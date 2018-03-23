@@ -8,7 +8,7 @@ MANAGE_URL = 'http://ac.qq.com/MyComic'
 USERNAME = "1042521247"
 PASSWORD = "qingdian171717"
 COOKIE_DOMAIN = ".qq.com"
-COOKIE_FILE = f'cookies/{COOKIE_DOMAIN[1:]}_{USERNAME}.json'
+COOKIE_FILE = f'cookies/{COOKIE_DOMAIN[1:]}_{USERNAME}.cookie.json'
 
 
 class Tencent:
