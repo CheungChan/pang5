@@ -1,16 +1,16 @@
 import json
 import os
-from datetime import datetime
 import time
+from datetime import datetime
+
 from logzero import logger
 from selenium import webdriver
-from selenium.common.exceptions import UnexpectedAlertPresentException
-from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
-from selenium.common.exceptions import UnexpectedAlertPresentException, TimeoutException, WebDriverException
+from selenium.common.exceptions import UnexpectedAlertPresentException, TimeoutException
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.support import expected_conditions
+from selenium.webdriver.support.ui import WebDriverWait
 
 from config import USE_FACE, CHROME_DRIVER_PATH, PHANTOMJS_PATH, SCREENSHOT_PATH, WAIT_CLICKABLE, WAIT_PRESENCE, \
     WAIT_VISIABLITY
