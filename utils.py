@@ -208,3 +208,35 @@ def click_by_actionchains(selector, sleep=2):
     time.sleep(sleep)
     g_driver.logger.info(f"点击 {selector} 按钮成功")
     return True
+
+
+def click_select(clickCSS, selectCSS, para):
+    if para:
+        if click(clickCSS):
+            if single_select(selectCSS, para):
+                return True
+        else:
+            logger.info(f'click_select:参数：{para} 无法赋值，没有找到定位 {clickCSS}')
+            return False
+    logger.info(f'click_select:定位 {clickCSS} 没有参数')
+    return False
+
+
+def single_select(css, para, trim_price=False):
+    if para:
+        try:
+            eles = g_driver.find_elements(By.CSS_SELECTOR, css)
+            for e in eles:
+                para_text = para.replace(" ", "")
+                ele_text = e.text.replace(" ", "")
+                if trim_price:
+                    ele_text = ele_text.split('\n')[0]
+                if ele_text == para_text:
+                    logger.info(para)
+                    e.click()
+                    return True
+        except Exception as e:
+            warnStr = f'single_select: 定位:{css}  参数: {para} 错误信息: {e} '
+            logger.info(warnStr)
+    logger.info(f'single_select:定位 {css} 没有参数')
+    return False

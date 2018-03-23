@@ -55,7 +55,6 @@ class Tencent:
 
                 # 进入上传章节页面
 
-
                 # 有了第一章之后才会出来是否定时发布和发布日期,请提前发布好第一章
                 if data['use-appoint'] == False:
                     # 定时发布选否
@@ -64,7 +63,6 @@ class Tencent:
                 else:
                     # 发布日期
                     self.driver.find_element_by_css_selector("#chapter_date").send_keys(data['chapter-publish-time'])
-
 
                 # 章节名称
                 self.driver.find_element_by_css_selector("#chapter_title").send_keys(data['chapter_title'])
