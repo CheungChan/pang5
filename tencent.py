@@ -32,8 +32,12 @@ class Tencent:
                 logger.info('登录成功')
 
                 # 点击章节管理
+                self.driver.find_element_by_link_text("章节管理").click()
 
+                # 点击新建章节
+                self.driver.find_element_by_link_text("新建章节").click()
 
+                # 进入上传章节页面
 
     def login(self):
         login_url = get_current_url()
