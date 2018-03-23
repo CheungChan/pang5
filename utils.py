@@ -14,15 +14,13 @@ g_driver = None
 
 
 class open_driver(object):
-    def __init__(self, width=1920, height=7000, cookie_domain=None, load_image=False):
+    def __init__(self, width=1920, height=7000, cookie_domain=None, load_image=False, cookie_file=None):
         self.width = width
         self.height = height
         self.cookie_domain = cookie_domain
         self.load_image = load_image
         if self.cookie_domain:
-            self.cookie_file = os.path.join(os.path.expanduser('~'), self.cookie_domain[1:] + '.json')
-            if not os.path.exists(self.cookie_file):
-                raise Exception(f'{self.cookie_file} 不存在，请设置')
+            self.cookie_file = cookie_file
 
     def __enter__(self):
         global g_driver
@@ -46,7 +44,6 @@ class open_driver(object):
             self.driver = webdriver.PhantomJS(PHANTOMJS_PATH, desired_capabilities=dcap, service_args=service_args)
             logger.info('phantomjs浏览器打开')
         self.driver.set_window_size(self.width, self.height)
-        self.add_cookie()
         js = "window.scrollTo(0, document.body.scrollHeight)"
         self.driver.scroll_buttom = lambda: self.driver.execute_script(js)
         g_driver = self.driver
@@ -56,7 +53,6 @@ class open_driver(object):
         if exc_tb:
             self.driver.get_screenshot_as_file(
                 f"{SCREENSHOT_PATH}/excep_{datetime.now().strftime('%Y-%m-%d %H %M %S')}.png")
-        self.store_cookie()
         logger.info("浏览器关闭")
         self.driver.close()
         self.driver.quit()
@@ -66,26 +62,6 @@ class open_driver(object):
             logger.error(exc_val)
             logger.error(exc_tb)
             return False
-
-    def add_cookie(self):
-        if not self.cookie_domain:
-            return
-        logger.info('加载cookie')
-        self.driver.delete_all_cookies()
-        cookies = json.load(open(self.cookie_file, 'r'))
-        for c in cookies:
-            if c.get('domain') != self.cookie_domain:
-                continue
-            self.driver.add_cookie(c)
-        logger.info('加载完成')
-
-    def store_cookie(self):
-        if not self.cookie_domain:
-            return
-        logger.info('存储cookie')
-        new_cookies = self.driver.get_cookies()
-        json.dump(new_cookies, open(self.cookie_file, 'w'))
-        logger.info('加载完成')
 
 
 class track_alert(object):
@@ -121,6 +97,27 @@ def refresh_recursion(url, num=3):
     return refresh_recursion(url, num - 1)
 
 
+def add_cookie(cookie_domain, driver, cookie_file):
+    if not os.path.exists(cookie_file):
+        return False
+    logger.info('加载cookie')
+    driver.delete_all_cookies()
+    cookies = json.load(open(cookie_file, 'r'))
+    for c in cookies:
+        if c.get('domain') != cookie_domain:
+            continue
+        driver.add_cookie(c)
+    logger.info('加载完成')
+    return True
+
+
+def store_cookie(driver, cookie_file):
+    logger.info('存储cookie')
+    new_cookies = driver.get_cookies()
+    json.dump(new_cookies, open(cookie_file, 'w'))
+    logger.info('加载完成')
+
+
 def get(url, sleep=2):
     try:
         logger.info(f'get:{url}')
@@ -143,4 +140,17 @@ def get_current_url():
         current_url = g_driver.current_url
     except TimeoutException:
         current_url = ''
+    logger.debug(f'current_url= {current_url}')
     return current_url
+
+
+def cookie_from_chrome_to_json(cookie_str, domain, username):
+    cookie_list = cookie_str.split(';')
+    cookies = []
+    for c in cookie_list:
+        name, value = c.split('=', maxsplit=1)
+        cookie = {'domain': domain, 'name': name, 'value': value, 'path': '/'}
+        cookies.append(cookie)
+    cookie_file = f'cookies/{domain[1:]}_{username}.json'
+    json.dump(cookies, open(cookie_file, 'w'))
+    logger.info(f'持久化{cookie_file}')
