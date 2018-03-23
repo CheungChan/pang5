@@ -19,22 +19,29 @@ g_driver = None
 
 
 class open_driver(object):
-    def __init__(self, width=1920, height=7000, cookie_domain=None, load_image=False, cookie_file=None):
+    def __init__(self, width=1920, height=7000, cookie_domain=None, load_image=False, cookie_file=None,
+                 browser='chrome'):
         self.width = width
         self.height = height
         self.cookie_domain = cookie_domain
         self.load_image = load_image
         if self.cookie_domain:
             self.cookie_file = cookie_file
+        self.browser = browser
 
     def __enter__(self):
         global g_driver
         if USE_FACE:
-            self.driver = webdriver.Chrome(CHROME_DRIVER_PATH)
-            # self.driver = webdriver.Firefox(executable_path='/usr/bin/geckodriver')
+            if self.browser == 'chrome':
+                self.driver = webdriver.Chrome(CHROME_DRIVER_PATH)
 
-            logger.info('chrome浏览器打开')
-            self.driver.get('http://www.baidu.com')
+                logger.info('chrome浏览器打开')
+                self.driver.get('http://www.baidu.com')
+            elif self.browser == 'firefox':
+                self.driver = webdriver.Firefox(executable_path='/usr/bin/geckodriver')
+                logger.info('firefox浏览器打开')
+                # self.driver.get('http://www.baidu.com')
+
         else:
             dcap = dict(DesiredCapabilities.PHANTOMJS)
             dcap["phantomjs.page.settings.userAgent"] = (
@@ -190,3 +197,14 @@ def click(css):
     else:
         logger.error(f'点击没有找到定位:  {css}')
         return False
+
+
+def click_by_actionchains(selector, sleep=2):
+    publish = g_driver.find_element_by_css_selector(selector)
+    try:
+        ActionChains(g_driver).click(publish).perform()
+    except TimeoutException as e:
+        g_driver.logger.warning(f'get：{selector} {e}')
+    time.sleep(sleep)
+    g_driver.logger.info(f"点击 {selector} 按钮成功")
+    return True
