@@ -240,3 +240,28 @@ def single_select(css, para, trim_price=False):
             logger.info(warnStr)
     logger.info(f'single_select:定位 {css} 没有参数')
     return False
+
+
+def get_sorted_imgs(dir_name):
+    """
+    根据文件夹地址返回这个文件夹下所有图片,按照数字顺序返回
+    eg.
+    ['1_01.jpg',
+     '1_02.jpg',
+     '1_03.jpg',
+     '1_04.jpg',
+     '1_05.jpg',
+     '2.jpg',
+     '3_01.jpg',
+     '3_02.jpg',
+     '3_03.jpg',
+     '3_04.jpg',
+     '3_05.jpg',
+     '3_06.jpg',
+     '4_01.jpg',
+     '4_02.jpg']
+    :param dir_name: 文件夹地址
+    :return:
+    """
+    l = os.listdir(dir_name)
+    return sorted(l, key=lambda x: x[:-4])
