@@ -1,13 +1,16 @@
 import json
 import os
 from datetime import datetime
-
+import time
 from logzero import logger
 from selenium import webdriver
 from selenium.common.exceptions import UnexpectedAlertPresentException
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+from selenium.common.exceptions import UnexpectedAlertPresentException, TimeoutException, WebDriverException
 
 from config import USE_FACE, CHROME_DRIVER_PATH, PHANTOMJS_PATH, SCREENSHOT_PATH
+
+g_driver = None
 
 
 class open_driver(object):
@@ -22,6 +25,7 @@ class open_driver(object):
                 raise Exception(f'{self.cookie_file} 不存在，请设置')
 
     def __enter__(self):
+        global g_driver
         if USE_FACE:
             self.driver = webdriver.Chrome(CHROME_DRIVER_PATH)
             # self.driver = webdriver.Firefox(executable_path='/usr/bin/geckodriver')
@@ -45,6 +49,7 @@ class open_driver(object):
         self.add_cookie()
         js = "window.scrollTo(0, document.body.scrollHeight)"
         self.driver.scroll_buttom = lambda: self.driver.execute_script(js)
+        g_driver = self.driver
         return self.driver
 
     def __exit__(self, exc_type, exc_val, exc_tb):
@@ -99,3 +104,43 @@ class track_alert(object):
             msg = re.findall(r'{Alert text : (.*)}', exc_val.msg)[0]
             logger.error(msg)
             return True
+
+
+def refresh_recursion(url, num=3):
+    if num == 0:
+        return False
+    try:
+        logger.info(f'refresh:{num}')
+        g_driver.get(url)
+        return True
+    except:
+        try:
+            g_driver.refresh()
+        except Exception as e:
+            logger.warning(f'refresh: {url} {e}')
+    return refresh_recursion(url, num - 1)
+
+
+def get(url, sleep=2):
+    try:
+        logger.info(f'get:{url}')
+        g_driver.implicitly_wait(10)
+        g_driver.get(url)
+    except TimeoutException as e:
+        g_driver.logger.warning(f'get: {url} {e}')
+        try:
+            refresh_recursion(url)
+        except TimeoutException as e2:
+            return True
+        time.sleep(sleep)
+    return True
+
+
+def get_current_url():
+    try:
+        g_driver.implicitly_wait(10)
+        # current_url = execute_js('return window.location.href;')
+        current_url = g_driver.current_url
+    except TimeoutException:
+        current_url = ''
+    return current_url
