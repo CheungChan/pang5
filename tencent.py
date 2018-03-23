@@ -10,7 +10,7 @@ PASSWORD = "qingdian171717"
 COOKIE_DOMAIN = ".qq.com"
 COOKIE_FILE = f'cookies/{COOKIE_DOMAIN[1:]}_{USERNAME}.cookie.json'
 data = {
-    'use-appoint': False,
+    'use-appoint': True,
     'chapter-publish-time': '2018-03-24 14:00:00',
     'chapter_title': '叫什么好呢',
     'tips-chapter': '/Users/chenzhang/Pictures/封面.jpg',
@@ -54,6 +54,9 @@ class Tencent:
                 self.driver.find_element_by_link_text("新建章节").click()
 
                 # 进入上传章节页面
+
+
+                # 有了第一章之后才会出来是否定时发布和发布日期,请提前发布好第一章
                 if data['use-appoint'] == False:
                     # 定时发布选否
                     self.driver.find_element_by_css_selector(
@@ -61,6 +64,7 @@ class Tencent:
                 else:
                     # 发布日期
                     self.driver.find_element_by_css_selector("#chapter_date").send_keys(data['chapter-publish-time'])
+
 
                 # 章节名称
                 self.driver.find_element_by_css_selector("#chapter_title").send_keys(data['chapter_title'])
