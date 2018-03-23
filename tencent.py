@@ -9,7 +9,11 @@ USERNAME = "1042521247"
 PASSWORD = "qingdian171717"
 COOKIE_DOMAIN = ".qq.com"
 COOKIE_FILE = f'cookies/{COOKIE_DOMAIN[1:]}_{USERNAME}.cookie.json'
-
+data = {
+    'use-appoint':True,
+    'chapter-publish-time':'2018-03-24 14:00:00',
+    'chapter_title':'叫什么好呢'
+}
 
 class Tencent:
     def __init__(self):

@@ -7,8 +7,13 @@ from selenium import webdriver
 from selenium.common.exceptions import UnexpectedAlertPresentException
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.common.exceptions import UnexpectedAlertPresentException, TimeoutException, WebDriverException
+from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions
 
-from config import USE_FACE, CHROME_DRIVER_PATH, PHANTOMJS_PATH, SCREENSHOT_PATH
+from config import USE_FACE, CHROME_DRIVER_PATH, PHANTOMJS_PATH, SCREENSHOT_PATH, WAIT_CLICKABLE, WAIT_PRESENCE, \
+    WAIT_VISIABLITY
 
 g_driver = None
 
@@ -154,3 +159,34 @@ def cookie_from_chrome_to_json(cookie_str, domain, username):
     cookie_file = f'cookies/{domain[1:]}_{username}.json'
     json.dump(cookies, open(cookie_file, 'w'))
     logger.info(f'持久化{cookie_file}')
+
+
+def __wait_ele(xpath, max_sec, _type):
+    if _type == WAIT_PRESENCE:
+        element_located = expected_conditions.presence_of_element_located
+    elif _type == WAIT_VISIABLITY:
+        element_located = expected_conditions.visibility_of_element_located
+    elif _type == WAIT_CLICKABLE:
+        element_located = expected_conditions.element_to_be_clickable
+    else:
+        raise Exception("方法调用错误，请检查_type参数")
+
+    try:
+        WebDriverWait(g_driver, max_sec, 0.5).until(element_located((By.XPATH, xpath)))
+        return True
+    except Exception as e:
+        logger.error(f'超过{max_sec}秒 {xpath} 不能显示，错误 {e}')
+        return False
+
+
+def __wait_ele_clickable(css, max_sec=20):
+    return __wait_ele(css, max_sec, WAIT_CLICKABLE)
+
+
+def click(css):
+    if __wait_ele_clickable(css):
+        g_driver.find_element(By.CSS_SELECTOR, css).click()
+        return True
+    else:
+        logger.error(f'点击没有找到定位:  {css}')
+        return False
