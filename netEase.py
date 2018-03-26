@@ -23,7 +23,7 @@ class Upload:
                 add_cookie(COOKIE_DOMAIN, driver, COOKIE_FILE)
                 get(MANAGE_URL)
                 if get_current_url() != MANAGE_URL:
-                    self.mail_login(driver)
+                    self.mobile_login(driver)
                     # self.mobile_login(driver)
                     store_cookie(driver, COOKIE_FILE)
                     logger.info('登录成功')
@@ -41,9 +41,8 @@ class Upload:
         # click('.topbar-meta-user >ul >li:nth-child(1)>.js-login-required')
         driver.find_element_by_css_selector('.topbar-meta-user >ul >li:nth-child(1)>.js-login-required').click()
         # driver.find_element_by_css_selector('.sns-mobile').click()
-        time.sleep(1)
+        driver.switch_to.frame(0)
         username = driver.find_elements_by_name('email')
-        pr
         username.clear()
         username.send_keys(login_username)
         password = driver.find_element_by_name('password')
@@ -68,10 +67,9 @@ class Upload:
         get('https://manhua.163.com/')
         # click('.topbar-meta-user >ul >li:nth-child(1)>.js-login-required')
         driver.find_element_by_css_selector('.topbar-meta-user >ul >li:nth-child(1)>.js-login-required').click()
-
-        # driver.find_element_by_css_selector('.sns-mobile').click()
-        click('.sns-mobile')
-        time.sleep(1)
+        time.sleep(3)
+        driver.find_element_by_css_selector('.sns-mobile').click()
+        # click('.sns-mobile')
         username = driver.find_element_by_id('username')
         username.clear()
         username.send_keys(login_username)
@@ -118,9 +116,8 @@ class Upload:
         # 判断是不是上传完成
         self.stop(driver)
         # 提交
-        driver.find_element_by_css_selector(
-            'body > section:nth-child(2) > div > div.large-9.medium-8.columns > div > form > div:nth-child(9) > div.small-10.columns > button.small.btn-normal.right').click()
-
+        time.sleep(2)
+        driver.find_element_by_xpath('/html/body/section[1]/div/div[3]/div/form/div[5]/div[2]/button[2]').click()
     # 看是否上传完
     def stop(self, driver):
         phui_backdrop = driver.find_element_by_class_name('phui-backdrop')
