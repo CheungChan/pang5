@@ -10,10 +10,10 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.support import expected_conditions
-from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support.ui import WebDriverWait, Select
 
 from config import USE_FACE, CHROME_DRIVER_PATH, PHANTOMJS_PATH, SCREENSHOT_PATH, WAIT_CLICKABLE, WAIT_PRESENCE, \
-    WAIT_VISIABLITY
+    WAIT_VISIABLITY, CHROME_ARG
 
 g_driver = None
 
@@ -33,7 +33,10 @@ class open_driver(object):
         global g_driver
         if USE_FACE:
             if self.browser == 'chrome':
-                self.driver = webdriver.Chrome(CHROME_DRIVER_PATH)
+                option = webdriver.ChromeOptions()
+                for iarg in CHROME_ARG:
+                    option.add_argument(iarg)
+                self.driver = webdriver.Chrome(CHROME_DRIVER_PATH, options=option)
 
                 logger.info('chrome浏览器打开')
                 self.driver.get('http://www.baidu.com')
@@ -55,7 +58,7 @@ class open_driver(object):
             service_args.append('--ignore-ssl-errors=true')
             self.driver = webdriver.PhantomJS(PHANTOMJS_PATH, desired_capabilities=dcap, service_args=service_args)
             logger.info('phantomjs浏览器打开')
-        self.driver.set_window_size(self.width, self.height)
+        # self.driver.set_window_size(self.width, self.height)
         js = "window.scrollTo(0, document.body.scrollHeight)"
         self.driver.scroll_buttom = lambda: self.driver.execute_script(js)
         g_driver = self.driver
@@ -265,3 +268,14 @@ def get_sorted_imgs(dir_name):
     """
     l = os.listdir(dir_name)
     return sorted(l, key=lambda x: x[:-4])
+
+
+def clear_and_send_keys(css, value):
+    ele = g_driver.find_element_by_css_selector(css)
+    ele.clear()
+    ele.send_keys(value)
+
+
+def select_value(css, value):
+    s = Select(g_driver.find_element_by_css_selector(css))
+    s.select_by_value(value)

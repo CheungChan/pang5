@@ -1,29 +1,26 @@
 import time
-
+import os
 from logzero import logger
+from utils import open_driver, track_alert, get, get_current_url, add_cookie, store_cookie, clear_and_send_keys, \
+    get_sorted_imgs, select_value
 
-from utils import open_driver, track_alert, get, get_current_url, add_cookie, store_cookie
-
+pwd = os.path.abspath(os.curdir)
+# 管理页面URL
 MANAGE_URL = 'http://ac.qq.com/MyComic'
+# 登录成功之后跳转的URL
+AUTH_OK_URL = 'http://ac.qq.com/MyComic?auth=1'
 USERNAME = "1042521247"
 PASSWORD = "qingdian171717"
 COOKIE_DOMAIN = ".qq.com"
 COOKIE_FILE = f'cookies/{COOKIE_DOMAIN[1:]}_{USERNAME}.cookie.json'
 data = {
-    'use-appoint': True,
-    'chapter-publish-time': '2018-03-24 14:00:00',
+    'use-appoint': True, ""
+                         'chapter-publish-time': '2018-03-24 14:00:00',
     'chapter_title': '叫什么好呢',
-    'tips-chapter': '/Users/chenzhang/Pictures/封面.jpg',
-    'pics': [
-        '/Users/chenzhang/Pictures/文章封面/20171031174631_rXO8gMcPUc_01.jpg',
-        '/Users/chenzhang/Pictures/文章封面/20171031174631_rXO8gMcPUc_02.jpg',
-        '/Users/chenzhang/Pictures/文章封面/20171031174631_rXO8gMcPUc_03.jpg',
-        '/Users/chenzhang/Pictures/文章封面/20171031174631_rXO8gMcPUc_04.jpg',
-        '/Users/chenzhang/Pictures/文章封面/20171031174631_rXO8gMcPUc_05.jpg',
-        '/Users/chenzhang/Pictures/文章封面/20171031174631_rXO8gMcPUc_06.jpg',
-        '/Users/chenzhang/Pictures/文章封面/20171031174631_rXO8gMcPUc_07.jpg',
-    ]
+    'tips-chapter': os.path.join(pwd, 'images', '标题.jpg'),
+    'pics': get_sorted_imgs(os.path.join(pwd, 'images', '章节'))
 }
+FIRST_CHAPTER = True
 
 
 class Tencent:
@@ -35,6 +32,12 @@ class Tencent:
                          cookie_file=COOKIE_FILE) as driver:
             with track_alert(driver):
                 self.driver = driver
+
+                # # 允许flash
+                # self.driver.get('chrome://settings/content/flash')
+                # time.sleep(3)
+                # self.driver.find_element_by_css_selector('#addSite').click()
+                # self.driver.find_element_by_css_selector('#input').send_keys('ac.qq.com')
 
                 # 处理登录
                 add_cookie(COOKIE_DOMAIN, driver, COOKIE_FILE)
@@ -54,27 +57,32 @@ class Tencent:
                 self.driver.find_element_by_link_text("新建章节").click()
 
                 # 进入上传章节页面
+                if not FIRST_CHAPTER:
 
-                # 有了第一章之后才会出来是否定时发布和发布日期,请提前发布好第一章
-                if data['use-appoint'] == False:
-                    # 定时发布选否
-                    self.driver.find_element_by_css_selector(
-                        'table > tbody > tr:nth-child(2) > td.chapter-publish-time > label:nth-child(2) > input[type="radio"]').click()
-                else:
-                    # 发布日期
-                    self.driver.find_element_by_css_selector("#chapter_date").send_keys(data['chapter-publish-time'])
+                    # 有了第一章之后才会出来是否定时发布和发布日期,请提前发布好第一章
+                    if data['use-appoint'] == False:
+                        # 定时发布选否
+                        self.driver.find_element_by_css_selector(
+                            'table > tbody > tr:nth-child(2) > td.chapter-publish-time > label:nth-child(2) > input[type="radio"]').click()
+                    else:
+                        # 发布日期
+                        self.driver.find_element_by_css_selector("#chapter_date").send_keys(
+                            data['chapter-publish-time'])
 
                 # 章节名称
-                self.driver.find_element_by_css_selector("#chapter_title").send_keys(data['chapter_title'])
+                clear_and_send_keys("#chapter_title", data['chapter_title'])
                 # 确定修改
                 self.driver.find_element_by_css_selector("#chapterTitleSubmit").click()
 
                 # 章节封面
-                self.driver.find_element_by_css_selector("#Filedata").send_keys(data["tips-chapter"])
+                tips_chapter = data["tips-chapter"]
+                logger.info(tips_chapter)
+                self.driver.find_element_by_css_selector("#Filedata").send_keys(tips_chapter)
 
                 # 点击上传封面
+                time.sleep(3)
                 self.driver.find_element_by_css_selector('#btn_upload').click()
-
+                time.sleep(3)
                 # TODO 上传章节内容
                 pass
 
@@ -82,11 +90,13 @@ class Tencent:
         login_url = get_current_url()
         self.driver.switch_to.frame('login_ifr')
         self.driver.find_element_by_css_selector("#switcher_plogin").click()
-        self.driver.find_element_by_css_selector("#u").send_keys(USERNAME)
-        self.driver.find_element_by_css_selector("#p").send_keys(PASSWORD)
+        clear_and_send_keys("#u", USERNAME)
+        clear_and_send_keys("#p", PASSWORD)
         time.sleep(2)
         self.driver.find_element_by_css_selector("#login_button").click()
         time.sleep(3)
+        if get_current_url() != AUTH_OK_URL:
+            input('请处理登录异常，之后按回车键')
         return get_current_url() != login_url
 
 
