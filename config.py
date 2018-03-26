@@ -8,3 +8,11 @@ SCREENSHOT_PATH = 'screenshot'
 WAIT_PRESENCE = 'presence'
 WAIT_VISIABLITY = "visiablity"
 WAIT_CLICKABLE = 'clickable'
+CHROME_ARG = [
+    '--disable-component-update',
+    '--allow-outdated-plugins',
+    r'ppapi-flash-path=C:\Users\CheungChan\AppData\Local\Google\Chrome\User Data\PepperFlash\29.0.0.113\pepflashplayer.dll',
+    'lang=zh_CN.UTF-8',
+    '--start-maximized',
+]
+
