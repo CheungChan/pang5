@@ -2,7 +2,7 @@ import time
 import os
 from logzero import logger
 from utils import open_driver, track_alert, get, get_current_url, add_cookie, store_cookie, clear_and_send_keys, \
-    get_sorted_imgs, select_value
+    get_sorted_imgs, use_flash, scroll_to,click_by_actionchains,click_by_pg
 
 pwd = os.path.abspath(os.curdir)
 # 管理页面URL
@@ -11,7 +11,7 @@ MANAGE_URL = 'http://ac.qq.com/MyComic'
 AUTH_OK_URL = 'http://ac.qq.com/MyComic?auth=1'
 USERNAME = "1042521247"
 PASSWORD = "qingdian171717"
-COOKIE_DOMAIN = ".qq.com"
+COOKIE_DOMAIN = ".ac.qq.com"
 COOKIE_FILE = f'cookies/{COOKIE_DOMAIN[1:]}_{USERNAME}.cookie.json'
 data = {
     'use-appoint': True, ""
@@ -33,12 +33,6 @@ class Tencent:
             with track_alert(driver):
                 self.driver = driver
 
-                # # 允许flash
-                # self.driver.get('chrome://settings/content/flash')
-                # time.sleep(3)
-                # self.driver.find_element_by_css_selector('#addSite').click()
-                # self.driver.find_element_by_css_selector('#input').send_keys('ac.qq.com')
-
                 # 处理登录
                 add_cookie(COOKIE_DOMAIN, driver, COOKIE_FILE)
                 get(MANAGE_URL)
@@ -55,6 +49,9 @@ class Tencent:
 
                 # 点击新建章节
                 self.driver.find_element_by_link_text("新建章节").click()
+
+                # 让网站允许Flash
+                use_flash()
 
                 # 进入上传章节页面
                 if not FIRST_CHAPTER:
@@ -83,8 +80,12 @@ class Tencent:
                 time.sleep(3)
                 self.driver.find_element_by_css_selector('#btn_upload').click()
                 time.sleep(3)
-                # TODO 上传章节内容
-                pass
+                # 上传章节内容
+                scroll_to()
+                self.driver.execute_script('document.querySelectorAll("#button_main")[0].style.display="block";')
+                click_by_pg(1599,749)
+                #1599 749
+                # toDO 上传图片选择图片并点击打开
 
     def login(self):
         login_url = get_current_url()

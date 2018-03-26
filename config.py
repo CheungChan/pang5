@@ -11,7 +11,8 @@ WAIT_CLICKABLE = 'clickable'
 CHROME_ARG = [
     '--disable-component-update',
     '--allow-outdated-plugins',
-    r'ppapi-flash-path=C:\Users\CheungChan\AppData\Local\Google\Chrome\User Data\PepperFlash\29.0.0.113\pepflashplayer.dll',
+    '—disable-bundled-ppapi-flash',
+    r'ppapi-flash-path=C:\Windows\SysWOW64\Macromed\Flash\pepflashplayer32_29_0_0_113.dll',
     'lang=zh_CN.UTF-8',
     '--start-maximized',
 ]

@@ -3,6 +3,7 @@ import os
 import time
 from datetime import datetime
 
+import pyautogui as pg
 from logzero import logger
 from selenium import webdriver
 from selenium.common.exceptions import UnexpectedAlertPresentException, TimeoutException
@@ -207,10 +208,14 @@ def click_by_actionchains(selector, sleep=2):
     try:
         ActionChains(g_driver).click(publish).perform()
     except TimeoutException as e:
-        g_driver.logger.warning(f'get：{selector} {e}')
+        logger.info(f'get：{selector} {e}')
     time.sleep(sleep)
-    g_driver.logger.info(f"点击 {selector} 按钮成功")
+    logger.info(f"点击 {selector} 按钮成功")
     return True
+
+
+def click_by_pg(width, height):
+    pg.click(width, height)
 
 
 def click_select(clickCSS, selectCSS, para):
@@ -279,3 +284,26 @@ def clear_and_send_keys(css, value):
 def select_value(css, value):
     s = Select(g_driver.find_element_by_css_selector(css))
     s.select_by_value(value)
+
+
+def use_flash():
+    POSITION_PERMISSION = (216, 93)
+    POSITION_FLASH = (720, 400)
+
+    pg.click(*POSITION_PERMISSION)
+    time.sleep(1)
+    pg.click(*POSITION_FLASH)
+    time.sleep(1)
+
+    pg.press(['down', 'down'])
+    pg.keyDown('enter')
+    pg.keyUp('enter')
+    pg.keyDown('escape')
+    pg.keyUp('escape')
+    pg.keyDown('f5')
+    pg.keyUp('f5')
+
+
+def scroll_to():
+    js = "window.scrollTo(0, document.body.scrollHeight)"
+    g_driver.execute_script(js)
