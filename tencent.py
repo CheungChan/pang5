@@ -1,8 +1,9 @@
 import time
 import os
 from logzero import logger
+import pyautogui as pg
 from utils import open_driver, track_alert, get, get_current_url, add_cookie, store_cookie, clear_and_send_keys, \
-    get_sorted_imgs, use_flash, scroll_to, click_by_actionchains, click_by_pg
+    get_sorted_imgs, use_flash, scroll_to, click_by_pg
 
 pwd = os.path.abspath(os.curdir)
 # 管理页面URL
@@ -52,60 +53,9 @@ class Tencent:
                 # 点击新建章节
                 self.driver.find_element_by_link_text("新建章节").click()
 
-                # 让网站允许Flash
-                use_flash()
+                self.publish()
 
-                # 进入上传章节页面
-                if not FIRST_CHAPTER:
-
-                    # 有了第一章之后才会出来是否定时发布和发布日期,请提前发布好第一章
-                    if data['use-appoint'] == False:
-                        # 定时发布选否
-                        self.driver.find_element_by_css_selector(
-                            'table > tbody > tr:nth-child(2) > td.chapter-publish-time > label:nth-child(2) > input[type="radio"]').click()
-                    else:
-                        # 发布日期
-                        self.driver.find_element_by_css_selector("#chapter_date").send_keys(
-                            data['chapter-publish-time'])
-
-                # 章节名称
-                clear_and_send_keys("#chapter_title", data['chapter_title'])
-                # 确定修改
-                self.driver.find_element_by_css_selector("#chapterTitleSubmit").click()
-
-                # 章节封面
-                tips_chapter = data["tips-chapter"]
-                logger.info(tips_chapter)
-                self.driver.find_element_by_css_selector("#Filedata").send_keys(tips_chapter)
-
-                # 点击上传封面
-                time.sleep(3)
-                self.driver.find_element_by_css_selector('#btn_upload').click()
-                time.sleep(3)
-                # 上传章节内容
-                scroll_to()
-                self.driver.execute_script('document.querySelectorAll("#button_main")[0].style.display="block";')
-                POSOTION_GREEN_BUTTON = (1599, 749)
-                click_by_pg(*POSOTION_GREEN_BUTTON)
-                # 1599 749
-                # toDO 上传图片选择图片并点击打开
-                img: str = ' '.join(data['pics'])
-                os.system(f'D:/uploadImg.exe {img}')
-                js = 'return $("#uploadProgressBox").text();'
-                while True:
-                    percent = self.driver.execute_script(js)
-                    time.sleep(1)
-                    logger.info(percent)
-                    if percent == '100%':
-                        break
-                if REAL_PUBLISH:
-                    create_url = get_current_url()
-                    self.driver.find_element_by_css_selector('#submit_data').click()
-                    time.sleep(2)
-                    if create_url == get_current_url():
-                        logger.error(f'发布失败')
-                        input('发布失败，请查看')
-                    logger.info('发布成功')
+                self.delete_all_chaptor()
                 time.sleep(1000000)
 
     def login(self):
@@ -120,6 +70,71 @@ class Tencent:
         if get_current_url() != AUTH_OK_URL:
             input('请处理登录异常，之后按回车键')
         return get_current_url() != login_url
+
+    def publish(self):
+        # 让网站允许Flash
+        use_flash()
+
+        # 进入上传章节页面
+        if not FIRST_CHAPTER:
+
+            # 有了第一章之后才会出来是否定时发布和发布日期,请提前发布好第一章
+            if data['use-appoint'] == False:
+                # 定时发布选否
+                self.driver.find_element_by_css_selector(
+                    'table > tbody > tr:nth-child(2) > td.chapter-publish-time > label:nth-child(2) > input[type="radio"]').click()
+            else:
+                # 发布日期
+                self.driver.find_element_by_css_selector("#chapter_date").send_keys(
+                    data['chapter-publish-time'])
+
+        # 章节名称
+        clear_and_send_keys("#chapter_title", data['chapter_title'])
+        # 确定修改
+        self.driver.find_element_by_css_selector("#chapterTitleSubmit").click()
+
+        # 章节封面
+        tips_chapter = data["tips-chapter"]
+        logger.info(tips_chapter)
+        self.driver.find_element_by_css_selector("#Filedata").send_keys(tips_chapter)
+
+        # 点击上传封面
+        time.sleep(3)
+        self.driver.find_element_by_css_selector('#btn_upload').click()
+        time.sleep(3)
+        # 上传章节内容
+        scroll_to()
+        self.driver.execute_script('document.querySelectorAll("#button_main")[0].style.display="block";')
+        POSOTION_GREEN_BUTTON = (1599, 749)
+        click_by_pg(*POSOTION_GREEN_BUTTON)
+        # 1599 749
+        img: str = ' '.join(data['pics'])
+        os.system(f'D:/uploadImg.exe {img}')
+        js = 'return $("#uploadProgressBox").text();'
+        while True:
+            percent = self.driver.execute_script(js)
+            time.sleep(1)
+            logger.info(percent)
+            if percent == '100%':
+                break
+        if REAL_PUBLISH:
+            create_url = get_current_url()
+            self.driver.find_element_by_css_selector('#submit_data').click()
+            time.sleep(2)
+            if create_url == get_current_url():
+                logger.error(f'发布失败')
+                input('发布失败，请查看')
+            logger.info('发布成功')
+
+    def delete_all_chaptor(self):
+        get('http://ac.qq.com/MyComic/chapterList/id/632099')
+        delete_eles = self.driver.find_elements_by_css_selector("a[do=delete]")
+        while len(delete_eles) > 0:
+            delete_eles[0].click()
+            time.sleep(2)
+            pg.press('enter')
+            time.sleep(2)
+            delete_eles = self.driver.find_elements_by_css_selector("a[do=delete]")
 
 
 if __name__ == '__main__':
