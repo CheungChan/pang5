@@ -2,7 +2,7 @@ import time
 import os
 from logzero import logger
 from utils import open_driver, track_alert, get, get_current_url, add_cookie, store_cookie, clear_and_send_keys, \
-    get_sorted_imgs, use_flash, scroll_to,click_by_actionchains,click_by_pg
+    get_sorted_imgs, use_flash, scroll_to, click_by_actionchains, click_by_pg
 
 pwd = os.path.abspath(os.curdir)
 # 管理页面URL
@@ -20,7 +20,9 @@ data = {
     'tips-chapter': os.path.join(pwd, 'images', '标题.jpg'),
     'pics': get_sorted_imgs(os.path.join(pwd, 'images', '章节'))
 }
+data['pics'] = [f'{os.path.join(pwd,"images","章节",d)}' for d in data['pics']]
 FIRST_CHAPTER = True
+REAL_PUBLISH = True
 
 
 class Tencent:
@@ -83,9 +85,28 @@ class Tencent:
                 # 上传章节内容
                 scroll_to()
                 self.driver.execute_script('document.querySelectorAll("#button_main")[0].style.display="block";')
-                click_by_pg(1599,749)
-                #1599 749
+                POSOTION_GREEN_BUTTON = (1599, 749)
+                click_by_pg(*POSOTION_GREEN_BUTTON)
+                # 1599 749
                 # toDO 上传图片选择图片并点击打开
+                img: str = ' '.join(data['pics'])
+                os.system(f'D:/uploadImg.exe {img}')
+                js = 'return $("#uploadProgressBox").text();'
+                while True:
+                    percent = self.driver.execute_script(js)
+                    time.sleep(1)
+                    logger.info(percent)
+                    if percent == '100%':
+                        break
+                if REAL_PUBLISH:
+                    create_url = get_current_url()
+                    self.driver.find_element_by_css_selector('#submit_data').click()
+                    time.sleep(2)
+                    if create_url == get_current_url():
+                        logger.error(f'发布失败')
+                        input('发布失败，请查看')
+                    logger.info('发布成功')
+                time.sleep(1000000)
 
     def login(self):
         login_url = get_current_url()
