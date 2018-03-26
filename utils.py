@@ -265,3 +265,9 @@ def get_sorted_imgs(dir_name):
     """
     l = os.listdir(dir_name)
     return sorted(l, key=lambda x: x[:-4])
+
+
+def clear_and_send_keys(css, value):
+    ele = g_driver.find_element_by_css_selector(css)
+    ele.clear()
+    ele.send_keys(value)
