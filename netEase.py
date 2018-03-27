@@ -6,8 +6,8 @@ from logzero import logger
 from data import data
 MANAGE_URL = 'https://zz.manhua.163.com/'
 COOKIE_DOMAIN = ".manhua.163.com"
-login_username=data['login_username']
-login_password=data['login_password']
+login_username=data['net_username']
+login_password=data['net_password']
 COOKIE_FILE = f'cookies/{COOKIE_DOMAIN[1:]}_{login_username}.cookie.json'
 from selenium.webdriver.support.ui import WebDriverWait
 
@@ -32,10 +32,10 @@ class Upload:
                     # 继续中间页面
                     get('http://zz.manhua.163.com/')
                 time.sleep(1)
-                driver.find_element_by_link_text(data['series_title']).click()
+                driver.find_element_by_link_text(data['net_series ']).click()
                 time.sleep(1)
                 driver.find_element_by_link_text('新增话').click()
-                self.form(driver,data['title_text'],data['image_pic'],data['data_netEase'], data['h_netEase'],data['m_netEase'])
+                self.form(driver,data['net_title '],data['net_image_pic'],data['net_d'], data['net_h'],data['net_m'],data['net-use-appoint'])
     #邮箱登录
     def mail_login(self, driver,login_username,login_password ):
         get('https://manhua.163.com/')
@@ -81,7 +81,7 @@ class Upload:
 
         return driver
 
-    def form(self, driver, title_text, dir_name,d,h_num,m_num, ):
+    def form(self, driver, title_text, dir_name,d,h_num,m_num,net_use_appoint ):
         '''
                     表单处理部分
                     '''
@@ -101,19 +101,20 @@ class Upload:
 
         driver.execute_script(js)
         # 定时
-        driver.find_element_by_id('timing_flag').click()
+        if net_use_appoint:
+            driver.find_element_by_id('timing_flag').click()
 
-        autoPublishDate = driver.find_element_by_css_selector(
-            '#timing > div > div.small-4.columns > input[type="text"]')
-        autoPublishDate.clear()
-        # 日期
-        autoPublishDate.send_keys(d)
-        h = Select(driver.find_element_by_css_selector('#timing > div > div:nth-child(2) > select'))
-        # 小时
-        h.select_by_value(h_num)
-        m = Select(driver.find_element_by_css_selector('#timing > div > div:nth-child(4) > select'))
-        # 分钟
-        m.select_by_value(m_num)
+            autoPublishDate = driver.find_element_by_css_selector(
+                '#timing > div > div.small-4.columns > input[type="text"]')
+            autoPublishDate.clear()
+            # 日期
+            autoPublishDate.send_keys(d)
+            h = Select(driver.find_element_by_css_selector('#timing > div > div:nth-child(2) > select'))
+            # 小时
+            h.select_by_value(h_num)
+            m = Select(driver.find_element_by_css_selector('#timing > div > div:nth-child(4) > select'))
+            # 分钟
+            m.select_by_value(m_num)
         # 判断是不是上传完成
         self.stop(driver)
         # 提交
