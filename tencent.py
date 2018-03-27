@@ -115,6 +115,10 @@ class Tencent:
             time.sleep(2)
             if create_url == get_current_url():
                 logger.error(f'发布失败')
+                err_msg_eles = self.driver.find_elements_by_css_selector("#cover_msg > div")
+                if len(err_msg_eles) > 0:
+                    err_msg = err_msg_eles[0].text
+                    logger.error(err_msg)
                 input('发布失败，请查看')
             logger.info('发布成功')
 

@@ -272,6 +272,7 @@ def get_sorted_imgs(dir_name):
     :return:
     """
     l = os.listdir(dir_name)
+    l = list(filter(lambda x: not x.startswith('.'), l))
     return sorted(l, key=lambda x: x[:-4])
 
 
