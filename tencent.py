@@ -12,7 +12,7 @@ MANAGE_URL = 'http://ac.qq.com/MyComic'
 AUTH_OK_URL = 'http://ac.qq.com/MyComic?auth=1'
 
 COOKIE_DOMAIN = ".ac.qq.com"
-COOKIE_FILE = f'cookies/{COOKIE_DOMAIN[1:]}_{data["username"]}.cookie.json'
+COOKIE_FILE = f'cookies/{COOKIE_DOMAIN[1:]}_{data["qq_username"]}.cookie.json'
 
 FIRST_CHAPTER = True
 REAL_PUBLISH = True
@@ -39,7 +39,7 @@ class Tencent:
                 logger.info('登录成功')
 
                 # 点击章节管理
-                get(f'http://ac.qq.com/MyComic/chapterList/id/{data["comic_id"]}')
+                get(f'http://ac.qq.com/MyComic/chapterList/id/{data["qq_comic_id"]}')
                 # self.driver.find_element_by_css_selector(".h_btn_section").click()
 
                 # 点击新建章节
@@ -54,8 +54,8 @@ class Tencent:
         login_url = get_current_url()
         self.driver.switch_to.frame('login_ifr')
         self.driver.find_element_by_css_selector("#switcher_plogin").click()
-        clear_and_send_keys("#u", data["username"])
-        clear_and_send_keys("#p", data["password"])
+        clear_and_send_keys("#u", data["qq_username"])
+        clear_and_send_keys("#p", data["qq_password"])
         time.sleep(2)
         self.driver.find_element_by_css_selector("#login_button").click()
         time.sleep(3)
@@ -71,22 +71,22 @@ class Tencent:
         if not FIRST_CHAPTER:
 
             # 有了第一章之后才会出来是否定时发布和发布日期,请提前发布好第一章
-            if data['use-appoint'] == False:
+            if data['qq_use-appoint'] == False:
                 # 定时发布选否
                 self.driver.find_element_by_css_selector(
                     'table > tbody > tr:nth-child(2) > td.chapter-publish-time > label:nth-child(2) > input[type="radio"]').click()
             else:
                 # 发布日期
                 self.driver.find_element_by_css_selector("#chapter_date").send_keys(
-                    data['chapter-publish-time'])
+                    data['qq_chapter-publish-time'])
 
         # 章节名称
-        clear_and_send_keys("#chapter_title", data['chapter_title'])
+        clear_and_send_keys("#chapter_title", data['qq_chapter_title'])
         # 确定修改
         self.driver.find_element_by_css_selector("#chapterTitleSubmit").click()
 
         # 章节封面
-        tips_chapter = data["tips-chapter"]
+        tips_chapter = data["qq_tips-chapter"]
         logger.info(tips_chapter)
         self.driver.find_element_by_css_selector("#Filedata").send_keys(tips_chapter)
 
@@ -100,7 +100,7 @@ class Tencent:
         POSOTION_GREEN_BUTTON = (1599, 749)
         click_by_pg(*POSOTION_GREEN_BUTTON)
         # 1599 749
-        img: str = ' '.join(data['pics'])
+        img: str = ' '.join(data['qq_pics'])
         os.system(f'D:/uploadImg.exe {img}')
         js = 'return $("#uploadProgressBox").text();'
         while True:
