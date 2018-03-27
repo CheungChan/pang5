@@ -4,13 +4,13 @@ import time
 from logzero import logger
 
 from utils import open_driver, track_alert, get, store_cookie
-
+from data import data
 MANAGE_URL = 'http://page.qingdian.cn/center/comicManagement/upload'
 LOGIN_URL = 'http://page.qingdian.cn/passport/login'
 
 COOKIE_DOMAIN = ".qingdian.cn"
-LOGIN_USERNAME = '13311095487'
-LONGIN_PASSWORD = '12345'
+LOGIN_USERNAME =data['qingdian_username']
+LONGIN_PASSWORD = data['qingdian_password']
 COOKIE_FILE = f'cookies/{COOKIE_DOMAIN[1:]}_{LOGIN_USERNAME}.cookie.json'
 
 
@@ -24,16 +24,16 @@ class Upload:
                          cookie_file=COOKIE_FILE) as driver:
             self.driver = driver
             with track_alert(driver):
-                self.mobile_login(driver)
+                self.mobile_login(driver,LOGIN_USERNAME , LONGIN_PASSWORD )
                 store_cookie(driver, COOKIE_FILE)
                 get(MANAGE_URL)
                 self.driver.find_element_by_link_text('我的作品').click()
-                self.search_article('今天天气很好')
-                self.form(driver)
+                self.search_article(data['qingdian_series'])
+                self.form(driver,data['qingdian_title'] ,data['qingaidan_pic'] ,data['qingdian_chapter'])
                 time.sleep(100)
 
     # 手机登录
-    def mobile_login(self, driver, login_username='13311095487', login_password='123456'):
+    def mobile_login(self, driver, login_username, login_password):
 
         get('http://page.qingdian.cn/passport/login')
         # click('.topbar-meta-user >ul >li:nth-child(1)>.js-login-required')
@@ -50,7 +50,7 @@ class Upload:
             '#app > div:nth-child(1) > div.clearfix.ui-area.passport-content > div.passport-right > div > div > div.pic-box > span').click()
         return driver
 
-    def form(self, driver, title_text='胖5号', dir_name=os.getcwd() + '/pic', d='2019-01-01', h_num='23', m_num='15'):
+    def form(self, driver, title_text , dir_name ,qingdian_chapter):
         '''
                     表单处理部分
                     '''
@@ -67,8 +67,8 @@ class Upload:
         for i in sorted(os.listdir(dir_name)):
             file = driver.find_element_by_css_selector('#add-section-img > div:nth-child(2) > input')
             file.send_keys(dir_name + '/' + i)
-        driver.execute_script(js)
-        # 定时
+
+
         driver.find_element_by_css_selector('.show-dialog').click()
         file = driver.find_element_by_css_selector(
             '#app > div.center.shadow-bottom-line > div.center-main.ui-area > div.center-tab-content.clearfix > div.right-main > div > div > div:nth-child(3) > div > div.cut-image-dialog.dialog-content > div > div.dialog-middle.clearfix > div.dm-btn-box.clearfix > div > input[type="file"]')

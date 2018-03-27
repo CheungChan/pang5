@@ -3,11 +3,12 @@ import time
 from selenium.webdriver.support.ui import Select
 import os
 from logzero import logger
-
+from data import data
 MANAGE_URL = 'https://zz.manhua.163.com/'
 COOKIE_DOMAIN = ".manhua.163.com"
-USERNAME = '18101038354'
-COOKIE_FILE = f'cookies/{COOKIE_DOMAIN[1:]}_{USERNAME}.cookie.json'
+login_username=data['login_username']
+login_password=data['login_password']
+COOKIE_FILE = f'cookies/{COOKIE_DOMAIN[1:]}_{login_username}.cookie.json'
 from selenium.webdriver.support.ui import WebDriverWait
 
 
@@ -23,7 +24,7 @@ class Upload:
                 add_cookie(COOKIE_DOMAIN, driver, COOKIE_FILE)
                 get(MANAGE_URL)
                 if get_current_url() != MANAGE_URL:
-                    self.mobile_login(driver)
+                    self.mobile_login(driver,login_username,login_password)
                     # self.mobile_login(driver)
                     store_cookie(driver, COOKIE_FILE)
                     logger.info('登录成功')
@@ -31,12 +32,12 @@ class Upload:
                     # 继续中间页面
                     get('http://zz.manhua.163.com/')
                 time.sleep(1)
-                driver.find_element_by_link_text('为什么救赎').click()
+                driver.find_element_by_link_text(data['series_title']).click()
                 time.sleep(1)
                 driver.find_element_by_link_text('新增话').click()
-                self.form(driver)
+                self.form(driver,data['title_text'],data['image_pic'],data['data_netEase'], data['h_netEase'],data['m_netEase'])
     #邮箱登录
-    def mail_login(self, driver,login_username='18101038354',login_password='qingdian'):
+    def mail_login(self, driver,login_username,login_password ):
         get('https://manhua.163.com/')
         # click('.topbar-meta-user >ul >li:nth-child(1)>.js-login-required')
         driver.find_element_by_css_selector('.topbar-meta-user >ul >li:nth-child(1)>.js-login-required').click()
@@ -62,7 +63,7 @@ class Upload:
         logger.error('不支持微信')
         return
     #手机登录
-    def mobile_login(self, driver,login_username='18101038354',login_password='qingdian'):
+    def mobile_login(self, driver,login_username,login_password):
 
         get('https://manhua.163.com/')
         # click('.topbar-meta-user >ul >li:nth-child(1)>.js-login-required')
@@ -80,7 +81,7 @@ class Upload:
 
         return driver
 
-    def form(self, driver, title_text='胖5号', dir_name=os.getcwd() + '/pic', d='2019-01-01', h_num='23', m_num='15'):
+    def form(self, driver, title_text, dir_name,d,h_num,m_num, ):
         '''
                     表单处理部分
                     '''
