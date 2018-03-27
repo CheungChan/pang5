@@ -15,15 +15,16 @@ data = {
 
 
     #网易
-    'login_username':'18101038354',
-    'login_password':'qingdian',
+    'net_username':'18101038354',
+    'net_password':'qingdian',
     #系列名
-    'series_title': '叫什么好呢',
-    'title_text':'胖5号',
-    'data_netEase':'2019-01-01',
-    'h_netEase':'23',
-    'm__netEase':'15',
-    'image_pic':os.getcwd() + '/pic',
+    'net-use-appoint':True,
+    'net_series_title': '叫什么好呢',
+    'net_title_text':'胖5号',
+    'net_d':'2019-01-01',
+    'net_h':'23',
+    'net_m':'15',
+    'net_image_pic':os.getcwd() + '/pic',
 
 
     #轻点
