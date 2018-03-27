@@ -129,6 +129,7 @@ class Tencent:
             delete_eles[0].click()
             time.sleep(2)
             pg.press('enter')
+            logger.info('删除章节')
             time.sleep(2)
             delete_eles = self.driver.find_elements_by_css_selector("a[do=delete]")
 
