@@ -3,7 +3,7 @@ import time
 
 from logzero import logger
 
-from utils import open_driver, track_alert, get, store_cookie
+from utils import open_driver, track_alert, get, store_cookie,get_sorted_imgs
 from data import data
 MANAGE_URL = 'http://page.qingdian.cn/center/comicManagement/upload'
 LOGIN_URL = 'http://page.qingdian.cn/passport/login'
@@ -29,7 +29,7 @@ class Upload:
                 get(MANAGE_URL)
                 self.driver.find_element_by_link_text('我的作品').click()
                 self.search_article(data['qingdian_series'])
-                self.form(driver,data['qingdian_title'] ,data['qingaidan_pic'] ,data['qingdian_chapter'])
+                self.form(driver,data['qingdian_title'] ,data['qingdian_pic'],data['qingdian_chapter'])
                 time.sleep(100)
 
     # 手机登录
@@ -64,15 +64,15 @@ class Upload:
         time.sleep(1)
         # 提示上传
         # 上传多个文件
-        for i in sorted(os.listdir(dir_name)):
+        for i in dir_name:
             file = driver.find_element_by_css_selector('#add-section-img > div:nth-child(2) > input')
-            file.send_keys(dir_name + '/' + i)
+            file.send_keys( i)
 
 
         driver.find_element_by_css_selector('.show-dialog').click()
         file = driver.find_element_by_css_selector(
             '#app > div.center.shadow-bottom-line > div.center-main.ui-area > div.center-tab-content.clearfix > div.right-main > div > div > div:nth-child(3) > div > div.cut-image-dialog.dialog-content > div > div.dialog-middle.clearfix > div.dm-btn-box.clearfix > div > input[type="file"]')
-        file.send_keys(dir_name + '/' + '1.jpg')
+        file.send_keys(qingdian_chapter)
         for i in range(20):
             driver.find_element_by_css_selector('.minus-btn').click()
         driver.find_element_by_css_selector(
@@ -82,7 +82,7 @@ class Upload:
         driver.find_element_by_css_selector(
             '#app > div.center.shadow-bottom-line > div.center-main.ui-area > div.center-tab-content.clearfix > div.right-main > div > div > div:nth-child(3) > div > div.mw-btn-box > span.btn-theme.btn-submit').click()
 
-        time.sleep(200)
+        time.sleep(2)
 
     def search_article(self, article_name):
         article_list = self.driver.find_elements_by_css_selector(

@@ -1,4 +1,4 @@
-from utils import open_driver, track_alert, get, click, store_cookie, add_cookie, get_current_url
+from utils import open_driver, track_alert, get, click, store_cookie, add_cookie, get_current_url,get_sorted_imgs
 import time
 from selenium.webdriver.support.ui import Select
 import os
@@ -32,10 +32,10 @@ class Upload:
                     # 继续中间页面
                     get('http://zz.manhua.163.com/')
                 time.sleep(1)
-                driver.find_element_by_link_text(data['net_series ']).click()
+                driver.find_element_by_link_text(data['net_series_title']).click()
                 time.sleep(1)
                 driver.find_element_by_link_text('新增话').click()
-                self.form(driver,data['net_title '],data['net_image_pic'],data['net_d'], data['net_h'],data['net_m'],data['net-use-appoint'])
+                self.form(driver,data['net_title_text'],data['net_image_pic'],data['net_d'], data['net_h'],data['net_m'],data['net-use-appoint'])
     #邮箱登录
     def mail_login(self, driver,login_username,login_password ):
         get('https://manhua.163.com/')
@@ -94,9 +94,10 @@ class Upload:
         time.sleep(1)
         # 提示上传
         # 上传多个文件
-        for i in sorted(os.listdir(dir_name)):
+        for i in dir_name :
             file = driver.find_element_by_css_selector('.webuploader-element-invisible')
-            file.send_keys(dir_name + '/' + i)
+            file.send_keys( i)
+
             self.stop(driver)
 
         driver.execute_script(js)

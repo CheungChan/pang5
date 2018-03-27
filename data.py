@@ -19,19 +19,19 @@ data = {
     'net_password':'qingdian',
     #系列名
     'net-use-appoint':True,
-    'net_series_title': '叫什么好呢',
+    'net_series_title': '为什么救赎',
     'net_title_text':'胖5号',
     'net_d':'2019-01-01',
     'net_h':'23',
     'net_m':'15',
-    'net_image_pic':os.getcwd() + '/pic',
+    'net_image_pic': [f'{os.path.join(pwd,"pic" ,d)}' for d in get_sorted_imgs(os.path.join(pwd, 'pic' ))],
 
 
     #轻点
     'qingdian_username':'13311095487',
     "qingdian_password":'123456',
     'qingdian_series': '今天天气很好',
-    'qingdian_chapter':os.getcwd() + '/pic/封面.jpg',
-    'qingdian_title':'胖5号',
-    'qingaidan_pic':os.getcwd() + '/pic',
+    'qingdian_chapter':os.path.join(pwd, 'series', '封面.jpg'),
+    'qingdian_title':'胖5号1',
+    'qingdian_pic':[f'{os.path.join(pwd,"pic" ,d)}' for d in get_sorted_imgs(os.path.join(pwd, 'pic' ))],
 }
