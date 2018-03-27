@@ -3,13 +3,14 @@ import time
 
 from logzero import logger
 
-from utils import open_driver, track_alert, get, store_cookie,get_sorted_imgs
+from utils import open_driver, track_alert, get, store_cookie, get_sorted_imgs
 from data import data
+
 MANAGE_URL = 'http://page.qingdian.cn/center/comicManagement/upload'
 LOGIN_URL = 'http://page.qingdian.cn/passport/login'
 
 COOKIE_DOMAIN = ".qingdian.cn"
-LOGIN_USERNAME =data['qingdian_username']
+LOGIN_USERNAME = data['qingdian_username']
 LONGIN_PASSWORD = data['qingdian_password']
 COOKIE_FILE = f'cookies/{COOKIE_DOMAIN[1:]}_{LOGIN_USERNAME}.cookie.json'
 
@@ -24,15 +25,16 @@ class Upload:
                          cookie_file=COOKIE_FILE) as driver:
             self.driver = driver
             with track_alert(driver):
-                self.mobile_login(driver,LOGIN_USERNAME , LONGIN_PASSWORD )
+                self.mobile_login(driver, LOGIN_USERNAME, LONGIN_PASSWORD)
                 store_cookie(driver, COOKIE_FILE)
                 get(MANAGE_URL)
                 self.driver.find_element_by_link_text('我的作品').click()
                 self.search_article(data['qingdian_series'])
-                self.form(driver,data['qingdian_title'] ,data['qingdian_pic'],data['qingdian_chapter'])
-                time.sleep(100)
+                self.form(driver, data['qingdian_title'], data['qingdian_pic'], data['qingdian_chapter'])
+                time.sleep(1000000)
 
     # 手机登录
+
     def mobile_login(self, driver, login_username, login_password):
 
         get('http://page.qingdian.cn/passport/login')
@@ -50,7 +52,7 @@ class Upload:
             '#app > div:nth-child(1) > div.clearfix.ui-area.passport-content > div.passport-right > div > div > div.pic-box > span').click()
         return driver
 
-    def form(self, driver, title_text , dir_name ,qingdian_chapter):
+    def form(self, driver, title_text, dir_name, qingdian_chapter):
         '''
                     表单处理部分
                     '''
@@ -66,8 +68,7 @@ class Upload:
         # 上传多个文件
         for i in dir_name:
             file = driver.find_element_by_css_selector('#add-section-img > div:nth-child(2) > input')
-            file.send_keys( i)
-
+            file.send_keys(i)
 
         driver.find_element_by_css_selector('.show-dialog').click()
         file = driver.find_element_by_css_selector(
@@ -78,6 +79,7 @@ class Upload:
         driver.find_element_by_css_selector(
             '#app > div.center.shadow-bottom-line > div.center-main.ui-area > div.center-tab-content.clearfix > div.right-main > div > div > div:nth-child(3) > div > div.cut-image-dialog.dialog-content > div > div.dialog-bottom > span.btn-theme.db-save').click()
         time.sleep(2)
+        self.stop(driver)
         # 提交
         driver.find_element_by_css_selector(
             '#app > div.center.shadow-bottom-line > div.center-main.ui-area > div.center-tab-content.clearfix > div.right-main > div > div > div:nth-child(3) > div > div.mw-btn-box > span.btn-theme.btn-submit').click()
@@ -90,18 +92,30 @@ class Upload:
         for a in article_list:
             print(a.find_element_by_css_selector('.mi-name-box').text)
             if "漫画名称：" + article_name == a.find_element_by_css_selector('.mi-name-box').text:
+                print(a.find_element_by_css_selector('.mi-name-box').text)
                 a.find_element_by_css_selector(
-                    '#app > div.center.shadow-bottom-line > div.center-main.ui-area > div.center-tab-content.clearfix > div.right-main > div > div > div:nth-child(1) > div > ul > li:nth-child(1) > div > div.bottom-btn-box > div:nth-child(1) > span:nth-child(3)').click()
+                    'div > div.bottom-btn-box > div:nth-child(1) > span:nth-child(3)').click()
                 return
         self.driver.find_element_by_css_selector('.btn-next').click()
         self.search_article(article_name)
 
     # 看是否上传完
     def stop(self, driver):
-        phui_backdrop = driver.find_element_by_class_name('phui-backdrop')
-        while phui_backdrop.is_displayed():
-            logger.info('暂停,文件未上传完成')
-            time.sleep(0.5)
+        while True:
+
+            # js得到对应的隐藏内容 bug......
+            js = '''
+            var a=true;
+    document.querySelectorAll('div.upload-item >div.status-cover.status-uploading>span').forEach(function(val,index,arr){
+    
+     if(val.innerHTML != '100') a=false;
+              
+    });return a;
+            '''
+            stop = driver.execute_script(js)
+            print(stop)
+            if stop:
+                break
 
 
 if __name__ == '__main__':

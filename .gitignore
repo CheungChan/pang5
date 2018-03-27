@@ -3,5 +3,4 @@
 *.log
 *.cookie.json
 screenshot/*.png
-*.jpg
 *.png
