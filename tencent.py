@@ -1,7 +1,7 @@
 import time
 import os
 from logzero import logger
-import pyautogui as pg
+
 from utils import open_driver, track_alert, get, get_current_url, add_cookie, store_cookie, clear_and_send_keys, \
     use_flash, scroll_to, click_by_pg
 from data import data
@@ -123,6 +123,7 @@ class Tencent:
             logger.info('发布成功')
 
     def delete_all_chaptor(self):
+        import pyautogui as pg
         get('http://ac.qq.com/MyComic/chapterList/id/632099')
         delete_eles = self.driver.find_elements_by_css_selector("a[do=delete]")
         while len(delete_eles) > 0:
