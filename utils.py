@@ -3,7 +3,6 @@ import os
 import time
 from datetime import datetime
 
-import pyautogui as pg
 from logzero import logger
 from selenium import webdriver
 from selenium.common.exceptions import UnexpectedAlertPresentException, TimeoutException
@@ -215,6 +214,7 @@ def click_by_actionchains(selector, sleep=2):
 
 
 def click_by_pg(width, height):
+    import pyautogui as pg
     pg.click(width, height)
 
 
@@ -290,6 +290,7 @@ def select_value(css, value):
 def use_flash():
     POSITION_PERMISSION = (216, 93)
     POSITION_FLASH = (720, 400)
+    import pyautogui as pg
 
     pg.click(*POSITION_PERMISSION)
     time.sleep(1)
