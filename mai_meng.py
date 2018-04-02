@@ -51,8 +51,9 @@ class MaiMeng:
     def login(self):
         login_url = get_current_url()
         clear_and_send_keys(".username-field > input:nth-child(2)", data["maimeng_username"])
+        time.sleep(3)
         clear_and_send_keys(".password-field > input:nth-child(2)", data["maimeng_password"])
-        time.sleep(2)
+        time.sleep(3)
         self.driver.find_element_by_css_selector(".login-btn").click()
         time.sleep(3)
         if get_current_url() != AUTH_OK_URL:
@@ -79,8 +80,17 @@ class MaiMeng:
             data['maimeng_comment'])
 
         # 漫画原稿
-        self.driver.find_element_by_css_selector(
-            '#create_chapter > div.container > div.inner-container > div:nth-child(5) > div > div.field-input > ul > li > img')
+        self.driver.execute_script('$("#create_chapter > div.container > div.inner-container > div:nth-child(5) > div > div.field-input > ul > li > img").click();')
+        img: str = ' '.join(data['qq_pics'])
+        os.system(f'D:/uploadImg.exe {img}')
+        loading = self.driver.find_element_by_css_selector('#create_chapter > div.container > div.inner-container > div:nth-child(5) > div > div.field-input > ul > div.el-loading-mask')
+        while loading.is_displayed():
+            time.sleep(2)
+        # 同意合同
+        self.driver.find_element_by_css_selector('#create_chapter > div:nth-child(2) > label > input[type="checkbox"]').click()
+        # 提交审核
+        # self.driver.find_element_by_css_selector('#create_chapter > ul > li:nth-child(4) > button').click()
+        time.sleep(100000)
 
 
 if __name__ == '__main__':
