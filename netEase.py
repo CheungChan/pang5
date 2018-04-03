@@ -37,6 +37,7 @@ class Upload:
                     driver.find_element_by_link_text(data['net_series_title']).click()
                     print(1)
                     time.sleep(1)
+                    import  pudb;pudb.set_trace()
                     driver.find_element_by_link_text('新增话').click()
                     print(2)
 
