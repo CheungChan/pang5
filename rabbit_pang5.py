@@ -82,8 +82,8 @@ def callback(ch, method, properties, body):
             if row[0]['is_publish_clock']:
                 data['net_d']= row[0]['publish_clock_time'].split(' ')[0]
                 data['net_h']=  row[0]['publish_clock_time'].split(' ')[1].split(':')[0]
-                m_num=row[0]['publish_clock_time'].split(' ')[1].split(':')[1]
-                if m_num <15 :
+                m_num=int(row[0]['publish_clock_time'].split(' ')[1].split(':')[1])
+                if m_num < 15 :
                     data['net_m'] =0
                 elif m_num >=15 and m_num < 30:
                     data['net_m'] = 15
@@ -125,5 +125,5 @@ def insert_rabbit(format):
 
 
 if __name__ == '__main__':
-    # insert_rabbit({'mysql_id': 6})
+    insert_rabbit({'mysql_id': 6})
     main()
