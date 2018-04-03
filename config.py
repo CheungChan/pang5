@@ -1,5 +1,11 @@
 import platform
-
+import os
+DEBUG = False
+profile_file = os.path.join(os.path.expanduser('~'), 'profile')
+if os.path.exists(profile_file):
+    with open(profile_file) as f:
+        if f.read().strip() == 'dev':
+            DEBUG = True
 USE_FACE = True
 CHROME_DRIVER_PATH = 'D:/chromedriver.exe' if platform.system() == 'Windows' else '/usr/bin/chromedriver'
 PHANTOMJS_PATH = ''
@@ -17,3 +23,19 @@ CHROME_ARG = [
     '--start-maximized',
 ]
 
+if DEBUG:
+    TEST_MYSQL_URL = 'mysql://10.10.6.2/pang5?user=develop&password=123-qwe&charset=utf8mb4'
+    RABBITMQ_HTOS = '10.10.6.5'
+    RABBITMQ_POST = 5672
+    RABBITMQ_USER = 'yanghao'
+    RABBITMQ_PASSWORD = '123456'
+else:
+    TEST_MYSQL_URL ='mysql://10.10.6.6/pang5?user=develop&password=123^%$-qwe&charset=utf8mb4'
+
+    RABBITMQ_HTOS = '10.10.10.3'
+    RABBITMQ_POST = 5000
+    RABBITMQ_USER = 'hgz'
+    RABBITMQ_PASSWORD = 'hgz123^%$'
+
+if __name__ == '__main__':
+    print(DEBUG)

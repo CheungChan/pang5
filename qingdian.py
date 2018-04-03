@@ -118,5 +118,12 @@ class Upload:
                 break
 
 
+
 if __name__ == '__main__':
     Upload().main()
+    # main()
+    # cookie=''
+    # a=[{'domain': '.aliyun.com', 'expiry': 1537866231, 'httpOnly': False, 'name': 'isg', 'path': '/', 'secure': False, 'value': 'BElJpFuBd0S8zQsw8IjrIZ0WWHxjPjVHEHVXVOu-xTBvMmlEM-ZNmDdjcJGEatUA'}, {'domain': 'm.aliyun.com', 'httpOnly': True, 'name': 'maliyun_temporary_console0', 'path': '/', 'secure': False, 'value': '1AbLByOMHeZe3G41KYd5WfDVZM%2F%2BFx3TkBVLPaURYXEKCZfzWY99kPfj1fL7J7L6EnVDiUZjbpSJFkVya0sLmaVzELFHpRqD72xzZuu1AJIH1lJwMktZWc6GRho0%2BMg5d8hQih%2Fw7WYg1ZpfXyMC5Q%3D%3D'}, {'domain': '.aliyun.com', 'expiry': 1837674229, 'httpOnly': False, 'name': 'cna', 'path': '/', 'secure': False, 'value': '5ZlDEzwdBn0CAXx+sEWhx56B'}, {'domain': '.aliyun.com', 'expiry': 1524906229.68761, 'httpOnly': False, 'name': 'aliyun_lang', 'path': '/', 'secure': False, 'value': 'zh'}, {'domain': '.aliyun.com', 'expiry': 1837674229.687547, 'httpOnly': False, 'name': 'aliyun_site', 'path': '/', 'secure': False, 'value': 'CN'}, {'domain': '.aliyun.com', 'expiry': 1524906229.687481, 'httpOnly': False, 'name': 'aliyun_country', 'path': '/', 'secure': False, 'value': 'CN'}, {'domain': '.aliyun.com', 'httpOnly': True, 'name': 'hssid', 'path': '/', 'secure': False, 'value': '17doOeWLfX61c9oK7ZZzqbA1'}, {'domain': '.aliyun.com', 'httpOnly': True, 'name': 'login_aliyunid_csrf', 'path': '/', 'secure': False, 'value': '_csrf_tk_1253022314229628'}, {'domain': 'm.aliyun.com', 'httpOnly': True, 'name': 'JSESSIONID', 'path': '/', 'secure': False, 'value': 'B1666FC1-T4UTYCNOTL36Q0P3SR263-F96LACFJ-YZ52'}, {'domain': '.aliyun.com', 'expiry': 1837674232.160001, 'httpOnly': False, 'name': 'cnz', 'path': '/', 'secure': False, 'value': '95lDE078S2wCAUWwfnzBzdQN'}, {'domain': '.aliyun.com', 'httpOnly': True, 'name': 'hsite', 'path': '/', 'secure': False, 'value': '6'}, {'domain': '.aliyun.com', 'httpOnly': True, 'name': 'login_aliyunid_pk', 'path': '/', 'secure': False, 'value': '1246497347206613'}, {'domain': '.aliyun.com', 'httpOnly': True, 'name': 'login_aliyunid_ticket', 'path': '/', 'secure': False, 'value': 'xmc8vVl3h5bQu*lSQ2l0HvqodDA_sVpof_BNTwUhTOoNC1ZBeeMfKJzxdnb95hYssNIZor6q7SCxRtgmGCbifG2Cd4ZWazmBdHI6sgXZqg4XFWQfyKpeu*0vCmV8s*MT5tJl3_1$$wxx5aHdWPouHfaV0'}, {'domain': '.aliyun.com', 'httpOnly': False, 'name': 'login_aliyunid', 'path': '/', 'secure': False, 'value': '"%E8%BD%BB%E7%82%B9%E4%BC%81%E4%B8%9A%E5%8F%B7"'}]
+    # for i in a:
+    #     cookie +=i['name']+':'+i['value']+";"
+    # print(cookie[:-1])

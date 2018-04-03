@@ -134,6 +134,9 @@ class Tencent:
             time.sleep(2)
             delete_eles = self.driver.find_elements_by_css_selector("a[do=delete]")
 
+def main():
+    Tencent().process()
+
 
 if __name__ == '__main__':
-    Tencent().process()
+    main()
