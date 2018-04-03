@@ -3,7 +3,7 @@ import os
 DEBUG = False
 profile_file = os.path.join(os.path.expanduser('~'), 'profile')
 if os.path.exists(profile_file):
-    with open(profile_file) as f:
+    with open(profile_file ,encoding='utf-8') as f:
         if f.read().strip() == 'dev':
             DEBUG = True
 USE_FACE = True
