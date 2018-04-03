@@ -37,7 +37,6 @@ class Upload:
                 driver.find_element_by_link_text(data['net_series_title']).click()
                 print(1)
                 time.sleep(1)
-                import  pudb;pudb.set_trace()
                 handles = driver.window_handles
                 time.sleep(100)
                 driver.switch_to_window(handles[-1])
