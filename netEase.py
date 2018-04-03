@@ -38,7 +38,7 @@ class Upload:
                 print(1)
                 time.sleep(1)
                 handles = driver.window_handles
-                time.sleep(100)
+                time.sleep(1)
                 driver.switch_to_window(handles[-1])
                 driver.find_element_by_link_text('新增话').click()
                 print(2)
