@@ -35,8 +35,11 @@ class Upload:
                 time.sleep(1)
                 try:
                     driver.find_element_by_link_text(data['net_series_title']).click()
+                    print(1)
                     time.sleep(1)
                     driver.find_element_by_link_text('新增话').click()
+                    print(2)
+
                     self.form(driver, data['net_title_text'], data['net_image_pic'], data['net_d'], data['net_h'],
                               data['net_m'], data['net-use-appoint'])
                 except:
