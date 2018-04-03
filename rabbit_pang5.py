@@ -60,15 +60,15 @@ def callback(ch, method, properties, body):
             userinfo = db.query('SELECT * FROM subscriber_platformsubscriber where id=:platform_subsriber_id_id',
                                 platform_subsriber_id_id=row[0]['platform_subsriber_id_id'])
         if userinfo[0]['platform'] == 'qingdian':
-            data['qingdian_username']=userinfo[0]['platform_username']
-            data['qingdian_password']=userinfo[0]['platform_password']
+            # data['qingdian_username']=userinfo[0]['platform_username']
+            # data['qingdian_password']=userinfo[0]['platform_password']
             data['qingdian_series']=row[0]['works_name']
             data['qingdian_title']=row[0]['chapter_name']
 
             qingdian.main()
         elif userinfo[0]['platform'] == 'qq':
-            # data['qq_username'] = userinfo[0]['platform_username']
-            # data['qq_password'] = userinfo[0]['platform_password']
+            data['qq_username'] = userinfo[0]['platform_username']
+            data['qq_password'] = userinfo[0]['platform_password']
             data['qq_comic_id-chapter'] = row[0]['works_id']
             data['qq_chapter_title'] = row[0]['chapter_name']
             data['qq_use-appoint'] = row[0]['is_publish_clock']
@@ -132,5 +132,5 @@ def insert_rabbit(format):
 
 
 if __name__ == '__main__':
-    insert_rabbit({'mysql_id': 8})
+    insert_rabbit({'mysql_id': 9})
     main()
