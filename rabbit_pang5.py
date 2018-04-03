@@ -99,9 +99,15 @@ def callback(ch, method, properties, body):
             logger.error('未知平台')
 
         if row[0]['cover_img']:
-            os.remove('./images/封面.jpg')
+            try:
+                os.remove('./images/封面.jpg')
+            except:
+                logger.error('no find')
         for i in  range(i):
-            os.remove('./images/章节/' + str(i+1) + '.jpg')
+            try:
+                os.remove('./images/章节/' + str(i+1) + '.jpg')
+            except:
+                logger.error('no find')
     # except Exception as e:
     #     print(e)
     #     logger.error('数据错误')

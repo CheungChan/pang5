@@ -25,7 +25,7 @@ class Upload:
                 add_cookie(COOKIE_DOMAIN, driver, COOKIE_FILE)
                 get(MANAGE_URL)
                 if get_current_url() != MANAGE_URL:
-                    self.mail_login(driver, login_username, login_password)
+                    self.mobile_login(driver, login_username, login_password)
                     # self.mobile_login(driver)
                     store_cookie(driver, COOKIE_FILE)
                     logger.info('登录成功')
@@ -33,11 +33,15 @@ class Upload:
                     # 继续中间页面
                     get('http://zz.manhua.163.com/')
                 time.sleep(1)
-                driver.find_element_by_link_text(data['net_series_title']).click()
-                time.sleep(1)
-                driver.find_element_by_link_text('新增话').click()
-                self.form(driver, data['net_title_text'], data['net_image_pic'], data['net_d'], data['net_h'],
-                          data['net_m'], data['net-use-appoint'])
+                try:
+                    driver.find_element_by_link_text(data['net_series_title']).click()
+                    time.sleep(1)
+                    driver.find_element_by_link_text('新增话').click()
+                    self.form(driver, data['net_title_text'], data['net_image_pic'], data['net_d'], data['net_h'],
+                              data['net_m'], data['net-use-appoint'])
+                except:
+                    logger.error('error')
+
 
     # 邮箱登录
     def mail_login(self, driver, login_username, login_password):
@@ -83,9 +87,13 @@ class Upload:
         username = driver.find_element_by_id('username')
         username.clear()
         username.send_keys(login_username)
+        time.sleep(3)
+
         password = driver.find_element_by_id('password')
         password.clear()
         password.send_keys(login_password)
+        time.sleep(3)
+
         driver.find_element_by_css_selector('form.login-classic > div:nth-child(8) > button').click()
 
         return driver
