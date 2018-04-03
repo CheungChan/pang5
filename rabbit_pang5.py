@@ -19,7 +19,7 @@ import config
 import netEase
 import qingdian
 import tencent
-
+from data import data
 db = records.Database(config.TEST_MYSQL_URL)
 
 
@@ -35,10 +35,10 @@ def main():
 
 
 def callback(ch, method, properties, body):
-    logger.info("[x] Received %r" % body)
-    rabbitInfo = json.loads(body)
+        logger.info("[x] Received %r" % body)
+        rabbitInfo = json.loads(body)
 
-    try:
+    # try:
         mysql_id = rabbitInfo['mysql_id']
         row = db.query('SELECT * FROM  chapter_chapter where id= :id_num', id_num=mysql_id)
         print(row[0])
@@ -58,22 +58,53 @@ def callback(ch, method, properties, body):
             # 平台
             userinfo = db.query('SELECT * FROM subscriber_platformsubscriber where id=:platform_subsriber_id_id',
                                 platform_subsriber_id_id=row[0]['platform_subsriber_id_id'])
-        # if userinfo[0]['platform'] == 'qingdian':
-        #     qingdian.main()
-        # elif userinfo[0]['platform'] == 'qq':
-        #     tencent.main()
-        # elif userinfo[0]['platform'] == 'netEase':
-        #     netEase.main()
-        # else:
-        #     logger.error('未知平台')
+        if userinfo[0]['platform'] == 'qingdian':
+            data['qingdian_username']=userinfo[0]['platform_username']
+            data['qingdian_password']=userinfo[0]['platform_password']
+            data['qingdian_series']=row[0]['works_name']
+            data['qingdian_title']=row[0]['chapter_name']
+
+            qingdian.main()
+        elif userinfo[0]['platform'] == 'qq':
+            data['qq_username'] = userinfo[0]['platform_username']
+            data['qq_password'] = userinfo[0]['platform_password']
+            data['qq_comic_id-chapter'] = row[0]['works_id']
+            data['qq_chapter_title'] = row[0]['chapter_name']
+            data['qq_use-appoint'] = row[0]['is_publish_clock']
+            data['qq_chapter-publish-time'] = row[0]['publish_clock_time']
+            tencent.main()
+        elif userinfo[0]['platform'] == 'netEase':
+            data['net_username']= userinfo[0]['platform_username']
+            data['net_password']= userinfo[0]['platform_password']
+            data['net-use-appoint']= row[0]['is_publish_clock']
+            data['net_series_title']= row[0]['works_name']
+            data['net_title_text']= row[0]['chapter_name']
+            if row[0]['is_publish_clock']:
+                data['net_d']= row[0]['publish_clock_time'].split(' ')[0]
+                data['net_h']=  row[0]['publish_clock_time'].split(' ')[1].split(':')[0]
+                m_num=row[0]['publish_clock_time'].split(' ')[1].split(':')[1]
+                if m_num <15 :
+                    data['net_m'] =0
+                elif m_num >=15 and m_num < 30:
+                    data['net_m'] = 15
+                elif m_num >=30 and m_num < 45:
+                    data['net_m'] = 30
+                elif m_num >=45 and m_num < 60:
+                    data['net_m'] = 45
+
+
+
+            netEase.main()
+        else:
+            logger.error('未知平台')
 
         if row[0]['cover_img']:
             os.remove('./images/封面.jpg')
         for i in  range(i):
             os.remove('./images/章节/' + str(i+1) + '.jpg')
-    except Exception as e:
-        print(e)
-        logger.error('数据错误')
+    # except Exception as e:
+    #     print(e)
+    #     logger.error('数据错误')
 
 
 def insert_rabbit(format):

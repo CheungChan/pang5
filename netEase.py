@@ -138,8 +138,11 @@ class Upload:
             logger.info('暂停,文件未上传完成')
             time.sleep(0.5)
 
+def main():
+    Upload().main()
+
 
 if __name__ == '__main__':
     # Upload_netEase = Upload()
     # Upload_netEase.main()
-    Upload().main()
+    main()

@@ -14,8 +14,10 @@ data = {
     'qq_pics': [f'{os.path.join(pwd,"images","章节",d)}' for d in get_sorted_imgs(os.path.join(pwd, 'images', '章节'))],
 
     # 网易
-    'net_username': 'qingdianmanhua@163.com',
-    'net_password': 'qingdian0908',
+    # 'net_username': 'qingdianmanhua@163.com',
+    # 'net_password': 'qingdian0908',
+    'net_username': '18101038354',
+    'net_password': 'qingdian',
     'net-use-appoint': True,
     'net_series_title': '万物皆娘',
     'net_title_text': '喝醉的妹子竟然扯开了衣服',
