@@ -16,10 +16,11 @@ from PIL import Image
 from logzero import logger
 
 import config
+
+from data import data
 import netEase
 import qingdian
 import tencent
-from data import data
 db = records.Database(config.TEST_MYSQL_URL)
 
 
@@ -66,8 +67,8 @@ def callback(ch, method, properties, body):
 
             qingdian.main()
         elif userinfo[0]['platform'] == 'qq':
-            data['qq_username'] = userinfo[0]['platform_username']
-            data['qq_password'] = userinfo[0]['platform_password']
+            # data['qq_username'] = userinfo[0]['platform_username']
+            # data['qq_password'] = userinfo[0]['platform_password']
             data['qq_comic_id-chapter'] = row[0]['works_id']
             data['qq_chapter_title'] = row[0]['chapter_name']
             data['qq_use-appoint'] = row[0]['is_publish_clock']
@@ -131,5 +132,5 @@ def insert_rabbit(format):
 
 
 if __name__ == '__main__':
-    insert_rabbit({'mysql_id': 6})
+    insert_rabbit({'mysql_id': 8})
     main()
