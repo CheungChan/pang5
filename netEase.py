@@ -40,7 +40,7 @@ class Upload:
                 handles = driver.window_handles
                 time.sleep(1)
                 driver.switch_to_window(handles[-1])
-                driver.find_element_by_link_text('新增话').click()
+                driver.find_element_by_css_selector('#panel1 > div > div > a').click()
                 print(2)
 
                 self.form(driver, data['net_title_text'], data['net_image_pic'], data['net_d'], data['net_h'],
