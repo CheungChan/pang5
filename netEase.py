@@ -38,6 +38,9 @@ class Upload:
                     print(1)
                     time.sleep(1)
                     import  pudb;pudb.set_trace()
+                    handles = driver.window_handles
+
+                    driver.switch_to_window(handles[-1])
                     driver.find_element_by_link_text('新增话').click()
                     print(2)
 
