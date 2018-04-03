@@ -40,6 +40,8 @@ class Upload:
                 handles = driver.window_handles
                 time.sleep(1)
                 driver.switch_to_window(handles[-1])
+                js = "window.scrollTo(0, document.body.scrollHeight)"
+                driver.execute_script(js)
                 driver.find_element_by_css_selector('#panel1 > div > div > a').click()
                 print(2)
 
