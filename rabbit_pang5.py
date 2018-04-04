@@ -17,11 +17,6 @@ from logzero import logger
 
 import config
 
-from data import data
-import netEase
-import qingdian
-import tencent
-import mai_meng
 
 db = records.Database(config.TEST_MYSQL_URL)
 
@@ -45,6 +40,7 @@ def callback(ch, method, properties, body):
     rabbitInfo = json.loads(body)
 
     try:
+
         mysql_id = rabbitInfo['mysql_id']
         row = db.query('SELECT * FROM  chapter_chapter where id= :id_num', id_num=mysql_id)
         print(row[0])
@@ -61,8 +57,13 @@ def callback(ch, method, properties, body):
             file.write(content)
             Image.open(file).convert("RGB").save(os.path.join(pwd, "images", "章节", str(i) + ".jpg"))
             i += 1
+        from data import data
+        import netEase
+        import qingdian
+        import tencent
+        import mai_meng
             # 平台
-            userinfo = db.query('SELECT * FROM subscriber_platformsubscriber where id=:platform_subsriber_id_id',
+        userinfo = db.query('SELECT * FROM subscriber_platformsubscriber where id=:platform_subsriber_id_id',
                                 platform_subsriber_id_id=row[0]['platform_subsriber_id_id'])
         if userinfo[0]['platform'] == 'qingdian':
             data['qingdian_username'] = userinfo[0]['platform_username']
@@ -145,6 +146,5 @@ def insert_rabbit(format):
 
 
 if __name__ == '__main__':
-    # insert_rabbit({'mysql_id': 15})
-
     main()
+
