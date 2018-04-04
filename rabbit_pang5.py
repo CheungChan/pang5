@@ -61,8 +61,8 @@ def callback(ch, method, properties, body):
             userinfo = db.query('SELECT * FROM subscriber_platformsubscriber where id=:platform_subsriber_id_id',
                                 platform_subsriber_id_id=row[0]['platform_subsriber_id_id'])
         if userinfo[0]['platform'] == 'qingdian':
-            # data['qingdian_username']=userinfo[0]['platform_username']
-            # data['qingdian_password']=userinfo[0]['platform_password']
+            data['qingdian_username']=userinfo[0]['platform_username']
+            data['qingdian_password']=userinfo[0]['platform_password']
             data['qingdian_series']=row[0]['works_name']
             data['qingdian_title']=row[0]['chapter_name']
 
@@ -135,6 +135,6 @@ def insert_rabbit(format):
 
 
 if __name__ == '__main__':
-    insert_rabbit({'mysql_id': 10})
+    # insert_rabbit({'mysql_id': 10})
     main()
     # print(os.path.join(pwd,"images","章节","aa.jpg"))
