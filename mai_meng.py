@@ -97,6 +97,7 @@ class MaiMeng:
         self.driver.find_element_by_css_selector(
             '#create_chapter > div:nth-child(2) > label > input[type="checkbox"]').click()
         # 提交审核
+        time.sleep(2)
         self.driver.find_element_by_css_selector('#create_chapter > ul > li:nth-child(4) > button').click()
         time.sleep(100000)
 
