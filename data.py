@@ -43,7 +43,7 @@ data = {
     'maimeng_series': '为什么救赎',
     'maimeng_chapter': os.path.join(pwd, 'series', '封面.jpg'),
     'maimeng_title': '喝醉的妹子竟然扯 开了衣服',
-    'maimeng_desp': '简介',
+    'maimeng_desp': '',
     'maimeng_comment':'无特殊要求',
     'maimeng_publish_time': '2019-10-10 10:17:17',
     'maimeng_pic': [f'{os.path.join(pwd,"pic" ,d)}' for d in get_sorted_imgs(os.path.join(pwd, 'pic'))],
