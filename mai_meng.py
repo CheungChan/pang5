@@ -53,7 +53,6 @@ class MaiMeng:
     def login(self):
         login_url = get_current_url()
         clear_and_send_keys(".username-field > input:nth-child(2)", data["maimeng_username"])
-        time.sleep(3)
         clear_and_send_keys(".password-field > input:nth-child(2)", data["maimeng_password"])
         time.sleep(3)
         self.driver.find_element_by_css_selector(".login-btn").click()
