@@ -99,7 +99,8 @@ class Tencent:
         # 上传章节内容
         scroll_to()
         self.driver.execute_script('document.querySelectorAll("#button_main")[0].style.display="block";')
-        POSOTION_GREEN_BUTTON = (1599, 749)
+        # POSOTION_GREEN_BUTTON = (1599, 749)
+        POSOTION_GREEN_BUTTON = (500, 217)
         click_by_pg(*POSOTION_GREEN_BUTTON)
         # 1599 749
         img: str = ' '.join(data['qq_pics'])
