@@ -288,8 +288,10 @@ def select_value(css, value):
 
 
 def use_flash():
-    POSITION_PERMISSION = (216, 93)
-    POSITION_FLASH = (720, 400)
+    # POSITION_PERMISSION = (216, 93)
+    POSITION_PERMISSION = (109, 48)
+    # POSITION_FLASH = (720, 400)
+    POSITION_FLASH = (360, 166)
     import pyautogui as pg
 
     pg.click(*POSITION_PERMISSION)
