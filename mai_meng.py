@@ -100,7 +100,7 @@ class MaiMeng:
             '#create_chapter > div:nth-child(2) > label > input[type="checkbox"]').click()
         # 提交审核
         time.sleep(2)
-        click('#create_chapter > ul > li:nth-child(4) > button')
+        click('#create_chapter > ul > li:nth-child(3) > button')
         time.sleep(100000)
 
 
