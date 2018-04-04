@@ -291,7 +291,7 @@ def use_flash():
     # POSITION_PERMISSION = (216, 93)
     POSITION_PERMISSION = (109, 48)
     # POSITION_FLASH = (720, 400)
-    POSITION_FLASH = (360, 212)
+    POSITION_FLASH = (360, 200)
     import pyautogui as pg
 
     pg.click(*POSITION_PERMISSION)
