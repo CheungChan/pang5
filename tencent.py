@@ -43,6 +43,7 @@ class Tencent:
                 # self.driver.find_element_by_css_selector(".h_btn_section").click()
 
                 # 点击新建章节
+                time.sleep(2)
                 self.driver.find_element_by_link_text("新建章节").click()
 
                 self.publish()
