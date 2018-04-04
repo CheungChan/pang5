@@ -16,7 +16,7 @@ CREATE_CHAPTER_URL = 'http://author.maimengjun.com/submission/create_chapter'
 
 class MaiMeng:
     def __init__(self):
-        pass
+        logger.info(data)
 
     def process(self):
         with open_driver(cookie_domain=COOKIE_DOMAIN,
