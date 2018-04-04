@@ -66,8 +66,10 @@ class Upload:
             time.sleep(1)
             # 提示上传
             # 上传多个文件
+
             for i in dir_name:
                 file = driver.find_element_by_css_selector('#add-section-img > div:nth-child(2) > input')
+                logger.info('上传图片'+i)
                 file.send_keys(i)
 
             driver.find_element_by_css_selector('.show-dialog').click()

@@ -134,5 +134,5 @@ def insert_rabbit(format):
 
 
 if __name__ == '__main__':
-    # insert_rabbit({'mysql_id': 9})
+    insert_rabbit({'mysql_id': 10})
     main()
