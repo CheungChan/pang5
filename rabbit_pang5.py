@@ -145,6 +145,6 @@ def insert_rabbit(format):
 
 
 if __name__ == '__main__':
-    insert_rabbit({'mysql_id': 14})
+    # insert_rabbit({'mysql_id': 14})
     main()
     # print(os.path.join(pwd,"images","章节","aa.jpg"))
