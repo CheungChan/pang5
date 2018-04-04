@@ -103,6 +103,7 @@ def callback(ch, method, properties, body):
             data['maimeng_password'] = userinfo[0]['platform_password']
             data['maimeng_series'] = row[0]['works_name']
             data['maimeng_title'] = row[0]['chapter_name']
+            data['maimeng_publish_time'] = row[0]['publish_clock_time'].split(' ')[0]
         else:
             logger.error('未知平台')
 
