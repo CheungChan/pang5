@@ -92,6 +92,7 @@ class MaiMeng:
             '#create_chapter > div.container > div.inner-container > div:nth-child(5) > div > div.field-input > ul > div.el-loading-mask')
         while loading.is_displayed():
             time.sleep(2)
+        scroll_to()
         # 同意合同
         self.driver.find_element_by_css_selector(
             '#create_chapter > div:nth-child(2) > label > input[type="checkbox"]').click()
