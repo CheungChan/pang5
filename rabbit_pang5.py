@@ -70,7 +70,7 @@ def callback(ch, method, properties, body):
         elif userinfo[0]['platform'] == 'qq':
             data['qq_username'] = userinfo[0]['platform_username']
             data['qq_password'] = userinfo[0]['platform_password']
-            data['qq_comic_id-chapter'] = row[0]['works_id']
+            data['qq_comic_id'] = row[0]['works_id']
             data['qq_chapter_title'] = row[0]['chapter_name']
             data['qq_use-appoint'] = row[0]['is_publish_clock']
             data['qq_chapter-publish-time'] = row[0]['publish_clock_time']
@@ -135,6 +135,6 @@ def insert_rabbit(format):
 
 
 if __name__ == '__main__':
-    # insert_rabbit({'mysql_id': 10})
+    insert_rabbit({'mysql_id': 12})
     main()
     # print(os.path.join(pwd,"images","章节","aa.jpg"))
