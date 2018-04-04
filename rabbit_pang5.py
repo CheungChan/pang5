@@ -35,11 +35,11 @@ def main():
 
 
 def callback(ch, method, properties, body):
-    i = 0
-    logger.info("[x] Received %r" % body)
-    rabbitInfo = json.loads(body)
+        i = 0
+        logger.info("[x] Received %r" % body)
+        rabbitInfo = json.loads(body)
 
-    try:
+    # try:
 
         mysql_id = rabbitInfo['mysql_id']
         row = db.query('SELECT * FROM  chapter_chapter where id= :id_num', id_num=mysql_id)
@@ -111,10 +111,10 @@ def callback(ch, method, properties, body):
         else:
             logger.error('未知平台')
 
-    except Exception as e:
-        logger.error(e)
-        logger.error('数据错误')
-    finally:
+    # except Exception as e:
+    #     logger.error(e)
+    #     logger.error('数据错误')
+    # finally:
         try:
             os.remove('./images/封面.jpg')
         except:
@@ -145,4 +145,5 @@ def insert_rabbit(format):
 
 
 if __name__ == '__main__':
-    main()
+    insert_rabbit({'mysql_id': 15})
+
