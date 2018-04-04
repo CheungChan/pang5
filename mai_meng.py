@@ -5,7 +5,7 @@ from logzero import logger
 
 from data import data
 from utils import open_driver, track_alert, get, get_current_url, add_cookie, store_cookie, clear_and_send_keys, \
-    scroll_to, click
+    scroll_to, click,click_by_actionchains
 
 COOKIE_DOMAIN = '.author.maimengjun.com'
 COOKIE_FILE = f'cookies/{COOKIE_DOMAIN[1:]}_{data["maimeng_username"]}.cookie.json'
@@ -100,7 +100,7 @@ class MaiMeng:
             '#create_chapter > div:nth-child(2) > label > input[type="checkbox"]').click()
         # 提交审核
         time.sleep(2)
-        click('ul.submit > li:nth-child(3) > button.confirm-btn')
+        click_by_actionchains('ul.submit > li:nth-child(3) > button.confirm-btn')
         time.sleep(100000)
 
 
