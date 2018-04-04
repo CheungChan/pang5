@@ -21,10 +21,13 @@ from data import data
 import netEase
 import qingdian
 import tencent
+import mai_meng
+
 db = records.Database(config.TEST_MYSQL_URL)
 
-
 pwd = os.path.abspath(os.curdir)
+
+
 def main():
     credentials = pika.PlainCredentials(config.RABBITMQ_USER, config.RABBITMQ_PASSWORD)
     connection = pika.BlockingConnection(
@@ -37,7 +40,7 @@ def main():
 
 
 def callback(ch, method, properties, body):
-    i=0
+    i = 0
     logger.info("[x] Received %r" % body)
     rabbitInfo = json.loads(body)
 
@@ -56,16 +59,16 @@ def callback(ch, method, properties, body):
             content = requests.get('http://pang5web.oss-cn-beijing.aliyuncs.com/' + img).content
             file = BytesIO()
             file.write(content)
-            Image.open(file).convert("RGB").save(os.path.join(pwd,"images","章节",str(i) + ".jpg") )
+            Image.open(file).convert("RGB").save(os.path.join(pwd, "images", "章节", str(i) + ".jpg"))
             i += 1
             # 平台
             userinfo = db.query('SELECT * FROM subscriber_platformsubscriber where id=:platform_subsriber_id_id',
                                 platform_subsriber_id_id=row[0]['platform_subsriber_id_id'])
         if userinfo[0]['platform'] == 'qingdian':
-            data['qingdian_username']=userinfo[0]['platform_username']
-            data['qingdian_password']=userinfo[0]['platform_password']
-            data['qingdian_series']=row[0]['works_name']
-            data['qingdian_title']=row[0]['chapter_name']
+            data['qingdian_username'] = userinfo[0]['platform_username']
+            data['qingdian_password'] = userinfo[0]['platform_password']
+            data['qingdian_series'] = row[0]['works_name']
+            data['qingdian_title'] = row[0]['chapter_name']
 
             qingdian.main()
         elif userinfo[0]['platform'] == 'qq':
@@ -77,24 +80,24 @@ def callback(ch, method, properties, body):
             data['qq_chapter-publish-time'] = row[0]['publish_clock_time']
             tencent.main()
         elif userinfo[0]['platform'] == 'netEase':
-            data['net_username']= userinfo[0]['platform_username']
-            data['net_password']= userinfo[0]['platform_password']
-            data['net-use-appoint']= row[0]['is_publish_clock']
-            data['net_series_title']= row[0]['works_name']
-            data['net_title_text']= row[0]['chapter_name']
-            data['net-login']= userinfo[0]['platform_login_type']
+            data['net_username'] = userinfo[0]['platform_username']
+            data['net_password'] = userinfo[0]['platform_password']
+            data['net-use-appoint'] = row[0]['is_publish_clock']
+            data['net_series_title'] = row[0]['works_name']
+            data['net_title_text'] = row[0]['chapter_name']
+            data['net-login'] = userinfo[0]['platform_login_type']
 
             if row[0]['is_publish_clock']:
-                data['net_d']= row[0]['publish_clock_time'].split(' ')[0]
-                data['net_h']=  row[0]['publish_clock_time'].split(' ')[1].split(':')[0]
-                m_num=int(row[0]['publish_clock_time'].split(' ')[1].split(':')[1])
-                if m_num < 15 :
-                    data['net_m'] =0
-                elif m_num >=15 and m_num < 30:
+                data['net_d'] = row[0]['publish_clock_time'].split(' ')[0]
+                data['net_h'] = row[0]['publish_clock_time'].split(' ')[1].split(':')[0]
+                m_num = int(row[0]['publish_clock_time'].split(' ')[1].split(':')[1])
+                if m_num < 15:
+                    data['net_m'] = 0
+                elif m_num >= 15 and m_num < 30:
                     data['net_m'] = 15
-                elif m_num >=30 and m_num < 45:
+                elif m_num >= 30 and m_num < 45:
                     data['net_m'] = 30
-                elif m_num >=45 and m_num < 60:
+                elif m_num >= 45 and m_num < 60:
                     data['net_m'] = 45
 
             netEase.main()
@@ -104,6 +107,7 @@ def callback(ch, method, properties, body):
             data['maimeng_series'] = row[0]['works_name']
             data['maimeng_title'] = row[0]['chapter_name']
             data['maimeng_publish_time'] = row[0]['publish_clock_time'].split(' ')[0]
+            mai_meng.main()
         else:
             logger.error('未知平台')
 
@@ -116,9 +120,9 @@ def callback(ch, method, properties, body):
         except:
             logger.error('no find')
 
-        for num in  range(i):
+        for num in range(i):
             try:
-                os.remove('./images/章节/' + str(num+1) + '.jpg')
+                os.remove('./images/章节/' + str(num + 1) + '.jpg')
             except:
                 logger.error('no find')
 
@@ -141,6 +145,6 @@ def insert_rabbit(format):
 
 
 if __name__ == '__main__':
-    # insert_rabbit({'mysql_id': 12})
+    insert_rabbit({'mysql_id': 14})
     main()
     # print(os.path.join(pwd,"images","章节","aa.jpg"))

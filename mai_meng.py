@@ -5,7 +5,7 @@ from logzero import logger
 
 from data import data
 from utils import open_driver, track_alert, get, get_current_url, add_cookie, store_cookie, clear_and_send_keys, \
-    scroll_to, click,click_by_actionchains
+    scroll_to, click, click_by_actionchains
 
 COOKIE_DOMAIN = '.author.maimengjun.com'
 COOKIE_FILE = f'cookies/{COOKIE_DOMAIN[1:]}_{data["maimeng_username"]}.cookie.json'
@@ -103,5 +103,9 @@ class MaiMeng:
         time.sleep(100000)
 
 
-if __name__ == '__main__':
+def main():
     MaiMeng().process()
+
+
+if __name__ == '__main__':
+    main()
