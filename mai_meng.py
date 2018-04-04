@@ -87,7 +87,7 @@ class MaiMeng:
         scroll_to(300)
         self.driver.find_element_by_css_selector(
             '#create_chapter > div.container > div.inner-container > div:nth-child(5) > div > div.field-input > ul > li > img').click()
-        img: str = ' '.join(data['qq_pics'])
+        img: str = ' '.join(data['maimeng_pic'])
         os.system(f'D:/uploadImg.exe {img}')
         loading = self.driver.find_element_by_css_selector(
             '#create_chapter > div.container > div.inner-container > div:nth-child(5) > div > div.field-input > ul > div.el-loading-mask')
