@@ -104,7 +104,7 @@ class MaiMeng:
         # 提交审核
         time.sleep(2)
         click_by_actionchains('ul.submit > li:nth-child(3) > button.confirm-btn')
-        time.sleep(100000)
+        time.sleep(3)
 
 
 def main():
