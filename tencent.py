@@ -60,6 +60,7 @@ class Tencent:
         self.driver.find_element_by_css_selector("#login_button").click()
         time.sleep(3)
         if get_current_url() != AUTH_OK_URL:
+            logger.info(get_current_url())
             input('请处理登录异常，之后按回车键')
         return get_current_url() != login_url
 
