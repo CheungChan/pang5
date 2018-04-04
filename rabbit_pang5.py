@@ -8,7 +8,7 @@
 import json
 import os
 from io import BytesIO
-
+import traceback
 import pika
 import records
 import requests
@@ -36,10 +36,10 @@ def main():
 
 
 def callback(ch, method, properties, body):
-        logger.info("[x] Received %r" % body)
-        rabbitInfo = json.loads(body)
+    logger.info("[x] Received %r" % body)
+    rabbitInfo = json.loads(body)
 
-    # try:
+    try:
         mysql_id = rabbitInfo['mysql_id']
         row = db.query('SELECT * FROM  chapter_chapter where id= :id_num', id_num=mysql_id)
         print(row[0])
@@ -111,9 +111,10 @@ def callback(ch, method, properties, body):
                 os.remove('./images/章节/' + str(i+1) + '.jpg')
             except:
                 logger.error('no find')
-    # except Exception as e:
-    #     print(e)
-    #     logger.error('数据错误')
+    except Exception as e:
+        print(e)
+        traceback.print_stack()
+        logger.error('数据错误')
 
 
 def insert_rabbit(format):
