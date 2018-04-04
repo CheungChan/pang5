@@ -43,7 +43,6 @@ def callback(ch, method, properties, body):
 
         mysql_id = rabbitInfo['mysql_id']
         row = db.query('SELECT * FROM  chapter_chapter where id= :id_num', id_num=mysql_id)
-        print(row[0])
         # 下载封面
         if row[0]['cover_img']:
             content = requests.get('http://pang5web.oss-cn-beijing.aliyuncs.com/' + row[0]['cover_img']).content
@@ -113,7 +112,7 @@ def callback(ch, method, properties, body):
             logger.error('未知平台')
 
     except Exception as e:
-        print(e)
+        logger.error(e)
         logger.error('数据错误')
     finally:
         try:
@@ -147,4 +146,3 @@ def insert_rabbit(format):
 
 if __name__ == '__main__':
     main()
-
