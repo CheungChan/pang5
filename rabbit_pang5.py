@@ -115,17 +115,17 @@ def callback(ch, method, properties, body):
     except Exception as e:
         print(e)
         logger.error('数据错误')
-    # finally:
-    #     try:
-    #         os.remove('./images/封面.jpg')
-    #     except:
-    #         logger.error('no find')
-    #
-    #     for num in range(i):
-    #         try:
-    #             os.remove('./images/章节/' + str(num + 1) + '.jpg')
-    #         except:
-    #             logger.error('no find')
+    finally:
+        try:
+            os.remove('./images/封面.jpg')
+        except:
+            logger.error('no find')
+
+        for num in range(i):
+            try:
+                os.remove('./images/章节/' + str(num + 1) + '.jpg')
+            except:
+                logger.error('no find')
 
 
 def insert_rabbit(format):
