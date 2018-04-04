@@ -80,6 +80,8 @@ def callback(ch, method, properties, body):
             data['net-use-appoint']= row[0]['is_publish_clock']
             data['net_series_title']= row[0]['works_name']
             data['net_title_text']= row[0]['chapter_name']
+            data['net-login']= userinfo[0]['platform_login_type']
+
             if row[0]['is_publish_clock']:
                 data['net_d']= row[0]['publish_clock_time'].split(' ')[0]
                 data['net_h']=  row[0]['publish_clock_time'].split(' ')[1].split(':')[0]
