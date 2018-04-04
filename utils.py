@@ -273,7 +273,7 @@ def get_sorted_imgs(dir_name):
     """
     l = os.listdir(dir_name)
     l = list(filter(lambda x: not x.startswith('.'), l))
-    return sorted(l, key=lambda x: x[:-4])
+    return sorted(l, key=lambda x: int(x[x.rindex('/') + 1:-4]))
 
 
 def clear_and_send_keys(css, value):
