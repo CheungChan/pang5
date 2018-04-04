@@ -308,6 +308,6 @@ def use_flash():
     pg.keyUp('f5')
 
 
-def scroll_to():
-    js = "window.scrollTo(0, document.body.scrollHeight)"
+def scroll_to(height="document.body.scrollHeight"):
+    js = f"window.scrollTo(0, {height})"
     g_driver.execute_script(js)

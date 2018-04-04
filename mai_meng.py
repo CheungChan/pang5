@@ -5,7 +5,7 @@ from utils import open_driver, track_alert, get, get_current_url, add_cookie, st
     use_flash, scroll_to, click_by_pg
 from data import data
 
-COOKIE_DOMAIN = 'author.maimengjun.com'
+COOKIE_DOMAIN = '.author.maimengjun.com'
 COOKIE_FILE = f'cookies/{COOKIE_DOMAIN[1:]}_{data["maimeng_username"]}.cookie.json'
 MANAGE_URL = 'http://author.maimengjun.com/submission'
 AUTH_OK_URL = 'http://author.maimengjun.com/submission'
@@ -74,20 +74,27 @@ class MaiMeng:
             self.driver.find_element_by_css_selector(
                 '#create_chapter > div.container > div.inner-container > div:nth-child(3) > div > div.field-input > div > input').send_keys(
                 data['maimeng_publish_time'])
+        # 点击确定
+        self.driver.find_element_by_css_selector(
+            'button.el-button.el-picker-panel__link-btn.el-button--default.el-button--mini.is-plain > span').click()
         # 备注
         self.driver.find_element_by_css_selector(
             '#create_chapter > div.container > div.inner-container > div:nth-child(4) > div > div.field-input > textarea').send_keys(
             data['maimeng_comment'])
 
         # 漫画原稿
-        self.driver.execute_script('document.querySelectorAll("#create_chapter > div.container > div.inner-container > div:nth-child(5) > div > div.field-input > ul > li > img").click();')
+        scroll_to(300)
+        self.driver.find_element_by_css_selector(
+            '#create_chapter > div.container > div.inner-container > div:nth-child(5) > div > div.field-input > ul > li > img').click()
         img: str = ' '.join(data['qq_pics'])
         os.system(f'D:/uploadImg.exe {img}')
-        loading = self.driver.find_element_by_css_selector('#create_chapter > div.container > div.inner-container > div:nth-child(5) > div > div.field-input > ul > div.el-loading-mask')
+        loading = self.driver.find_element_by_css_selector(
+            '#create_chapter > div.container > div.inner-container > div:nth-child(5) > div > div.field-input > ul > div.el-loading-mask')
         while loading.is_displayed():
             time.sleep(2)
         # 同意合同
-        self.driver.find_element_by_css_selector('#create_chapter > div:nth-child(2) > label > input[type="checkbox"]').click()
+        self.driver.find_element_by_css_selector(
+            '#create_chapter > div:nth-child(2) > label > input[type="checkbox"]').click()
         # 提交审核
         # self.driver.find_element_by_css_selector('#create_chapter > ul > li:nth-child(4) > button').click()
         time.sleep(100000)

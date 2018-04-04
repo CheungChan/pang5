@@ -30,6 +30,8 @@ class Tencent:
 
                 # 处理登录
                 add_cookie(COOKIE_DOMAIN, driver, COOKIE_FILE)
+                #driver.get('http://www.baidu.com')
+                time.sleep(5)
                 get(MANAGE_URL)
                 if get_current_url() != MANAGE_URL:
                     if not self.login():
@@ -39,7 +41,7 @@ class Tencent:
                 logger.info('登录成功')
 
                 # 点击章节管理
-                get(f'http://ac.qq.com/MyComic/chapterList/id/{data["qq_comic_id"]}')
+                driver.get(f'http://ac.qq.com/MyComic/chapterList/id/{data["qq_comic_id"]}')
                 # self.driver.find_element_by_css_selector(".h_btn_section").click()
 
                 # 点击新建章节

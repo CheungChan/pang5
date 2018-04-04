@@ -4,9 +4,9 @@ from utils import get_sorted_imgs
 pwd = os.path.abspath(os.curdir)
 data = {
     # QQ动漫
-    'qq_username': "3389209527",
-    'qq_password': "qingdian88",
-    'qq_comic_id': '629518',
+    'qq_username': "1042521247",
+    'qq_password': "qingdian171717",
+    'qq_comic_id': '632099',
     'qq_use-appoint': True,
     'qq_chapter-publish-time': '2018-03-24 14:00:00',
     'qq_chapter_title': '喝醉的妹子竟然扯开了衣服',
