@@ -106,7 +106,7 @@ def callback(ch, method, properties, body):
             data['maimeng_password'] = userinfo[0]['platform_password']
             data['maimeng_series'] = row[0]['works_name']
             data['maimeng_title'] = row[0]['chapter_name']
-            data['maimeng_publish_time'] = row[0]['publish_clock_time'].split(' ')[0]
+            data['maimeng_publish_time'] = row[0]['publish_clock_time']
             mai_meng.main()
         else:
             logger.error('未知平台')
@@ -114,17 +114,17 @@ def callback(ch, method, properties, body):
     except Exception as e:
         print(e)
         logger.error('数据错误')
-    finally:
-        try:
-            os.remove('./images/封面.jpg')
-        except:
-            logger.error('no find')
-
-        for num in range(i):
-            try:
-                os.remove('./images/章节/' + str(num + 1) + '.jpg')
-            except:
-                logger.error('no find')
+    # finally:
+    #     try:
+    #         os.remove('./images/封面.jpg')
+    #     except:
+    #         logger.error('no find')
+    #
+    #     for num in range(i):
+    #         try:
+    #             os.remove('./images/章节/' + str(num + 1) + '.jpg')
+    #         except:
+    #             logger.error('no find')
 
 
 def insert_rabbit(format):
@@ -145,6 +145,6 @@ def insert_rabbit(format):
 
 
 if __name__ == '__main__':
-    # insert_rabbit({'mysql_id': 14})
+    # insert_rabbit({'mysql_id': 15})
+
     main()
-    # print(os.path.join(pwd,"images","章节","aa.jpg"))
