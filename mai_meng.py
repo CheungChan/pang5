@@ -75,9 +75,9 @@ class MaiMeng:
             self.driver.find_element_by_css_selector(
                 '#create_chapter > div.container > div.inner-container > div:nth-child(3) > div > div.field-input > div > input').send_keys(
                 data['maimeng_publish_time'])
-        # 点击确定
-        self.driver.find_element_by_css_selector(
-            'button.el-button.el-picker-panel__link-btn.el-button--default.el-button--mini.is-plain > span').click()
+            # 点击确定
+            self.driver.find_element_by_css_selector(
+                'button.el-button.el-picker-panel__link-btn.el-button--default.el-button--mini.is-plain > span').click()
         # 备注
         self.driver.find_element_by_css_selector(
             '#create_chapter > div.container > div.inner-container > div:nth-child(4) > div > div.field-input > textarea').send_keys(
