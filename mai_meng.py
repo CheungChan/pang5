@@ -80,7 +80,7 @@ class MaiMeng:
             data['maimeng_comment'])
 
         # 漫画原稿
-        self.driver.execute_script('$("#create_chapter > div.container > div.inner-container > div:nth-child(5) > div > div.field-input > ul > li > img").click();')
+        self.driver.execute_script('document.querySelectorAll("#create_chapter > div.container > div.inner-container > div:nth-child(5) > div > div.field-input > ul > li > img").click();')
         img: str = ' '.join(data['qq_pics'])
         os.system(f'D:/uploadImg.exe {img}')
         loading = self.driver.find_element_by_css_selector('#create_chapter > div.container > div.inner-container > div:nth-child(5) > div > div.field-input > ul > div.el-loading-mask')

@@ -25,8 +25,12 @@ class Upload:
                 add_cookie(COOKIE_DOMAIN, driver, COOKIE_FILE)
                 get(MANAGE_URL)
                 if get_current_url() != MANAGE_URL:
-                    self.mobile_login(driver, login_username, login_password)
+                    if data['net-login']=='mobile':
+                        self.mobile_login(driver, login_username, login_password)
+                    elif data['net-login']=='mail':
+                        self.mail_login(driver, login_username, login_password)
                     # self.mobile_login(driver)
+
                     store_cookie(driver, COOKIE_FILE)
                     logger.info('登录成功')
                     # 登录

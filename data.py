@@ -19,6 +19,7 @@ data = {
     'net_username': '18101038354',
     'net_password': 'qingdian',
     'net-use-appoint': True,
+    'net-login': 'mobile',
     'net_series_title': '万物皆娘',
     'net_title_text': '喝醉的妹子竟然扯开了衣服',
     'net_d': '2018-04-02',
