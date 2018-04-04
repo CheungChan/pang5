@@ -24,6 +24,7 @@ import tencent
 db = records.Database(config.TEST_MYSQL_URL)
 
 
+pwd = os.path.abspath(os.curdir)
 def main():
     credentials = pika.PlainCredentials(config.RABBITMQ_USER, config.RABBITMQ_PASSWORD)
     connection = pika.BlockingConnection(
@@ -54,7 +55,7 @@ def callback(ch, method, properties, body):
             content = requests.get('http://pang5web.oss-cn-beijing.aliyuncs.com/' + img).content
             file = BytesIO()
             file.write(content)
-            Image.open(file).convert("RGB").save('./images/章节/' + str(i) + ".jpg")
+            Image.open(file).convert("RGB").save(os.path.join(pwd,"images","章节",str(i) + ".jpg") )
             i += 1
             # 平台
             userinfo = db.query('SELECT * FROM subscriber_platformsubscriber where id=:platform_subsriber_id_id',
@@ -136,3 +137,4 @@ def insert_rabbit(format):
 if __name__ == '__main__':
     insert_rabbit({'mysql_id': 10})
     main()
+    # print(os.path.join(pwd,"images","章节","aa.jpg"))
