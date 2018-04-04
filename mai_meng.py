@@ -90,7 +90,9 @@ class MaiMeng:
         img: str = ' '.join(data['maimeng_pic'])
         logger.info(data)
         logger.info(img)
-        os.system(f'D:/uploadImg.exe {img}')
+        cmd = f'D:/uploadImg.exe {img}'
+        logger.info(cmd)
+        os.system(cmd)
         loading = self.driver.find_element_by_css_selector(
             '#create_chapter > div.container > div.inner-container > div:nth-child(5) > div > div.field-input > ul > div.el-loading-mask')
         while loading.is_displayed():
