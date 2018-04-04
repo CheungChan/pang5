@@ -1,9 +1,11 @@
-import time
 import os
+import time
+
 from logzero import logger
-from utils import open_driver, track_alert, get, get_current_url, add_cookie, store_cookie, clear_and_send_keys, \
-    use_flash, scroll_to, click_by_pg
+
 from data import data
+from utils import open_driver, track_alert, get, get_current_url, add_cookie, store_cookie, clear_and_send_keys, \
+    scroll_to, click
 
 COOKIE_DOMAIN = '.author.maimengjun.com'
 COOKIE_FILE = f'cookies/{COOKIE_DOMAIN[1:]}_{data["maimeng_username"]}.cookie.json'
@@ -98,7 +100,7 @@ class MaiMeng:
             '#create_chapter > div:nth-child(2) > label > input[type="checkbox"]').click()
         # 提交审核
         time.sleep(2)
-        self.driver.find_element_by_css_selector('#create_chapter > ul > li:nth-child(4) > button').click()
+        click('#create_chapter > ul > li:nth-child(4) > button')
         time.sleep(100000)
 
 
