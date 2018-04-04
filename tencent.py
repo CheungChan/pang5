@@ -48,7 +48,7 @@ class Tencent:
                 self.publish()
 
                 # self.delete_all_chaptor()
-                time.sleep(1000000)
+                # time.sleep(1000000)
 
     def login(self):
         login_url = get_current_url()
