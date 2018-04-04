@@ -37,6 +37,7 @@ def main():
 
 
 def callback(ch, method, properties, body):
+    i=0
     logger.info("[x] Received %r" % body)
     rabbitInfo = json.loads(body)
 
@@ -96,25 +97,29 @@ def callback(ch, method, properties, body):
                 elif m_num >=45 and m_num < 60:
                     data['net_m'] = 45
 
-
-
             netEase.main()
+        elif userinfo[0]['platform'] == 'maimeng':
+            data['maimeng_username'] = userinfo[0]['platform_username']
+            data['maimeng_password'] = userinfo[0]['platform_password']
+            data['maimeng_series'] = row[0]['works_name']
+            data['maimeng_title'] = row[0]['chapter_name']
         else:
             logger.error('未知平台')
 
-        if row[0]['cover_img']:
-            try:
-                os.remove('./images/封面.jpg')
-            except:
-                logger.error('no find')
-        for i in  range(i):
-            try:
-                os.remove('./images/章节/' + str(i+1) + '.jpg')
-            except:
-                logger.error('no find')
     except Exception as e:
         print(e)
         logger.error('数据错误')
+    finally:
+        try:
+            os.remove('./images/封面.jpg')
+        except:
+            logger.error('no find')
+
+        for num in  range(i):
+            try:
+                os.remove('./images/章节/' + str(num+1) + '.jpg')
+            except:
+                logger.error('no find')
 
 
 def insert_rabbit(format):
