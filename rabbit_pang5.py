@@ -113,7 +113,6 @@ def callback(ch, method, properties, body):
                 logger.error('no find')
     except Exception as e:
         print(e)
-        traceback.print_stack()
         logger.error('数据错误')
 
 
@@ -135,5 +134,5 @@ def insert_rabbit(format):
 
 
 if __name__ == '__main__':
-    insert_rabbit({'mysql_id': 9})
+    # insert_rabbit({'mysql_id': 9})
     main()
