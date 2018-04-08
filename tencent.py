@@ -24,7 +24,7 @@ class Tencent:
 
     def process(self):
         with open_driver(cookie_domain=COOKIE_DOMAIN,
-                         cookie_file=COOKIE_FILE) as driver:
+                         cookie_file=COOKIE_FILE,browser='firefox') as driver:
             with track_alert(driver):
                 self.driver = driver
 

@@ -9,6 +9,7 @@ if os.path.exists(profile_file):
 USE_FACE = True
 CHROME_DRIVER_PATH = 'D:/chromedriver.exe' if platform.system() == 'Windows' else '/usr/bin/chromedriver'
 PHANTOMJS_PATH = ''
+FIREFOX_DRIVER_PATH = 'D:/geckodriver.exe' if platform.system() == 'Windows' else '/usr/bin/geckodriver'
 SCREENSHOT_PATH = 'screenshot'
 # 等待类型
 WAIT_PRESENCE = 'presence'

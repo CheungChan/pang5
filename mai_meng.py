@@ -20,17 +20,17 @@ class MaiMeng:
 
     def process(self):
         with open_driver(cookie_domain=COOKIE_DOMAIN,
-                         cookie_file=COOKIE_FILE) as driver:
+                         cookie_file=COOKIE_FILE,browser='firefox') as driver:
             with track_alert(driver):
                 self.driver = driver
                 # 处理登录
-                add_cookie(COOKIE_DOMAIN, driver, COOKIE_FILE)
+                # add_cookie(COOKIE_DOMAIN, driver, COOKIE_FILE)
                 get(MANAGE_URL)
                 if get_current_url() != MANAGE_URL:
                     if not self.login():
                         logger.error('登录失败')
                         return
-                store_cookie(driver, COOKIE_FILE)
+                # store_cookie(driver, COOKIE_FILE)
                 logger.info('登录成功')
 
                 # 根据作品名称点击对应的新建章节
@@ -76,6 +76,7 @@ class MaiMeng:
                 '#create_chapter > div.container > div.inner-container > div:nth-child(3) > div > div.field-input > div > input').send_keys(
                 data['maimeng_publish_time'])
             # 点击确定
+            time.sleep(2)
             self.driver.find_element_by_css_selector(
                 'button.el-button.el-picker-panel__link-btn.el-button--default.el-button--mini.is-plain > span').click()
         # 备注

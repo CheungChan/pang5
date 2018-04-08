@@ -13,7 +13,7 @@ from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.ui import WebDriverWait, Select
 
 from config import USE_FACE, CHROME_DRIVER_PATH, PHANTOMJS_PATH, SCREENSHOT_PATH, WAIT_CLICKABLE, WAIT_PRESENCE, \
-    WAIT_VISIABLITY, CHROME_ARG
+    WAIT_VISIABLITY, CHROME_ARG, FIREFOX_DRIVER_PATH
 
 g_driver = None
 
@@ -41,9 +41,11 @@ class open_driver(object):
                 logger.info('chrome浏览器打开')
                 self.driver.get('http://www.baidu.com')
             elif self.browser == 'firefox':
-                self.driver = webdriver.Firefox(executable_path='/usr/bin/geckodriver')
+                self.driver = webdriver.Firefox(executable_path=FIREFOX_DRIVER_PATH)
+
                 logger.info('firefox浏览器打开')
                 # self.driver.get('http://www.baidu.com')
+            self.driver.maximize_window()
 
         else:
             dcap = dict(DesiredCapabilities.PHANTOMJS)
