@@ -5,7 +5,7 @@ from logzero import logger
 
 from data import data
 from utils import open_driver, track_alert, get, get_current_url, add_cookie, store_cookie, clear_and_send_keys, \
-    scroll_to, click, click_by_actionchains
+    scroll_to, click, click_by_pg
 
 COOKIE_DOMAIN = '.u17.com'
 COOKIE_FILE = f'cookies/{COOKIE_DOMAIN[1:]}_{data["u17_username"]}.cookie.json'
@@ -49,26 +49,48 @@ class U17:
         clear_and_send_keys("#chapter_name", data['u17_series'])
 
         logger.info('上传封面图片')
-        self.driver.find_element_by_css_selector('#upload_image').click()
+        time.sleep(2)
+        # self.driver.find_element_by_css_selector('div.bg_cover_box > #upload_image').click()
         # click_by_actionchains("#upload_image")
+        POSOTION_GREEN_BUTTON = (1068, 885)
+        click_by_pg(*POSOTION_GREEN_BUTTON)
+        time.sleep(2)
         img: str = data['u17_chapter']
         cmd = f'D:/uploadImg.exe 打开 {img}'
         logger.info(cmd)
         os.system(cmd)
         while True:
             loading_ele = self.driver.find_element_by_css_selector('.loading_tm > img:nth-child(1)')
-            if loading_ele.is_displayed():
+            if not loading_ele.is_displayed():
                 logger.info('封面上传完毕')
                 break
             logger.info('封面正在上传中。。。')
             time.sleep(2)
-        # 章节内容
-        self.driver.find_element_by_css_selector('span.csbtn').click()
+
+        logger.info('上传章节内容')
+        scroll_to()
+        # self.driver.find_element_by_css_selector('span.csbtn').click()
+        POSOTION_GREEN_BUTTON = (784, 1108)
+        click_by_pg(*POSOTION_GREEN_BUTTON)
         img: str = ' '.join(data['u17_pic'])
         cmd = f'D:/uploadImg.exe 打开 {img}'
         logger.info(cmd)
         os.system(cmd)
-        pass
+
+        logger.info('点击开始上传')
+        time.sleep(2)
+        self.driver.find_element_by_css_selector('#btn_start').click()
+        while True:
+            li_ele = self.driver.find_elements_by_css_selector('#image_list > li')
+            if all([li.get_attribute('message') == '上传完毕' for li in li_ele]):
+                logger.info('上传完毕')
+                break
+            logger.info('上传中')
+            time.sleep(2)
+
+        logger.info('提交审核')
+        self.driver.find_element_by_css_selector('#main > div.borbox > div > div.tc > a').click()
+        logger.info('发布成功')
 
 
 def main():
