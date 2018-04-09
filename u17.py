@@ -52,7 +52,9 @@ class U17:
         time.sleep(2)
         # self.driver.find_element_by_css_selector('div.bg_cover_box > #upload_image').click()
         # click_by_actionchains("#upload_image")
-        POSOTION_GREEN_BUTTON = (1068, 885)
+        # POSOTION_GREEN_BUTTON = (1068, 885)
+        POSOTION_GREEN_BUTTON = (439, 442)
+
         click_by_pg(*POSOTION_GREEN_BUTTON)
         time.sleep(2)
         img: str = data['u17_chapter']
@@ -70,7 +72,9 @@ class U17:
         logger.info('上传章节内容')
         scroll_to()
         # self.driver.find_element_by_css_selector('span.csbtn').click()
-        POSOTION_GREEN_BUTTON = (784, 1108)
+        # POSOTION_GREEN_BUTTON = (784, 1108)
+        POSOTION_GREEN_BUTTON = (288,304 )
+
         click_by_pg(*POSOTION_GREEN_BUTTON)
         img: str = ' '.join(data['u17_pic'])
         cmd = f'D:/uploadImg.exe 打开 {img}'
