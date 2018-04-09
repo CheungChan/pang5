@@ -29,7 +29,7 @@ class Tencent:
                 self.driver = driver
 
                 # 处理登录
-                add_cookie(COOKIE_DOMAIN, driver, COOKIE_FILE)
+                # add_cookie(COOKIE_DOMAIN, driver, COOKIE_FILE)
                 #driver.get('http://www.baidu.com')
                 time.sleep(5)
                 get(MANAGE_URL)
@@ -37,11 +37,14 @@ class Tencent:
                     if not self.login():
                         logger.error('登录失败')
                         return
-                store_cookie(driver, COOKIE_FILE)
+                # store_cookie(driver, COOKIE_FILE)
+                self.driver.switch_to.default_content()
                 logger.info('登录成功')
 
                 # 点击章节管理
-                driver.get(f'http://ac.qq.com/MyComic/chapterList/id/{data["qq_comic_id"]}')
+                url = f'http://ac.qq.com/MyComic/chapterList/id/{data["qq_comic_id"]}'
+                logger.info(url)
+                driver.get(url)
                 # self.driver.find_element_by_css_selector(".h_btn_section").click()
 
                 # 点击新建章节
@@ -69,7 +72,7 @@ class Tencent:
 
     def publish(self):
         # 让网站允许Flash
-        use_flash()
+        # use_flash()
 
         # 进入上传章节页面
         if not FIRST_CHAPTER:
@@ -106,7 +109,9 @@ class Tencent:
         click_by_pg(*POSOTION_GREEN_BUTTON)
         # 1599 749
         img: str = ' '.join(data['qq_pics'])
-        os.system(f'D:/uploadImg.exe {img}')
+        cmd = f'D:/uploadImg.exe 打开 {img}'
+        logger.info(cmd)
+        os.system(cmd)
         js = 'return $("#uploadProgressBox").text();'
         while True:
             percent = self.driver.execute_script(js)

@@ -91,7 +91,7 @@ class MaiMeng:
         img: str = ' '.join(data['maimeng_pic'])
         logger.info(data)
         logger.info(img)
-        cmd = f'D:/uploadImg.exe {img}'
+        cmd = f'D:/uploadImg.exe 文件上传 {img}'
         logger.info(cmd)
         os.system(cmd)
         loading = self.driver.find_element_by_css_selector(

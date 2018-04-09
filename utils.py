@@ -41,10 +41,14 @@ class open_driver(object):
                 logger.info('chrome浏览器打开')
                 self.driver.get('http://www.baidu.com')
             elif self.browser == 'firefox':
-                self.driver = webdriver.Firefox(executable_path=FIREFOX_DRIVER_PATH)
+                profile = webdriver.FirefoxProfile()
+                profile.set_preference('dom.ipc.plugins.enabled.libflashplayer.so','true')
+                profile.set_preference("plugin.state.flash", 2)
+                self.driver = webdriver.Firefox(executable_path=FIREFOX_DRIVER_PATH,firefox_profile=profile)
 
                 logger.info('firefox浏览器打开')
                 # self.driver.get('http://www.baidu.com')
+
             self.driver.maximize_window()
 
         else:
@@ -72,7 +76,8 @@ class open_driver(object):
                 f"{SCREENSHOT_PATH}/excep_{datetime.now().strftime('%Y-%m-%d %H %M %S')}.png")
         logger.info("浏览器关闭")
         self.driver.close()
-        self.driver.quit()
+        if self.browser == 'chrome':
+            self.driver.quit()
         if exc_tb:
             logger.error("出现异常")
             logger.error(exc_type)

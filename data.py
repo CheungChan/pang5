@@ -10,8 +10,8 @@ data = {
     'qq_use-appoint': True,
     'qq_chapter-publish-time': '2018-03-24 14:00:00',
     'qq_chapter_title': '喝醉的妹子竟然扯开了衣服',
-    'qq_tips-chapter': os.path.join(pwd, 'images', '封面.jpg'),
-    'qq_pics': [f'{os.path.join(pwd,"images","章节",d)}' for d in get_sorted_imgs(os.path.join(pwd, 'images', '章节'))],
+    'qq_tips-chapter': os.path.join(pwd, 'images', '腾讯封面.jpg'),
+    'qq_pics': [f'"{os.path.join(pwd,"images","章节",d)}"' for d in get_sorted_imgs(os.path.join(pwd, 'images', '章节'))],
 
     # 网易
     # 'net_username': 'qingdianmanhua@163.com',
