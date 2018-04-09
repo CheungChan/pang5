@@ -49,9 +49,9 @@ class U17:
         clear_and_send_keys("#chapter_name", data['u17_series'])
 
         logger.info('上传封面图片')
-        # self.driver.find_element_by_css_selector('#upload_image').click()
-        click_by_actionchains("#upload_image")
-        img: str = ' '.join(data['u17_chapter'])
+        self.driver.find_element_by_css_selector('#upload_image').click()
+        # click_by_actionchains("#upload_image")
+        img: str = data['u17_chapter']
         cmd = f'D:/uploadImg.exe 打开 {img}'
         logger.info(cmd)
         os.system(cmd)
