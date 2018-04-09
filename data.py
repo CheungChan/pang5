@@ -47,4 +47,12 @@ data = {
     'maimeng_comment':'无特殊要求',
     'maimeng_publish_time': '2019-10-10 10:17:17',
     'maimeng_pic': [f'"{os.path.join(pwd,"images","章节",d)}"' for d in get_sorted_imgs(os.path.join(pwd,"images","章节"))],
+
+    # 有妖气
+    'u17_username':'1042521247@qq.com',
+    'u17_password':'qingdian17',
+    'u17_series':'为什么救赎',
+    'u17_comic_id':'171154',
+    'u17_chapter':os.path.join(pwd, 'series', '封面.jpg'),
+    'u17_pic':[f'"{os.path.join(pwd,"images","章节",d)}"' for d in get_sorted_imgs(os.path.join(pwd,"images","章节"))],
 }
