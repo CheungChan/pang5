@@ -36,15 +36,24 @@ class open_driver(object):
                 option = webdriver.ChromeOptions()
                 for iarg in CHROME_ARG:
                     option.add_argument(iarg)
+                prefs = {
+                    "profile.default_content_setting_values.plugins": 1,
+                    "profile.content_settings.plugin_whitelist.adobe-flash-player": 1,
+                    "profile.content_settings.exceptions.plugins.*,*.per_resource.adobe-flash-player": 1,
+                    "profile.default_content_setting_values": {
+                        "notifications": 2
+                    }
+                }
+                option.add_experimental_option("prefs", prefs)
                 self.driver = webdriver.Chrome(CHROME_DRIVER_PATH, options=option)
 
                 logger.info('chrome浏览器打开')
                 self.driver.get('http://www.baidu.com')
             elif self.browser == 'firefox':
                 profile = webdriver.FirefoxProfile()
-                profile.set_preference('dom.ipc.plugins.enabled.libflashplayer.so','true')
+                profile.set_preference('dom.ipc.plugins.enabled.libflashplayer.so', 'true')
                 profile.set_preference("plugin.state.flash", 2)
-                self.driver = webdriver.Firefox(executable_path=FIREFOX_DRIVER_PATH,firefox_profile=profile)
+                self.driver = webdriver.Firefox(executable_path=FIREFOX_DRIVER_PATH, firefox_profile=profile)
 
                 logger.info('firefox浏览器打开')
                 # self.driver.get('http://www.baidu.com')
