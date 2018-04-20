@@ -5,7 +5,7 @@ from logzero import logger
 
 from data import data
 from utils import open_driver, track_alert, get, get_current_url, clear_and_send_keys, \
-    scroll_to,click_by_sikulix
+    scroll_to, click_by_sikulix
 
 COOKIE_DOMAIN = '.u17.com'
 COOKIE_FILE = f'cookies/{COOKIE_DOMAIN[1:]}_{data["u17_username"]}.cookie.json'
@@ -56,7 +56,8 @@ class U17:
         # POSOTION_GREEN_BUTTON = (439, 442)
         #
         # click_by_pg(*POSOTION_GREEN_BUTTON)
-        click_by_sikulix('u17_title_my.png')
+        title = 'u17_title_prod.png'
+        click_by_sikulix(title)
         time.sleep(2)
         img: str = data['u17_chapter']
         cmd = f'D:/uploadImg.exe 打开 {img}'
@@ -77,7 +78,8 @@ class U17:
         # POSOTION_GREEN_BUTTON = (288,304 )
         #
         # click_by_pg(*POSOTION_GREEN_BUTTON)
-        click_by_sikulix('u17_chapter_my.png')
+        chapter = 'u17_chapter_prod.png'
+        click_by_sikulix(chapter)
         img: str = ' '.join(data['u17_pic'])
         cmd = f'D:/uploadImg.exe 打开 {img}'
         logger.info(cmd)

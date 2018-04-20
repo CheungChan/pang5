@@ -3,10 +3,10 @@ import time
 
 from logzero import logger
 
-from config import BROWSER_CHROME,BROWSER_FIREFOX
+from config import BROWSER_FIREFOX
 from data import data
 from utils import open_driver, track_alert, get, get_current_url, clear_and_send_keys, \
-    scroll_to, click_by_pg, click_by_sikulix
+    scroll_to, click_by_sikulix
 
 # 管理页面URL
 MANAGE_URL = 'http://ac.qq.com/MyComic'
@@ -114,7 +114,8 @@ class Tencent:
         # 点击上传按钮
         # d = self.driver.find_element_by_css_selector("#create_chapter_tip").location_once_scrolled_into_view
         # printt(d['x'],d['y'])
-        click_by_sikulix('tencent_prod.png')
+        png = 'tencent_prod.png'
+        click_by_sikulix(png)
         # click_by_pg(*POSOTION_GREEN_BUTTON)
         img: str = ' '.join(data['qq_pics'])
         cmd = f'D:/uploadImg.exe 打开 {img}'
@@ -140,17 +141,17 @@ class Tencent:
                 input('发布失败，请查看')
             logger.info('发布成功')
 
-    def delete_all_chaptor(self):
-        import pyautogui as pg
-        get('http://ac.qq.com/MyComic/chapterList/id/632099')
-        delete_eles = self.driver.find_elements_by_css_selector("a[do=delete]")
-        while len(delete_eles) > 0:
-            delete_eles[0].click()
-            time.sleep(2)
-            pg.press('enter')
-            logger.info('删除章节')
-            time.sleep(2)
-            delete_eles = self.driver.find_elements_by_css_selector("a[do=delete]")
+    # def delete_all_chaptor(self):
+    #     import pyautogui as pg
+    #     get('http://ac.qq.com/MyComic/chapterList/id/632099')
+    #     delete_eles = self.driver.find_elements_by_css_selector("a[do=delete]")
+    #     while len(delete_eles) > 0:
+    #         delete_eles[0].click()
+    #         time.sleep(2)
+    #         pg.press('enter')
+    #         logger.info('删除章节')
+    #         time.sleep(2)
+    #         delete_eles = self.driver.find_elements_by_css_selector("a[do=delete]")
 
 
 def main():
