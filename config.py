@@ -15,6 +15,9 @@ SCREENSHOT_PATH = 'screenshot'
 WAIT_PRESENCE = 'presence'
 WAIT_VISIABLITY = "visiablity"
 WAIT_CLICKABLE = 'clickable'
+BROWSER_CHROME = 'chrome'
+BROWSER_FIREFOX = 'firefox'
+RUN_SIKULIX_CMD = r'D:\sikuli\runsikulix.cmd'
 CHROME_ARG = [
     '--disable-component-update',
     '--allow-outdated-plugins',

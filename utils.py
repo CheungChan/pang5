@@ -13,7 +13,7 @@ from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.ui import WebDriverWait, Select
 
 from config import USE_FACE, CHROME_DRIVER_PATH, PHANTOMJS_PATH, SCREENSHOT_PATH, WAIT_CLICKABLE, WAIT_PRESENCE, \
-    WAIT_VISIABLITY, CHROME_ARG, FIREFOX_DRIVER_PATH
+    WAIT_VISIABLITY, CHROME_ARG, FIREFOX_DRIVER_PATH, RUN_SIKULIX_CMD
 
 g_driver = None
 
@@ -232,6 +232,20 @@ def click_by_actionchains(selector, sleep=2):
 def click_by_pg(width, height):
     import pyautogui as pg
     pg.click(width, height)
+
+
+def click_by_sikulix(image_path):
+    """
+    使用sikulix根据按钮图片点击按钮
+    :param image_path: 按钮图片路径  可以传绝对路径 也可以传递相对路径 相对路径是相对D:/PycharmWorkspace/pang5/upload_btn_images
+    :return:
+    """
+    if not os.path.isabs(image_path):
+        image_path = os.path.join(os.path.abspath('.'), 'upload_btn_images',image_path)
+    skl = os.path.join(os.path.abspath('.'), 'upload_image.skl')
+    cmd = f'{RUN_SIKULIX_CMD} -r {skl} --args {image_path}'
+    logger.info(cmd)
+    os.system(cmd)
 
 
 def click_select(clickCSS, selectCSS, para):

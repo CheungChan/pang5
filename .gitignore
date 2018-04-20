@@ -4,3 +4,4 @@
 *.cookie.json
 screenshot/*.png
 *.png
+!upload_btn_images/*.png

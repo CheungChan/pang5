@@ -1,10 +1,12 @@
-import time
 import os
+import time
+
 from logzero import logger
 
-from utils import open_driver, track_alert, get, get_current_url, add_cookie, store_cookie, clear_and_send_keys, \
-    use_flash, scroll_to, click_by_pg
+from config import BROWSER_CHROME
 from data import data
+from utils import open_driver, track_alert, get, get_current_url, clear_and_send_keys, \
+    scroll_to, click_by_pg, click_by_sikulix
 
 # 管理页面URL
 MANAGE_URL = 'http://ac.qq.com/MyComic'
@@ -16,6 +18,10 @@ COOKIE_FILE = f'cookies/{COOKIE_DOMAIN[1:]}_{data["qq_username"]}.cookie.json'
 
 FIRST_CHAPTER = True
 REAL_PUBLISH = True
+browser = BROWSER_CHROME
+
+# POSOTION_GREEN_BUTTON = (1599, 749)
+POSOTION_GREEN_BUTTON = (678, 219)
 
 
 class Tencent:
@@ -24,13 +30,13 @@ class Tencent:
 
     def process(self):
         with open_driver(cookie_domain=COOKIE_DOMAIN,
-                         cookie_file=COOKIE_FILE,browser='firefox') as driver:
+                         cookie_file=COOKIE_FILE, browser=browser) as driver:
             with track_alert(driver):
                 self.driver = driver
 
                 # 处理登录
                 # add_cookie(COOKIE_DOMAIN, driver, COOKIE_FILE)
-                #driver.get('http://www.baidu.com')
+                # driver.get('http://www.baidu.com')
                 time.sleep(5)
                 get(MANAGE_URL)
                 if get_current_url() != MANAGE_URL:
@@ -103,11 +109,15 @@ class Tencent:
         time.sleep(3)
         # 上传章节内容
         scroll_to()
-        self.driver.execute_script('document.querySelectorAll("#button_main")[0].style.display="block";')
-        # POSOTION_GREEN_BUTTON = (1599, 749)
-        POSOTION_GREEN_BUTTON = (678, 219)
-        click_by_pg(*POSOTION_GREEN_BUTTON)
-        # 1599 749
+        # self.driver.execute_script('document.querySelectorAll("#button_mid")[0].style.display="block";')
+        # time.sleep(1)
+        # 点击上传按钮
+        if browser == BROWSER_CHROME:
+            # d = self.driver.find_element_by_css_selector("#create_chapter_tip").location_once_scrolled_into_view
+            # printt(d['x'],d['y'])
+            click_by_sikulix('tencent.png')
+        else:
+            click_by_pg(*POSOTION_GREEN_BUTTON)
         img: str = ' '.join(data['qq_pics'])
         cmd = f'D:/uploadImg.exe 打开 {img}'
         logger.info(cmd)
@@ -143,6 +153,7 @@ class Tencent:
             logger.info('删除章节')
             time.sleep(2)
             delete_eles = self.driver.find_elements_by_css_selector("a[do=delete]")
+
 
 def main():
     Tencent().process()
