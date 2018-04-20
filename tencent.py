@@ -3,7 +3,7 @@ import time
 
 from logzero import logger
 
-from config import BROWSER_CHROME
+from config import BROWSER_CHROME,BROWSER_FIREFOX
 from data import data
 from utils import open_driver, track_alert, get, get_current_url, clear_and_send_keys, \
     scroll_to, click_by_pg, click_by_sikulix
@@ -18,7 +18,7 @@ COOKIE_FILE = f'cookies/{COOKIE_DOMAIN[1:]}_{data["qq_username"]}.cookie.json'
 
 FIRST_CHAPTER = True
 REAL_PUBLISH = True
-browser = BROWSER_CHROME
+browser = BROWSER_FIREFOX
 
 # POSOTION_GREEN_BUTTON = (1599, 749)
 POSOTION_GREEN_BUTTON = (678, 219)
@@ -112,12 +112,10 @@ class Tencent:
         # self.driver.execute_script('document.querySelectorAll("#button_mid")[0].style.display="block";')
         # time.sleep(1)
         # 点击上传按钮
-        if browser == BROWSER_CHROME:
-            # d = self.driver.find_element_by_css_selector("#create_chapter_tip").location_once_scrolled_into_view
-            # printt(d['x'],d['y'])
-            click_by_sikulix('tencent.png')
-        else:
-            click_by_pg(*POSOTION_GREEN_BUTTON)
+        # d = self.driver.find_element_by_css_selector("#create_chapter_tip").location_once_scrolled_into_view
+        # printt(d['x'],d['y'])
+        click_by_sikulix('tencent.png')
+        # click_by_pg(*POSOTION_GREEN_BUTTON)
         img: str = ' '.join(data['qq_pics'])
         cmd = f'D:/uploadImg.exe 打开 {img}'
         logger.info(cmd)
