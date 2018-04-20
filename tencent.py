@@ -114,7 +114,7 @@ class Tencent:
         # 点击上传按钮
         # d = self.driver.find_element_by_css_selector("#create_chapter_tip").location_once_scrolled_into_view
         # printt(d['x'],d['y'])
-        click_by_sikulix('tencent.png')
+        click_by_sikulix('tencent_prod.png')
         # click_by_pg(*POSOTION_GREEN_BUTTON)
         img: str = ' '.join(data['qq_pics'])
         cmd = f'D:/uploadImg.exe 打开 {img}'
