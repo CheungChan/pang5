@@ -4,8 +4,8 @@ import time
 from logzero import logger
 
 from data import data
-from utils import open_driver, track_alert, get, get_current_url, add_cookie, store_cookie, clear_and_send_keys, \
-    scroll_to, click, click_by_pg
+from utils import open_driver, track_alert, get, get_current_url, clear_and_send_keys, \
+    scroll_to,click_by_sikulix
 
 COOKIE_DOMAIN = '.u17.com'
 COOKIE_FILE = f'cookies/{COOKIE_DOMAIN[1:]}_{data["u17_username"]}.cookie.json'
@@ -53,9 +53,10 @@ class U17:
         # self.driver.find_element_by_css_selector('div.bg_cover_box > #upload_image').click()
         # click_by_actionchains("#upload_image")
         # POSOTION_GREEN_BUTTON = (1068, 885)
-        POSOTION_GREEN_BUTTON = (439, 442)
-
-        click_by_pg(*POSOTION_GREEN_BUTTON)
+        # POSOTION_GREEN_BUTTON = (439, 442)
+        #
+        # click_by_pg(*POSOTION_GREEN_BUTTON)
+        click_by_sikulix('u17_title_my.png')
         time.sleep(2)
         img: str = data['u17_chapter']
         cmd = f'D:/uploadImg.exe 打开 {img}'
@@ -73,9 +74,10 @@ class U17:
         scroll_to()
         # self.driver.find_element_by_css_selector('span.csbtn').click()
         # POSOTION_GREEN_BUTTON = (784, 1108)
-        POSOTION_GREEN_BUTTON = (288,304 )
-
-        click_by_pg(*POSOTION_GREEN_BUTTON)
+        # POSOTION_GREEN_BUTTON = (288,304 )
+        #
+        # click_by_pg(*POSOTION_GREEN_BUTTON)
+        click_by_sikulix('u17_chapter_my.png')
         img: str = ' '.join(data['u17_pic'])
         cmd = f'D:/uploadImg.exe 打开 {img}'
         logger.info(cmd)

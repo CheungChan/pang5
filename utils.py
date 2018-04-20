@@ -230,6 +230,12 @@ def click_by_actionchains(selector, sleep=2):
 
 
 def click_by_pg(width, height):
+    """
+    尽量不要用此方法  坐标局限性忒大，推荐改用click_by_sikulix
+    :param width:
+    :param height:
+    :return:
+    """
     import pyautogui as pg
     pg.click(width, height)
 
