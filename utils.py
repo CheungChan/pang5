@@ -243,6 +243,7 @@ def click_by_pyautogui(image_path):
     if loc:
         x, y = loc
         logger.info(f'x={x}, y={y}')
+        pyautogui.moveTo(x, y)
         pyautogui.click(x, y)
     else:
         logger.error(f'{image_path} 在页面上不能找到')
