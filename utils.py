@@ -229,15 +229,23 @@ def click_by_actionchains(selector, sleep=2):
     return True
 
 
-def click_by_pg(width, height):
+def click_by_pyautogui(image_path):
     """
     尽量不要用此方法  坐标局限性忒大，推荐改用click_by_sikulix
     :param width:
     :param height:
     :return:
     """
-    import pyautogui as pg
-    pg.click(width, height)
+    import pyautogui
+    if not os.path.isabs(image_path):
+        image_path = os.path.join(os.path.abspath('.'), 'upload_btn_images', image_path)
+    loc = pyautogui.locateCenterOnScreen(image_path)
+    if loc:
+        x, y = loc
+        logger.info(f'x={x}, y={y}')
+        pyautogui.click(x, y)
+    else:
+        logger.error(f'{image_path} 在页面上不能找到')
 
 
 def click_by_sikulix(image_path):
@@ -247,7 +255,7 @@ def click_by_sikulix(image_path):
     :return:
     """
     if not os.path.isabs(image_path):
-        image_path = os.path.join(os.path.abspath('.'), 'upload_btn_images',image_path)
+        image_path = os.path.join(os.path.abspath('.'), 'upload_btn_images', image_path)
     skl = os.path.join(os.path.abspath('.'), 'upload_image.skl')
     cmd = f'{RUN_SIKULIX_CMD} -r {skl} --args {image_path}'
     logger.info(cmd)

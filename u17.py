@@ -1,16 +1,23 @@
 import os
 import time
+import getpass
 
 from logzero import logger
 
 from data import data
 from utils import open_driver, track_alert, get, get_current_url, clear_and_send_keys, \
-    scroll_to, click_by_sikulix
+    scroll_to, click_by_sikulix, click_by_pyautogui
 
 COOKIE_DOMAIN = '.u17.com'
 COOKIE_FILE = f'cookies/{COOKIE_DOMAIN[1:]}_{data["u17_username"]}.cookie.json'
 LOGIN_URL = 'http://passport.u17.com/member_v2/login.php?url=http%3A%2F%2Fcomic.user.u17.com/index.php'
 AUTH_OK_URL = 'http://comic.user.u17.com/index.php'
+if getpass.getuser() == 'CheungChan':
+    TITLE_PNG = 'u17_title_my.png'
+    CHAPTER_PNG = 'u17_chapter_my.png'
+else:
+    TITLE_PNG = 'u17_title_prod.png'
+    CHAPTER_PNG = 'u17_chapter_prod.png'
 
 
 class U17:
@@ -56,8 +63,7 @@ class U17:
         # POSOTION_GREEN_BUTTON = (439, 442)
         #
         # click_by_pg(*POSOTION_GREEN_BUTTON)
-        title = 'u17_title_prod.png'
-        click_by_sikulix(title)
+        click_by_pyautogui(TITLE_PNG)
         time.sleep(2)
         img: str = data['u17_chapter']
         cmd = f'D:/uploadImg.exe 打开 {img}'
@@ -78,8 +84,7 @@ class U17:
         # POSOTION_GREEN_BUTTON = (288,304 )
         #
         # click_by_pg(*POSOTION_GREEN_BUTTON)
-        chapter = 'u17_chapter_prod.png'
-        click_by_sikulix(chapter)
+        click_by_pyautogui(CHAPTER_PNG)
         img: str = ' '.join(data['u17_pic'])
         cmd = f'D:/uploadImg.exe 打开 {img}'
         logger.info(cmd)
