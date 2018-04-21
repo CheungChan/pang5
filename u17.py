@@ -79,6 +79,7 @@ class U17:
 
         logger.info('上传章节内容')
         scroll_to()
+        time.sleep(1)
         # self.driver.find_element_by_css_selector('span.csbtn').click()
         # POSOTION_GREEN_BUTTON = (784, 1108)
         # POSOTION_GREEN_BUTTON = (288,304 )
@@ -90,16 +91,17 @@ class U17:
         logger.info(cmd)
         os.system(cmd)
 
-        logger.info('点击开始上传')
-        time.sleep(2)
-        self.driver.find_element_by_css_selector('#btn_start').click()
         while True:
             li_ele = self.driver.find_elements_by_css_selector('#image_list > li')
-            if all([li.get_attribute('message') == '上传完毕' for li in li_ele]):
+            els = [li.get_attribute('message') == '上传完毕' for li in li_ele]
+            count_all = len(els)
+            count_ok = sum(els)
+            count_lack = count_all - count_ok
+            if count_lack == 0:
                 logger.info('上传完毕')
                 break
-            logger.info('上传中')
-            time.sleep(2)
+            logger.info(f'上传中, 共{count_all}个， {count_ok}个上传成功， {count_lack}个正在上传中。。。')
+            time.sleep(4)
 
         logger.info('提交审核')
         self.driver.find_element_by_css_selector('#main > div.borbox > div > div.tc > a').click()
