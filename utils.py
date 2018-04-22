@@ -82,7 +82,7 @@ class open_driver(object):
     def __exit__(self, exc_type, exc_val, exc_tb):
         if exc_tb:
             self.driver.get_screenshot_as_file(
-                f"{SCREENSHOT_PATH}/excep_{datetime.now().strftime('%Y-%m-%d %H %M %S')}.png")
+                f"{SCREENSHOT_PATH}/excep_{datetime.now().strftime('%Y-%m-%d %H%M%S')}.png")
         logger.info("浏览器关闭")
         self.driver.close()
         if self.browser == 'chrome':
