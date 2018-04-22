@@ -231,9 +231,7 @@ def click_by_actionchains(selector, sleep=2):
 
 def click_by_pyautogui(image_path):
     """
-    尽量不要用此方法  坐标局限性忒大，推荐改用click_by_sikulix
-    :param width:
-    :param height:
+    根据pyautogui提供的图像识别技术，点击屏幕上的像素点
     :return:
     """
     import pyautogui
