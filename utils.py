@@ -299,20 +299,12 @@ def get_sorted_imgs(dir_name):
     """
     根据文件夹地址返回这个文件夹下所有图片,按照数字顺序返回
     eg.
-    ['1_01.jpg',
-     '1_02.jpg',
-     '1_03.jpg',
-     '1_04.jpg',
-     '1_05.jpg',
-     '2.jpg',
-     '3_01.jpg',
-     '3_02.jpg',
-     '3_03.jpg',
-     '3_04.jpg',
-     '3_05.jpg',
-     '3_06.jpg',
-     '4_01.jpg',
-     '4_02.jpg']
+    ['1.jpg',
+     '02.jpg',
+     '03.jpg',
+     '04.jpg',
+     '05.jpg',
+     ]
     :param dir_name: 文件夹地址
     :return:
     """
