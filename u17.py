@@ -12,12 +12,8 @@ COOKIE_DOMAIN = '.u17.com'
 COOKIE_FILE = f'cookies/{COOKIE_DOMAIN[1:]}_{data["u17_username"]}.cookie.json'
 LOGIN_URL = 'http://passport.u17.com/member_v2/login.php?url=http%3A%2F%2Fcomic.user.u17.com/index.php'
 AUTH_OK_URL = 'http://comic.user.u17.com/index.php'
-if getpass.getuser() == 'CheungChan':
-    TITLE_PNG = 'u17_title_my.png'
-    CHAPTER_PNG = 'u17_chapter_my.png'
-else:
-    TITLE_PNG = 'u17_title_prod.png'
-    CHAPTER_PNG = 'u17_chapter_prod.png'
+TITLE_PNG = 'u17_title.png'
+CHAPTER_PNG = 'u17_chapter.png'
 
 
 class U17:

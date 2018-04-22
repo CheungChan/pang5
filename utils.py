@@ -237,8 +237,11 @@ def click_by_pyautogui(image_path):
     :return:
     """
     import pyautogui
+    width, height = pyautogui.size()
     if not os.path.isabs(image_path):
-        image_path = os.path.join(os.path.abspath('.'), 'upload_btn_images', image_path)
+        # 适配不同分辨率的图片， 仿大安卓
+        image_path = os.path.join(os.path.abspath('.'), 'upload_btn_images', f'{width}_{height}', image_path)
+    assert os.path.exists(image_path), logger.error(f'{image_path}文件不存在')
     loc = pyautogui.locateCenterOnScreen(image_path)
     if loc:
         x, y = loc

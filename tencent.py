@@ -22,10 +22,8 @@ REAL_PUBLISH = True
 browser = BROWSER_FIREFOX
 
 DELETE_OK_PNG = 'tencent_delete_ok.png'
-if getpass.getuser() == 'CheungChan':
-    CHAPTER_PNG = 'tencent_my.png'
-else:
-    CHAPTER_PNG = 'tencent_prod.png'
+CHAPTER_PNG = 'tencent.png'
+
 
 
 class Tencent:
