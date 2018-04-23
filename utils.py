@@ -94,6 +94,9 @@ class open_driver(object):
             logger.error(exc_type)
             logger.error(exc_val)
             logger.error(exc_tb)
+            if exc_type == Pang5Exception:
+                # TODO 处理异常
+                pass
             return False
 
 
@@ -113,6 +116,12 @@ class track_alert(object):
             msg = re.findall(r'{Alert text : (.*)}', exc_val.msg)[0]
             logger.error(msg)
             return True
+
+
+class Pang5Exception(Exception):
+    def __init__(self, msg):
+        logger.error(msg)
+        # TODO 更改数据库状态
 
 
 def refresh_recursion(url, num=3):
