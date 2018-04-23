@@ -7,7 +7,7 @@ from logzero import logger
 from config import BROWSER_FIREFOX
 from data import data
 from utils import open_driver, track_alert, get, get_current_url, clear_and_send_keys, \
-    scroll_to, click_by_sikulix
+    scroll_to, click_by_pyautogui
 
 # 管理页面URL
 MANAGE_URL = 'http://ac.qq.com/MyComic'
@@ -116,7 +116,7 @@ class Tencent:
         # 点击上传按钮
         # d = self.driver.find_element_by_css_selector("#create_chapter_tip").location_once_scrolled_into_view
         # printt(d['x'],d['y'])
-        click_by_sikulix(CHAPTER_PNG)
+        click_by_pyautogui(CHAPTER_PNG)
         # click_by_pg(*POSOTION_GREEN_BUTTON)
         img: str = ' '.join(data['qq_pics'])
         cmd = f'D:/uploadImg.exe 打开 {img}'
@@ -125,7 +125,7 @@ class Tencent:
         js = 'return $("#uploadProgressBox").text();'
         while True:
             percent = self.driver.execute_script(js)
-            time.sleep(1)
+            time.sleep(4)
             logger.info(percent)
             if percent == '100%':
                 break
