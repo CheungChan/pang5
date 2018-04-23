@@ -87,6 +87,7 @@ class U17:
         cmd = f'D:/uploadImg.exe 打开 {img}'
         logger.info(cmd)
         os.system(cmd)
+        time.sleep(2)
         logger.info('点击开始上传')
         click_by_pyautogui(START_UPLOAD_PNG)
 
