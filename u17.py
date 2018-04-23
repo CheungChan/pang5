@@ -14,6 +14,7 @@ LOGIN_URL = 'http://passport.u17.com/member_v2/login.php?url=http%3A%2F%2Fcomic.
 AUTH_OK_URL = 'http://comic.user.u17.com/index.php'
 TITLE_PNG = 'u17_title.png'
 CHAPTER_PNG = 'u17_chapter.png'
+START_UPLOAD_PNG = 'u17_start_upload.png'
 
 
 class U17:
@@ -86,6 +87,8 @@ class U17:
         cmd = f'D:/uploadImg.exe 打开 {img}'
         logger.info(cmd)
         os.system(cmd)
+        logger.info('点击开始上传')
+        click_by_pyautogui(START_UPLOAD_PNG)
 
         while True:
             li_ele = self.driver.find_elements_by_css_selector('#image_list > li')
