@@ -3,6 +3,7 @@ import os
 import time
 from datetime import datetime
 
+import logzero
 from logzero import logger
 from selenium import webdriver
 from selenium.common.exceptions import UnexpectedAlertPresentException, TimeoutException
@@ -13,9 +14,10 @@ from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.ui import WebDriverWait, Select
 
 from config import USE_FACE, CHROME_DRIVER_PATH, PHANTOMJS_PATH, SCREENSHOT_PATH, WAIT_CLICKABLE, WAIT_PRESENCE, \
-    WAIT_VISIABLITY, CHROME_ARG, FIREFOX_DRIVER_PATH, RUN_SIKULIX_CMD
+    WAIT_VISIABLITY, CHROME_ARG, FIREFOX_DRIVER_PATH, RUN_SIKULIX_CMD, LOGFILE_NAME
 
 g_driver = None
+logzero.logfile(LOGFILE_NAME, encoding='utf-8', maxBytes=500_0000, backupCount=3)
 
 
 class open_driver(object):

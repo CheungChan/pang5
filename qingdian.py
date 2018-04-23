@@ -1,11 +1,13 @@
-import os
 import time
 
+import logzero
 from logzero import logger
 
-from utils import open_driver, track_alert, get, store_cookie, get_sorted_imgs
+from config import LOGFILE_NAME
 from data import data
+from utils import open_driver, track_alert, get, store_cookie
 
+logzero.logfile(LOGFILE_NAME, encoding='utf-8', maxBytes=500_0000, backupCount=3)
 MANAGE_URL = 'http://page.qingdian.cn/center/comicManagement/upload'
 LOGIN_URL = 'http://page.qingdian.cn/passport/login'
 
@@ -69,7 +71,7 @@ class Upload:
 
             for i in dir_name:
                 file = driver.find_element_by_css_selector('#add-section-img > div:nth-child(2) > input')
-                logger.info('上传图片'+i)
+                logger.info('上传图片' + i)
                 file.send_keys(i)
 
             driver.find_element_by_css_selector('.show-dialog').click()
@@ -125,6 +127,7 @@ class Upload:
 
 def main():
     Upload().main()
+
 
 if __name__ == '__main__':
     Upload().main()

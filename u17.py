@@ -1,13 +1,15 @@
 import os
 import time
-import getpass
 
+import logzero
 from logzero import logger
 
+from config import LOGFILE_NAME
 from data import data
 from utils import open_driver, track_alert, get, get_current_url, clear_and_send_keys, \
-    scroll_to, click_by_sikulix, click_by_pyautogui
+    scroll_to, click_by_pyautogui
 
+logzero.logfile(LOGFILE_NAME, encoding='utf-8', maxBytes=500_0000, backupCount=3)
 COOKIE_DOMAIN = '.u17.com'
 COOKIE_FILE = f'cookies/{COOKIE_DOMAIN[1:]}_{data["u17_username"]}.cookie.json'
 LOGIN_URL = 'http://passport.u17.com/member_v2/login.php?url=http%3A%2F%2Fcomic.user.u17.com/index.php'

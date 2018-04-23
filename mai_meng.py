@@ -1,12 +1,14 @@
 import os
 import time
-
+import logzero
 from logzero import logger
 
 from data import data
 from utils import open_driver, track_alert, get, get_current_url, clear_and_send_keys, \
     scroll_to, click_by_actionchains
+from config import LOGFILE_NAME
 
+logzero.logfile(LOGFILE_NAME, encoding='utf-8', maxBytes=500_0000, backupCount=3)
 COOKIE_DOMAIN = '.author.maimengjun.com'
 COOKIE_FILE = f'cookies/{COOKIE_DOMAIN[1:]}_{data["maimeng_username"]}.cookie.json'
 MANAGE_URL = 'http://author.maimengjun.com/submission'
@@ -20,7 +22,7 @@ class MaiMeng:
 
     def process(self):
         with open_driver(cookie_domain=COOKIE_DOMAIN,
-                         cookie_file=COOKIE_FILE,browser='firefox') as driver:
+                         cookie_file=COOKIE_FILE, browser='firefox') as driver:
             with track_alert(driver):
                 self.driver = driver
                 # 处理登录

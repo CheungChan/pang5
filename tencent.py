@@ -1,14 +1,16 @@
 import os
 import time
-import getpass
 
+import logzero
 from logzero import logger
 
 from config import BROWSER_FIREFOX
+from config import LOGFILE_NAME
 from data import data
 from utils import open_driver, track_alert, get, get_current_url, clear_and_send_keys, \
     scroll_to, click_by_pyautogui
 
+logzero.logfile(LOGFILE_NAME, encoding='utf-8', maxBytes=500_0000, backupCount=3)
 # 管理页面URL
 MANAGE_URL = 'http://ac.qq.com/MyComic'
 # 登录成功之后跳转的URL
@@ -23,7 +25,6 @@ browser = BROWSER_FIREFOX
 
 DELETE_OK_PNG = 'tencent_delete_ok.png'
 CHAPTER_PNG = 'tencent.png'
-
 
 
 class Tencent:

@@ -4,7 +4,10 @@ from selenium.webdriver.support.ui import Select
 import os
 from logzero import logger
 from data import data
+import logzero
+from config import LOGFILE_NAME
 
+logzero.logfile(LOGFILE_NAME, encoding='utf-8', maxBytes=500_0000, backupCount=3)
 MANAGE_URL = 'https://zz.manhua.163.com/'
 COOKIE_DOMAIN = ".manhua.163.com"
 login_username = data['net_username']
@@ -25,9 +28,9 @@ class Upload:
                 add_cookie(COOKIE_DOMAIN, driver, COOKIE_FILE)
                 get(MANAGE_URL)
                 if get_current_url() != MANAGE_URL:
-                    if data['net-login']=='mobile':
+                    if data['net-login'] == 'mobile':
                         self.mobile_login(driver, login_username, login_password)
-                    elif data['net-login']=='mail':
+                    elif data['net-login'] == 'mail':
                         self.mail_login(driver, login_username, login_password)
                     # self.mobile_login(driver)
 
@@ -53,7 +56,6 @@ class Upload:
                           data['net_m'], data['net-use-appoint'])
                 # except:
                 #     logger.error('error')
-
 
     # 邮箱登录
     def mail_login(self, driver, login_username, login_password):
@@ -157,6 +159,7 @@ class Upload:
         while phui_backdrop.is_displayed():
             logger.info('暂停,文件未上传完成')
             time.sleep(0.5)
+
 
 def main():
     Upload().main()
