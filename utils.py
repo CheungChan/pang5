@@ -88,9 +88,7 @@ class open_driver(object):
             self.driver.get_screenshot_as_file(
                 f"{SCREENSHOT_PATH}/excep_{datetime.now().strftime('%Y-%m-%d %H%M%S')}.png")
         logger.info("浏览器关闭")
-        self.driver.close()
-        if self.browser == 'chrome':
-            self.driver.quit()
+        self.driver.quit()
         if exc_tb:
             logger.error("出现异常")
             logger.error(exc_type)
