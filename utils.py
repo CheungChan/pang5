@@ -87,6 +87,8 @@ class open_driver(object):
         if exc_tb:
             self.driver.get_screenshot_as_file(
                 f"{SCREENSHOT_PATH}/excep_{datetime.now().strftime('%Y-%m-%d %H%M%S')}.png")
+        logger.info('屏蔽关闭提示框')
+        self.driver.execute_script("window.onbeforeunload = function(e){};")
         logger.info("浏览器关闭")
         # quit是关闭所有窗口  close是关闭当前窗口
         self.driver.quit()

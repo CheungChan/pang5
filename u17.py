@@ -108,8 +108,6 @@ class U17:
 
         logger.info('提交审核')
         self.driver.find_element_by_css_selector('#main > div.borbox > div > div.tc > a').click()
-        logger.info('关闭 是否要离开该网站吗的提示框')
-        self.driver.switch_to.alert.accept()
         logger.info('发布成功')
         update_status2OK(self.mysql_id)
 
