@@ -18,6 +18,8 @@ from config import USE_FACE, CHROME_DRIVER_PATH, PHANTOMJS_PATH, SCREENSHOT_PATH
     WAIT_VISIABLITY, CHROME_ARG, FIREFOX_DRIVER_PATH, RUN_SIKULIX_CMD, LOGFILE_NAME, MYSQL_URL
 
 g_driver = None
+g_mysqlid = {"mysql_id": None}
+# 此变量要在平台的脚本中修改值,所有采用了dict的结构,为可变对象,才能修改.平台脚本必须修改该值.
 logzero.logfile(LOGFILE_NAME, encoding='utf-8', maxBytes=500_0000, backupCount=3)
 db = records.Database(MYSQL_URL)
 
@@ -121,19 +123,20 @@ class track_alert(object):
 
 
 class Pang5Exception(Exception):
-    def __init__(self, mysql_id, msg):
+    def __init__(self, msg):
         logger.error(msg)
-        update_status2fail(mysql_id, msg)
+        update_status2fail(msg)
 
 
-def update_status2fail(mysql_id, msg):
-    rows = db.query("update chapter_chapter set status=-1, fail_reason=:msg where id=:id", id=mysql_id, msg=msg)
+def update_status2fail(msg):
+    rows = db.query("update chapter_chapter set status=-1, fail_reason=:msg where id=:id", id=g_mysqlid['mysql_id'],
+                    msg=msg)
     logger.info(rows)
 
 
-def update_status2OK(mysql_id):
+def update_status2OK():
     # 没有异常, 更改数据库状态
-    rows = db.query('update chapter_chapter set status=0, ok_time=:ok_time where id=:id', id=mysql_id,
+    rows = db.query('update chapter_chapter set status=0, ok_time=:ok_time where id=:id', id=g_mysqlid["mysql_id"],
                     ok_time=datetime.now())
     logger.info(rows)
 
@@ -272,7 +275,7 @@ def click_by_pyautogui(image_path):
         pyautogui.moveTo(x, y)
         pyautogui.click(x, y)
     else:
-        logger.error(f'{image_path} 在页面上不能找到')
+        raise Pang5Exception(f'{image_path} 在页面上不能找到')
 
 
 def click_by_sikulix(image_path):
