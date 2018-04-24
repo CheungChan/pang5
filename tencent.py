@@ -8,7 +8,7 @@ from config import BROWSER_FIREFOX
 from config import LOGFILE_NAME
 from data import data
 from utils import open_driver, track_alert, get, get_current_url, clear_and_send_keys, \
-    scroll_to, click_by_pyautogui,g_mysqlid
+    scroll_to, click_by_pyautogui,g_mysqlid,Pang5Exception
 
 logzero.logfile(LOGFILE_NAME, encoding='utf-8', maxBytes=500_0000, backupCount=3)
 # 管理页面URL
@@ -45,8 +45,7 @@ class Tencent:
                 get(MANAGE_URL)
                 if get_current_url() != MANAGE_URL:
                     if not self.login():
-                        logger.error('登录失败')
-                        return
+                        raise Pang5Exception('登录失败')
                 # store_cookie(driver, COOKIE_FILE)
                 self.driver.switch_to.default_content()
                 logger.info('登录成功')
@@ -77,7 +76,7 @@ class Tencent:
         time.sleep(3)
         if get_current_url() != AUTH_OK_URL:
             logger.info(get_current_url())
-            input('请处理登录异常，之后按回车键')
+            raise Pang5Exception("登录异常")
         return get_current_url() != login_url
 
     def publish(self):
@@ -141,7 +140,7 @@ class Tencent:
                 if len(err_msg_eles) > 0:
                     err_msg = err_msg_eles[0].text
                     logger.error(err_msg)
-                input('发布失败，请查看')
+                raise Pang5Exception('发布失败，稍后会重试')
             logger.info('发布成功')
 
     def delete_all_chaptor(self):
