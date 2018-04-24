@@ -88,6 +88,7 @@ class open_driver(object):
             self.driver.get_screenshot_as_file(
                 f"{SCREENSHOT_PATH}/excep_{datetime.now().strftime('%Y-%m-%d %H%M%S')}.png")
         logger.info("浏览器关闭")
+        # quit是关闭所有窗口  close是关闭当前窗口
         self.driver.quit()
         if exc_tb:
             logger.error("出现异常")
@@ -130,7 +131,8 @@ def update_status2fail(mysql_id, msg):
 
 def update_status2OK(mysql_id):
     # 没有异常, 更改数据库状态
-    rows = db.query('update chapter_chapter set status=0, ok_time=:ok_time where id=:id', id=mysql_id)
+    rows = db.query('update chapter_chapter set status=0, ok_time=:ok_time where id=:id', id=mysql_id,
+                    ok_time=datetime.now())
     logger.info(rows)
 
 
