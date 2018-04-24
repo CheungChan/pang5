@@ -4,8 +4,10 @@ from logzero import logger
 from selenium.webdriver.support.ui import Select
 
 from data import data
-from utils import open_driver, track_alert, get, store_cookie, add_cookie, get_current_url
-
+import logzero
+from config import LOGFILE_NAME
+from utils import open_driver,get,track_alert,add_cookie,get_current_url,store_cookie
+logzero.logfile(LOGFILE_NAME, encoding='utf-8', maxBytes=500_0000, backupCount=3)
 MANAGE_URL = 'https://zz.manhua.163.com/'
 COOKIE_DOMAIN = ".manhua.163.com"
 login_username = 308602626#data['net_username']
@@ -16,8 +18,7 @@ class Upload:
     def __init__(self):
         logger.info('开始')
 
-
-    def main(self):
+    def process(self, mysql_id):
         with open_driver(cookie_domain=".manhua.163.com",
                          cookie_file=COOKIE_FILE) as driver:
             with track_alert(driver):
@@ -25,7 +26,6 @@ class Upload:
                 add_cookie(COOKIE_DOMAIN, driver, COOKIE_FILE)
                 get(MANAGE_URL)
                 if get_current_url() != MANAGE_URL:
-                    data['net-login'] = 'qq'
                     if data['net-login'] == 'mobile':
                         self.mobile_login(driver, login_username, login_password)
                     elif data['net-login'] == 'mail':
@@ -183,9 +183,11 @@ class Upload:
             time.sleep(0.5)
 
 
-def main():
-    Upload().main()
-    # Upload().qq_login()
+def main(mysql_id):
+    Upload().process(mysql_id)
+
 
 if __name__ == '__main__':
-    main()
+    # Upload_netEase = Upload()
+    # Upload_netEase.main()
+    main(10000)

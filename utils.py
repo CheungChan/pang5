@@ -3,6 +3,7 @@ import os
 import time
 from datetime import datetime
 
+import logzero
 from logzero import logger
 from selenium import webdriver
 from selenium.common.exceptions import UnexpectedAlertPresentException, TimeoutException
@@ -11,11 +12,14 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.ui import WebDriverWait, Select
+import records
 
 from config import USE_FACE, CHROME_DRIVER_PATH, PHANTOMJS_PATH, SCREENSHOT_PATH, WAIT_CLICKABLE, WAIT_PRESENCE, \
-    WAIT_VISIABLITY, CHROME_ARG, FIREFOX_DRIVER_PATH
+    WAIT_VISIABLITY, CHROME_ARG, FIREFOX_DRIVER_PATH, RUN_SIKULIX_CMD, LOGFILE_NAME, MYSQL_URL
 
 g_driver = None
+logzero.logfile(LOGFILE_NAME, encoding='utf-8', maxBytes=500_0000, backupCount=3)
+db = records.Database(MYSQL_URL)
 
 
 class open_driver(object):
@@ -36,15 +40,24 @@ class open_driver(object):
                 option = webdriver.ChromeOptions()
                 for iarg in CHROME_ARG:
                     option.add_argument(iarg)
+                prefs = {
+                    "profile.default_content_setting_values.plugins": 1,
+                    "profile.content_settings.plugin_whitelist.adobe-flash-player": 1,
+                    "profile.content_settings.exceptions.plugins.*,*.per_resource.adobe-flash-player": 1,
+                    "profile.default_content_setting_values": {
+                        "notifications": 2
+                    }
+                }
+                option.add_experimental_option("prefs", prefs)
                 self.driver = webdriver.Chrome(CHROME_DRIVER_PATH, options=option)
 
                 logger.info('chrome浏览器打开')
                 self.driver.get('http://www.baidu.com')
             elif self.browser == 'firefox':
                 profile = webdriver.FirefoxProfile()
-                profile.set_preference('dom.ipc.plugins.enabled.libflashplayer.so','true')
+                profile.set_preference('dom.ipc.plugins.enabled.libflashplayer.so', 'true')
                 profile.set_preference("plugin.state.flash", 2)
-                self.driver = webdriver.Firefox(executable_path=FIREFOX_DRIVER_PATH,firefox_profile=profile)
+                self.driver = webdriver.Firefox(executable_path=FIREFOX_DRIVER_PATH, firefox_profile=profile)
 
                 logger.info('firefox浏览器打开')
                 # self.driver.get('http://www.baidu.com')
@@ -73,16 +86,19 @@ class open_driver(object):
     def __exit__(self, exc_type, exc_val, exc_tb):
         if exc_tb:
             self.driver.get_screenshot_as_file(
-                f"{SCREENSHOT_PATH}/excep_{datetime.now().strftime('%Y-%m-%d %H %M %S')}.png")
+                f"{SCREENSHOT_PATH}/excep_{datetime.now().strftime('%Y-%m-%d %H%M%S')}.png")
+        logger.info('屏蔽关闭提示框')
+        self.driver.execute_script("window.onbeforeunload = function(e){};")
         logger.info("浏览器关闭")
-        self.driver.close()
-        if self.browser == 'chrome':
-            self.driver.quit()
+        # quit是关闭所有窗口  close是关闭当前窗口
+        self.driver.quit()
         if exc_tb:
             logger.error("出现异常")
             logger.error(exc_type)
             logger.error(exc_val)
             logger.error(exc_tb)
+            if exc_type == Pang5Exception:
+                pass
             return False
 
 
@@ -102,6 +118,24 @@ class track_alert(object):
             msg = re.findall(r'{Alert text : (.*)}', exc_val.msg)[0]
             logger.error(msg)
             return True
+
+
+class Pang5Exception(Exception):
+    def __init__(self, mysql_id, msg):
+        logger.error(msg)
+        update_status2fail(mysql_id, msg)
+
+
+def update_status2fail(mysql_id, msg):
+    rows = db.query("update chapter_chapter set status=-1, fail_reason=:msg where id=:id", id=mysql_id, msg=msg)
+    logger.info(rows)
+
+
+def update_status2OK(mysql_id):
+    # 没有异常, 更改数据库状态
+    rows = db.query('update chapter_chapter set status=0, ok_time=:ok_time where id=:id', id=mysql_id,
+                    ok_time=datetime.now())
+    logger.info(rows)
 
 
 def refresh_recursion(url, num=3):
@@ -220,9 +254,39 @@ def click_by_actionchains(selector, sleep=2):
     return True
 
 
-def click_by_pg(width, height):
-    import pyautogui as pg
-    pg.click(width, height)
+def click_by_pyautogui(image_path):
+    """
+    根据pyautogui提供的图像识别技术，点击屏幕上的像素点
+    :return:
+    """
+    import pyautogui
+    width, height = pyautogui.size()
+    if not os.path.isabs(image_path):
+        # 适配不同分辨率的图片， 仿大安卓
+        image_path = os.path.join(os.path.abspath('.'), 'upload_btn_images', f'{width}_{height}', image_path)
+    assert os.path.exists(image_path), logger.error(f'{image_path}文件不存在')
+    loc = pyautogui.locateCenterOnScreen(image_path)
+    if loc:
+        x, y = loc
+        logger.info(f'x={x}, y={y}')
+        pyautogui.moveTo(x, y)
+        pyautogui.click(x, y)
+    else:
+        logger.error(f'{image_path} 在页面上不能找到')
+
+
+def click_by_sikulix(image_path):
+    """
+    使用sikulix根据按钮图片点击按钮
+    :param image_path: 按钮图片路径  可以传绝对路径 也可以传递相对路径 相对路径是相对D:/PycharmWorkspace/pang5/upload_btn_images
+    :return:
+    """
+    if not os.path.isabs(image_path):
+        image_path = os.path.join(os.path.abspath('.'), 'upload_btn_images', image_path)
+    skl = os.path.join(os.path.abspath('.'), 'upload_image.skl')
+    cmd = f'{RUN_SIKULIX_CMD} -r {skl} --args {image_path}'
+    logger.info(cmd)
+    os.system(cmd)
 
 
 def click_select(clickCSS, selectCSS, para):
@@ -261,20 +325,12 @@ def get_sorted_imgs(dir_name):
     """
     根据文件夹地址返回这个文件夹下所有图片,按照数字顺序返回
     eg.
-    ['1_01.jpg',
-     '1_02.jpg',
-     '1_03.jpg',
-     '1_04.jpg',
-     '1_05.jpg',
-     '2.jpg',
-     '3_01.jpg',
-     '3_02.jpg',
-     '3_03.jpg',
-     '3_04.jpg',
-     '3_05.jpg',
-     '3_06.jpg',
-     '4_01.jpg',
-     '4_02.jpg']
+    ['1.jpg',
+     '02.jpg',
+     '03.jpg',
+     '04.jpg',
+     '05.jpg',
+     ]
     :param dir_name: 文件夹地址
     :return:
     """

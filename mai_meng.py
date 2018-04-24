@@ -1,12 +1,14 @@
 import os
 import time
-
+import logzero
 from logzero import logger
 
 from data import data
-from utils import open_driver, track_alert, get, get_current_url, add_cookie, store_cookie, clear_and_send_keys, \
-    scroll_to, click, click_by_actionchains
+from utils import open_driver, track_alert, get, get_current_url, clear_and_send_keys, \
+    scroll_to, click_by_actionchains
+from config import LOGFILE_NAME
 
+logzero.logfile(LOGFILE_NAME, encoding='utf-8', maxBytes=500_0000, backupCount=3)
 COOKIE_DOMAIN = '.author.maimengjun.com'
 COOKIE_FILE = f'cookies/{COOKIE_DOMAIN[1:]}_{data["maimeng_username"]}.cookie.json'
 MANAGE_URL = 'http://author.maimengjun.com/submission'
@@ -18,9 +20,9 @@ class MaiMeng:
     def __init__(self):
         logger.info(data)
 
-    def process(self):
+    def process(self, mysql_id):
         with open_driver(cookie_domain=COOKIE_DOMAIN,
-                         cookie_file=COOKIE_FILE,browser='firefox') as driver:
+                         cookie_file=COOKIE_FILE, browser='firefox') as driver:
             with track_alert(driver):
                 self.driver = driver
                 # 处理登录
@@ -108,9 +110,9 @@ class MaiMeng:
         time.sleep(3)
 
 
-def main():
-    MaiMeng().process()
+def main(mysql_id):
+    MaiMeng().process(mysql_id)
 
 
 if __name__ == '__main__':
-    main()
+    main(10000)

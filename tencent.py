@@ -1,11 +1,16 @@
-import time
 import os
+import time
+
+import logzero
 from logzero import logger
 
-from utils import open_driver, track_alert, get, get_current_url, add_cookie, store_cookie, clear_and_send_keys, \
-    use_flash, scroll_to, click_by_pg
+from config import BROWSER_FIREFOX
+from config import LOGFILE_NAME
 from data import data
+from utils import open_driver, track_alert, get, get_current_url, clear_and_send_keys, \
+    scroll_to, click_by_pyautogui
 
+logzero.logfile(LOGFILE_NAME, encoding='utf-8', maxBytes=500_0000, backupCount=3)
 # 管理页面URL
 MANAGE_URL = 'http://ac.qq.com/MyComic'
 # 登录成功之后跳转的URL
@@ -16,21 +21,25 @@ COOKIE_FILE = f'cookies/{COOKIE_DOMAIN[1:]}_{data["qq_username"]}.cookie.json'
 
 FIRST_CHAPTER = True
 REAL_PUBLISH = True
+browser = BROWSER_FIREFOX
+
+DELETE_OK_PNG = 'tencent_delete_ok.png'
+CHAPTER_PNG = 'tencent.png'
 
 
 class Tencent:
     def __init__(self):
         pass
 
-    def process(self):
+    def process(self, mysql_id):
         with open_driver(cookie_domain=COOKIE_DOMAIN,
-                         cookie_file=COOKIE_FILE,browser='firefox') as driver:
+                         cookie_file=COOKIE_FILE, browser=browser) as driver:
             with track_alert(driver):
                 self.driver = driver
 
                 # 处理登录
                 # add_cookie(COOKIE_DOMAIN, driver, COOKIE_FILE)
-                #driver.get('http://www.baidu.com')
+                # driver.get('http://www.baidu.com')
                 time.sleep(5)
                 get(MANAGE_URL)
                 if get_current_url() != MANAGE_URL:
@@ -103,11 +112,13 @@ class Tencent:
         time.sleep(3)
         # 上传章节内容
         scroll_to()
-        self.driver.execute_script('document.querySelectorAll("#button_main")[0].style.display="block";')
-        # POSOTION_GREEN_BUTTON = (1599, 749)
-        POSOTION_GREEN_BUTTON = (678, 219)
-        click_by_pg(*POSOTION_GREEN_BUTTON)
-        # 1599 749
+        # self.driver.execute_script('document.querySelectorAll("#button_mid")[0].style.display="block";')
+        # time.sleep(1)
+        # 点击上传按钮
+        # d = self.driver.find_element_by_css_selector("#create_chapter_tip").location_once_scrolled_into_view
+        # printt(d['x'],d['y'])
+        click_by_pyautogui(CHAPTER_PNG)
+        # click_by_pg(*POSOTION_GREEN_BUTTON)
         img: str = ' '.join(data['qq_pics'])
         cmd = f'D:/uploadImg.exe 打开 {img}'
         logger.info(cmd)
@@ -115,7 +126,7 @@ class Tencent:
         js = 'return $("#uploadProgressBox").text();'
         while True:
             percent = self.driver.execute_script(js)
-            time.sleep(1)
+            time.sleep(4)
             logger.info(percent)
             if percent == '100%':
                 break
@@ -133,20 +144,20 @@ class Tencent:
             logger.info('发布成功')
 
     def delete_all_chaptor(self):
-        import pyautogui as pg
         get('http://ac.qq.com/MyComic/chapterList/id/632099')
         delete_eles = self.driver.find_elements_by_css_selector("a[do=delete]")
         while len(delete_eles) > 0:
             delete_eles[0].click()
             time.sleep(2)
-            pg.press('enter')
+            click_by_pyautogui(DELETE_OK_PNG)
             logger.info('删除章节')
             time.sleep(2)
             delete_eles = self.driver.find_elements_by_css_selector("a[do=delete]")
 
-def main():
-    Tencent().process()
+
+def main(mysql_id):
+    Tencent().process(mysql_id)
 
 
 if __name__ == '__main__':
-    main()
+    main(10000)
