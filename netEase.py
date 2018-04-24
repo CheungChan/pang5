@@ -1,21 +1,21 @@
-from utils import open_driver, track_alert, get, click, store_cookie, add_cookie, get_current_url, get_sorted_imgs
 import time
-from selenium.webdriver.support.ui import Select
-import os
+
 from logzero import logger
+from selenium.webdriver.support.ui import Select
+
 from data import data
+from utils import open_driver, track_alert, get, store_cookie, add_cookie, get_current_url
 
 MANAGE_URL = 'https://zz.manhua.163.com/'
 COOKIE_DOMAIN = ".manhua.163.com"
-login_username = data['net_username']
-login_password = data['net_password']
+login_username = 308602626#data['net_username']
+login_password = 'DAhuang1991' #data['net_password']
 COOKIE_FILE = f'cookies/{COOKIE_DOMAIN[1:]}_{login_username}.cookie.json'
-from selenium.webdriver.support.ui import WebDriverWait
-
 
 class Upload:
     def __init__(self):
         logger.info('开始')
+
 
     def main(self):
         with open_driver(cookie_domain=".manhua.163.com",
@@ -25,10 +25,13 @@ class Upload:
                 add_cookie(COOKIE_DOMAIN, driver, COOKIE_FILE)
                 get(MANAGE_URL)
                 if get_current_url() != MANAGE_URL:
-                    if data['net-login']=='mobile':
+                    data['net-login'] = 'qq'
+                    if data['net-login'] == 'mobile':
                         self.mobile_login(driver, login_username, login_password)
-                    elif data['net-login']=='mail':
+                    elif data['net-login'] == 'mail':
                         self.mail_login(driver, login_username, login_password)
+                    elif data['net-login'] == 'qq':
+                        self.qq_login(driver, login_username, login_password)
                     # self.mobile_login(driver)
 
                     store_cookie(driver, COOKIE_FILE)
@@ -39,7 +42,6 @@ class Upload:
                 time.sleep(1)
                 # try:
                 driver.find_element_by_link_text(data['net_series_title']).click()
-                print(1)
                 time.sleep(1)
                 handles = driver.window_handles
                 time.sleep(1)
@@ -47,13 +49,10 @@ class Upload:
                 js = "window.scrollTo(0, document.body.scrollHeight)"
                 driver.execute_script(js)
                 driver.find_element_by_css_selector('#panel1 > div > div > a').click()
-                print(2)
-
                 self.form(driver, data['net_title_text'], data['net_image_pic'], data['net_d'], data['net_h'],
                           data['net_m'], data['net-use-appoint'])
                 # except:
                 #     logger.error('error')
-
 
     # 邮箱登录
     def mail_login(self, driver, login_username, login_password):
@@ -74,7 +73,32 @@ class Upload:
         pass
 
     # qq登录
-    def qq_login(self, driver):
+    def qq_login(self, driver,login_username, login_password):
+        get('https://manhua.163.com/')
+        # click('.topbar-meta-user >ul >li:nth-child(1)>.js-login-required')
+        driver.find_element_by_css_selector('.topbar-meta-user >ul >li:nth-child(1)>.js-login-required').click()
+        time.sleep(3)
+        driver.find_element_by_css_selector('#common_login > div.m-loginswitch > ul > li:nth-child(2) > a > i').click()
+        time.sleep(3)
+        print(get_current_url())
+        windows = driver.window_handles
+        driver.switch_to.window(windows[-1])
+        driver.switch_to_frame(driver.find_element_by_id("ptlogin_iframe"))
+        driver.find_element_by_id('switcher_plogin').click()
+        time.sleep(3)
+
+        u=driver.find_element_by_id('u')
+        u.clear()
+        u.send_keys(login_username)
+        p=driver.find_element_by_id('p')
+        p.clear()
+        p.send_keys(login_password)
+        driver.find_element_by_id('login_button').click()
+        time.sleep(3)
+
+        windows = driver.window_handles
+        driver.switch_to.window(windows[-1])
+
         pass
 
     # 微博登录
@@ -158,11 +182,10 @@ class Upload:
             logger.info('暂停,文件未上传完成')
             time.sleep(0.5)
 
+
 def main():
     Upload().main()
-
+    # Upload().qq_login()
 
 if __name__ == '__main__':
-    # Upload_netEase = Upload()
-    # Upload_netEase.main()
     main()

@@ -8,7 +8,6 @@
 import json
 import os
 from io import BytesIO
-import traceback
 import pika
 import records
 import requests
@@ -35,11 +34,11 @@ def main():
 
 
 def callback(ch, method, properties, body):
-        i = 0
-        logger.info("[x] Received %r" % body)
-        rabbitInfo = json.loads(body)
+    i = 0
+    logger.info("[x] Received %r" % body)
+    rabbitInfo = json.loads(body)
 
-    # try:
+    try:
 
         mysql_id = rabbitInfo['mysql_id']
         row = db.query('SELECT * FROM  chapter_chapter where id= :id_num', id_num=mysql_id)
@@ -69,7 +68,6 @@ def callback(ch, method, properties, body):
             data['qingdian_password'] = userinfo[0]['platform_password']
             data['qingdian_series'] = row[0]['works_name']
             data['qingdian_title'] = row[0]['chapter_name']
-
             qingdian.main()
         elif userinfo[0]['platform'] == 'qq':
             data['qq_username'] = userinfo[0]['platform_username']
@@ -80,6 +78,7 @@ def callback(ch, method, properties, body):
             data['qq_chapter-publish-time'] = row[0]['publish_clock_time']
             tencent.main()
         elif userinfo[0]['platform'] == 'netEase':
+
             data['net_username'] = userinfo[0]['platform_username']
             data['net_password'] = userinfo[0]['platform_password']
             data['net-use-appoint'] = row[0]['is_publish_clock']
@@ -95,7 +94,7 @@ def callback(ch, method, properties, body):
                     data['net_m'] = 0
                 elif m_num >= 15 and m_num < 30:
                     data['net_m'] = 15
-                elif m_num >= 30 and m_num < 45:
+                elif m_num >= 30 and m_num < 45:    
                     data['net_m'] = 30
                 elif m_num >= 45 and m_num < 60:
                     data['net_m'] = 45
@@ -111,10 +110,10 @@ def callback(ch, method, properties, body):
         else:
             logger.error('未知平台')
 
-    # except Exception as e:
-    #     logger.error(e)
-    #     logger.error('数据错误')
-    # finally:
+    except Exception as e:
+        logger.error(e)
+        logger.error('数据错误')
+    finally:
         try:
             os.remove('./images/封面.jpg')
         except:
@@ -125,7 +124,7 @@ def callback(ch, method, properties, body):
                 os.remove('./images/章节/' + str(num + 1) + '.jpg')
             except:
                 logger.error('no find')
-
+        logger.info('发布成功')
 
 def insert_rabbit(format):
     credentials = pika.PlainCredentials(config.RABBITMQ_USER, config.RABBITMQ_PASSWORD)
@@ -145,4 +144,5 @@ def insert_rabbit(format):
 
 
 if __name__ == '__main__':
-    main()
+    row = db.query('SELECT * FROM  chapter_chapter where id= :id_num', id_num=17)
+    print(row[1])
