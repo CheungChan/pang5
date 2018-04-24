@@ -6,19 +6,22 @@ from selenium.webdriver.support.ui import Select
 from data import data
 import logzero
 from config import LOGFILE_NAME
-from utils import open_driver,get,track_alert,add_cookie,get_current_url,store_cookie
+from utils import open_driver, get, track_alert, add_cookie, get_current_url, store_cookie, g_mysqlid
+
 logzero.logfile(LOGFILE_NAME, encoding='utf-8', maxBytes=500_0000, backupCount=3)
 MANAGE_URL = 'https://zz.manhua.163.com/'
 COOKIE_DOMAIN = ".manhua.163.com"
-login_username = 308602626#data['net_username']
-login_password = 'DAhuang1991' #data['net_password']
+login_username = 308602626  # data['net_username']
+login_password = 'DAhuang1991'  # data['net_password']
 COOKIE_FILE = f'cookies/{COOKIE_DOMAIN[1:]}_{login_username}.cookie.json'
+
 
 class Upload:
     def __init__(self):
         logger.info('开始')
 
     def process(self, mysql_id):
+        g_mysqlid["mysql_id"] = mysql_id
         with open_driver(cookie_domain=".manhua.163.com",
                          cookie_file=COOKIE_FILE) as driver:
             with track_alert(driver):
@@ -73,7 +76,7 @@ class Upload:
         pass
 
     # qq登录
-    def qq_login(self, driver,login_username, login_password):
+    def qq_login(self, driver, login_username, login_password):
         get('https://manhua.163.com/')
         # click('.topbar-meta-user >ul >li:nth-child(1)>.js-login-required')
         driver.find_element_by_css_selector('.topbar-meta-user >ul >li:nth-child(1)>.js-login-required').click()
@@ -87,10 +90,10 @@ class Upload:
         driver.find_element_by_id('switcher_plogin').click()
         time.sleep(3)
 
-        u=driver.find_element_by_id('u')
+        u = driver.find_element_by_id('u')
         u.clear()
         u.send_keys(login_username)
-        p=driver.find_element_by_id('p')
+        p = driver.find_element_by_id('p')
         p.clear()
         p.send_keys(login_password)
         driver.find_element_by_id('login_button').click()

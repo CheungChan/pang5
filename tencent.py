@@ -8,7 +8,7 @@ from config import BROWSER_FIREFOX
 from config import LOGFILE_NAME
 from data import data
 from utils import open_driver, track_alert, get, get_current_url, clear_and_send_keys, \
-    scroll_to, click_by_pyautogui
+    scroll_to, click_by_pyautogui,g_mysqlid
 
 logzero.logfile(LOGFILE_NAME, encoding='utf-8', maxBytes=500_0000, backupCount=3)
 # 管理页面URL
@@ -32,6 +32,7 @@ class Tencent:
         pass
 
     def process(self, mysql_id):
+        g_mysqlid["mysql_id"] = mysql_id
         with open_driver(cookie_domain=COOKIE_DOMAIN,
                          cookie_file=COOKIE_FILE, browser=browser) as driver:
             with track_alert(driver):

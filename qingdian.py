@@ -5,7 +5,7 @@ from logzero import logger
 
 from config import LOGFILE_NAME
 from data import data
-from utils import open_driver, track_alert, get, store_cookie
+from utils import open_driver, track_alert, get, store_cookie, g_mysqlid
 
 logzero.logfile(LOGFILE_NAME, encoding='utf-8', maxBytes=500_0000, backupCount=3)
 MANAGE_URL = 'http://page.qingdian.cn/center/comicManagement/upload'
@@ -23,6 +23,7 @@ class Qingdian:
         self.driver = None
 
     def process(self, mysql_id):
+        g_mysqlid["mysql_id"] = mysql_id
         with open_driver(cookie_domain=COOKIE_DOMAIN,
                          cookie_file=COOKIE_FILE) as driver:
             self.driver = driver
@@ -127,7 +128,6 @@ class Qingdian:
 
 def main(mysql_id):
     Qingdian().process(mysql_id)
-
 
 
 if __name__ == '__main__':
