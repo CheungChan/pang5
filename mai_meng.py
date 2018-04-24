@@ -5,7 +5,7 @@ from logzero import logger
 
 from data import data
 from utils import open_driver, track_alert, get, get_current_url, clear_and_send_keys, \
-    scroll_to, click_by_actionchains,g_mysqlid
+    scroll_to, click_by_actionchains,g_mysqlid,Pang5Exception
 from config import LOGFILE_NAME
 
 logzero.logfile(LOGFILE_NAME, encoding='utf-8', maxBytes=500_0000, backupCount=3)
@@ -31,8 +31,7 @@ class MaiMeng:
                 get(MANAGE_URL)
                 if get_current_url() != MANAGE_URL:
                     if not self.login():
-                        logger.error('登录失败')
-                        return
+                        raise Pang5Exception('登录失败')
                 # store_cookie(driver, COOKIE_FILE)
                 logger.info('登录成功')
 
@@ -61,7 +60,8 @@ class MaiMeng:
         self.driver.find_element_by_css_selector(".login-btn").click()
         time.sleep(3)
         if get_current_url() != AUTH_OK_URL:
-            input('请处理登录异常，之后按回车键')
+            logger.error(get_current_url())
+            raise Pang5Exception("登录异常")
         return get_current_url() != login_url
 
     def publish(self):
