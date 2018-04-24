@@ -7,7 +7,7 @@ from logzero import logger
 from config import LOGFILE_NAME
 from data import data
 from utils import open_driver, track_alert, get, get_current_url, clear_and_send_keys, \
-    scroll_to, click_by_pyautogui
+    scroll_to, click_by_pyautogui, Pang5Exception, update_status2OK
 
 logzero.logfile(LOGFILE_NAME, encoding='utf-8', maxBytes=500_0000, backupCount=3)
 COOKIE_DOMAIN = '.u17.com'
@@ -21,6 +21,7 @@ START_UPLOAD_PNG = 'u17_start_upload.png'
 
 class U17:
     def process(self, mysql_id):
+        self.mysql_id = mysql_id
         with open_driver(cookie_domain=COOKIE_DOMAIN,
                          cookie_file=COOKIE_FILE, browser='firefox') as driver:
             with track_alert(driver):
@@ -44,7 +45,7 @@ class U17:
         self.driver.execute_script(js)
         time.sleep(3)
         if get_current_url() != AUTH_OK_URL:
-            input('请处理登录异常，之后按回车键')
+            raise Pang5Exception(self.mysql_id, "登录异常")
         return get_current_url() != login_url
 
     def publish(self):
@@ -108,6 +109,7 @@ class U17:
         logger.info('提交审核')
         self.driver.find_element_by_css_selector('#main > div.borbox > div > div.tc > a').click()
         logger.info('发布成功')
+        update_status2OK(self.mysql_id)
 
 
 def main(mysql_id):

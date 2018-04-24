@@ -97,7 +97,6 @@ class open_driver(object):
             logger.error(exc_val)
             logger.error(exc_tb)
             if exc_type == Pang5Exception:
-                # TODO 处理异常
                 pass
             return False
 
@@ -123,8 +122,18 @@ class track_alert(object):
 class Pang5Exception(Exception):
     def __init__(self, mysql_id, msg):
         logger.error(msg)
-        rows = db.query("update chapter_chapter set status=-1, fail_reason=:msg where id=:id", id=mysql_id, msg=msg)
-        logger.info(rows)
+        update_status2fail(mysql_id, msg)
+
+
+def update_status2fail(mysql_id, msg):
+    rows = db.query("update chapter_chapter set status=-1, fail_reason=:msg where id=:id", id=mysql_id, msg=msg)
+    logger.info(rows)
+
+
+def update_status2OK(mysql_id):
+    # 没有异常, 更改数据库状态
+    rows = db.query('update chapter_chapter set status=0, ok_time=:ok_time where id=:id', id=mysql_id)
+    logger.info(rows)
 
 
 def refresh_recursion(url, num=3):
