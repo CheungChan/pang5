@@ -152,5 +152,6 @@ def insert_rabbit(format):
 
 
 if __name__ == '__main__':
-    row = db.query('SELECT * FROM  chapter_chapter where id= :id_num', id_num=17)
-    print(row[1])
+    # row = db.query('SELECT * FROM  chapter_chapter where id= :id_num', id_num=17)
+    # print(row[1])
+    main()
