@@ -275,7 +275,8 @@ def click_by_pyautogui(image_path):
         pyautogui.moveTo(x, y)
         pyautogui.click(x, y)
     else:
-        raise Pang5Exception(f'{image_path} 在页面上不能找到')
+        logger.error(f'{image_path} 在页面上不能找到')
+        raise Pang5Exception('发布失败,会在稍后重试')
 
 
 def click_by_sikulix(image_path):
