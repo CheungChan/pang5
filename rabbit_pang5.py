@@ -21,7 +21,7 @@ from config import LOGFILE_NAME
 
 logzero.logfile(LOGFILE_NAME, encoding='utf-8', maxBytes=500_0000, backupCount=3)
 
-db = records.Database(config.TEST_MYSQL_URL)
+db = records.Database(config.MYSQL_URL)
 
 pwd = os.path.abspath(os.curdir)
 
@@ -73,7 +73,7 @@ def callback(ch, method, properties, body):
         data['qingdian_series'] = row[0]['works_name']
         data['qingdian_title'] = row[0]['chapter_name']
 
-        qingdian.main()
+        qingdian.main(mysql_id)
     elif userinfo[0]['platform'] == 'qq':
         data['qq_username'] = userinfo[0]['platform_username']
         data['qq_password'] = userinfo[0]['platform_password']
@@ -81,7 +81,7 @@ def callback(ch, method, properties, body):
         data['qq_chapter_title'] = row[0]['chapter_name']
         data['qq_use-appoint'] = row[0]['is_publish_clock']
         data['qq_chapter-publish-time'] = row[0]['publish_clock_time']
-        tencent.main()
+        tencent.main(mysql_id)
     elif userinfo[0]['platform'] == 'netEase':
         data['net_username'] = userinfo[0]['platform_username']
         data['net_password'] = userinfo[0]['platform_password']
@@ -103,14 +103,20 @@ def callback(ch, method, properties, body):
             elif m_num >= 45 and m_num < 60:
                 data['net_m'] = 45
 
-        netEase.main()
+        netEase.main(mysql_id)
     elif userinfo[0]['platform'] == 'maimeng':
         data['maimeng_username'] = userinfo[0]['platform_username']
         data['maimeng_password'] = userinfo[0]['platform_password']
         data['maimeng_series'] = row[0]['works_name']
         data['maimeng_title'] = row[0]['chapter_name']
         data['maimeng_publish_time'] = row[0]['publish_clock_time']
-        mai_meng.main()
+        mai_meng.main(mysql_id)
+    elif userinfo[0]['platform'] == 'u17':
+        data['u17_username'] = userinfo[0]['platform_username']
+        data['u17_password'] = userinfo[0]['platform_password']
+        data['u17_comic_id'] = row[0]['works_id']
+        data['u17_chapter'] = row[0]['chapter_name']
+        data['u17_series'] = row[0]['works_name']
     else:
         logger.error('未知平台')
 

@@ -32,13 +32,13 @@ CHROME_ARG = [
 ]
 
 if DEBUG:
-    TEST_MYSQL_URL = 'mysql://10.10.6.2/pang5?user=develop&password=123-qwe&charset=utf8mb4'
+    MYSQL_URL = 'mysql://10.10.6.2/pang5?user=develop&password=123-qwe&charset=utf8mb4'
     RABBITMQ_HTOS = '10.10.6.5'
     RABBITMQ_POST = 5672
     RABBITMQ_USER = 'yanghao'
     RABBITMQ_PASSWORD = '123456'
 else:
-    TEST_MYSQL_URL = 'mysql://10.10.6.6/pang5?user=develop&password=123^%$-qwe&charset=utf8mb4'
+    MYSQL_URL = 'mysql://10.10.6.6/pang5?user=develop&password=123^%$-qwe&charset=utf8mb4'
 
     RABBITMQ_HTOS = '10.10.10.3'
     RABBITMQ_POST = 5000

@@ -20,7 +20,7 @@ START_UPLOAD_PNG = 'u17_start_upload.png'
 
 
 class U17:
-    def process(self):
+    def process(self, mysql_id):
         with open_driver(cookie_domain=COOKIE_DOMAIN,
                          cookie_file=COOKIE_FILE, browser='firefox') as driver:
             with track_alert(driver):
@@ -110,9 +110,9 @@ class U17:
         logger.info('发布成功')
 
 
-def main():
-    U17().process()
+def main(mysql_id):
+    U17().process(mysql_id)
 
 
 if __name__ == '__main__':
-    main()
+    main(10000)

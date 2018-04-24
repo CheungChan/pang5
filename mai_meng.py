@@ -20,7 +20,7 @@ class MaiMeng:
     def __init__(self):
         logger.info(data)
 
-    def process(self):
+    def process(self, mysql_id):
         with open_driver(cookie_domain=COOKIE_DOMAIN,
                          cookie_file=COOKIE_FILE, browser='firefox') as driver:
             with track_alert(driver):
@@ -110,9 +110,9 @@ class MaiMeng:
         time.sleep(3)
 
 
-def main():
-    MaiMeng().process()
+def main(mysql_id):
+    MaiMeng().process(mysql_id)
 
 
 if __name__ == '__main__':
-    main()
+    main(10000)

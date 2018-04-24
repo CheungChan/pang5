@@ -31,7 +31,7 @@ class Tencent:
     def __init__(self):
         pass
 
-    def process(self):
+    def process(self, mysql_id):
         with open_driver(cookie_domain=COOKIE_DOMAIN,
                          cookie_file=COOKIE_FILE, browser=browser) as driver:
             with track_alert(driver):
@@ -149,15 +149,15 @@ class Tencent:
         while len(delete_eles) > 0:
             delete_eles[0].click()
             time.sleep(2)
-            click_by_sikulix(DELETE_OK_PNG)
+            click_by_pyautogui(DELETE_OK_PNG)
             logger.info('删除章节')
             time.sleep(2)
             delete_eles = self.driver.find_elements_by_css_selector("a[do=delete]")
 
 
-def main():
-    Tencent().process()
+def main(mysql_id):
+    Tencent().process(mysql_id)
 
 
 if __name__ == '__main__':
-    main()
+    main(10000)

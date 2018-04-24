@@ -20,7 +20,7 @@ class Upload:
     def __init__(self):
         logger.info('开始')
 
-    def main(self):
+    def process(self, mysql_id):
         with open_driver(cookie_domain=".manhua.163.com",
                          cookie_file=COOKIE_FILE) as driver:
             with track_alert(driver):
@@ -161,11 +161,11 @@ class Upload:
             time.sleep(0.5)
 
 
-def main():
-    Upload().main()
+def main(mysql_id):
+    Upload().process(mysql_id)
 
 
 if __name__ == '__main__':
     # Upload_netEase = Upload()
     # Upload_netEase.main()
-    main()
+    main(10000)
