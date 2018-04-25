@@ -134,6 +134,7 @@ class Pang5Exception(Exception):
 
 
 def update_status2fail(msg):
+    logger.error(msg)
     rows = db.query("update chapter_chapter set status=-1, fail_reason=:msg where id=:id", id=g_mysqlid['mysql_id'],
                     msg=msg)
     logger.info(rows)
