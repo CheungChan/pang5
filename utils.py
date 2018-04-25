@@ -137,14 +137,14 @@ def update_status2fail(msg):
     logger.error(msg)
     rows = db.query("update chapter_chapter set status=-1, fail_reason=:msg where id=:id", id=g_mysqlid['mysql_id'],
                     msg=msg)
-    logger.info(rows)
+    logger.info(rows.as_dict())
 
 
 def update_status2OK():
     # 没有异常, 更改数据库状态
     rows = db.query('update chapter_chapter set status=0, ok_time=:ok_time where id=:id', id=g_mysqlid["mysql_id"],
                     ok_time=datetime.now())
-    logger.info(rows)
+    logger.info(rows.as_dict())
 
 
 def refresh_recursion(url, num=3):
