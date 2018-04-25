@@ -109,7 +109,12 @@ class Qingdian:
                 a.find_element_by_css_selector(
                     'div > div.bottom-btn-box > div:nth-child(1) > span:nth-child(3)').click()
                 return
-        self.driver.find_element_by_css_selector('.btn-next').click()
+        btn = self.driver.find_element_by_css_selector('.btn-next')
+        if 'disabled' not in btn.get_attribute('class'):
+            btn.click()
+            time.sleep(1)
+        else:
+            raise Pang5Exception(f'用户没有绑定作品 "{article_name}"')
         self.search_article(article_name)
 
     # 看是否上传完
