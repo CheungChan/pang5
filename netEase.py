@@ -6,7 +6,7 @@ from selenium.webdriver.support.ui import Select
 from data import data
 import logzero
 from config import LOGFILE_NAME
-from utils import open_driver, get, track_alert, add_cookie, get_current_url, store_cookie, g_mysqlid
+from utils import open_driver, get, track_alert, add_cookie, get_current_url, store_cookie, g_mysqlid,Pang5Exception
 
 logzero.logfile(LOGFILE_NAME, encoding='utf-8', maxBytes=500_0000, backupCount=3)
 MANAGE_URL = 'https://zz.manhua.163.com/'
@@ -44,7 +44,10 @@ class Upload:
                     get('http://zz.manhua.163.com/')
                 time.sleep(1)
                 # try:
-                driver.find_element_by_link_text(data['net_series_title']).click()
+                net_series = driver.find_elements_by_link_text(data['net_series_title'])
+                if len(net_series) == 0:
+                    raise Pang5Exception("该用户下没有该作品")
+                net_series[0].click()
                 time.sleep(1)
                 handles = driver.window_handles
                 time.sleep(1)
