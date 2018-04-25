@@ -7,7 +7,7 @@ from logzero import logger
 from config import LOGFILE_NAME
 from data import data
 from utils import open_driver, track_alert, get, get_current_url, clear_and_send_keys, \
-    scroll_to, click_by_pyautogui, Pang5Exception, update_status2OK,g_mysqlid
+    scroll_to, click_by_pyautogui, Pang5Exception, update_status2OK, g_mysqlid
 
 logzero.logfile(LOGFILE_NAME, encoding='utf-8', maxBytes=500_0000, backupCount=3)
 COOKIE_DOMAIN = '.u17.com'
@@ -20,6 +20,9 @@ START_UPLOAD_PNG = 'u17_start_upload.png'
 
 
 class U17:
+    def __init__(self):
+        logger.info(data)
+
     def process(self, mysql_id):
         g_mysqlid["mysql_id"] = mysql_id
         with open_driver(cookie_domain=COOKIE_DOMAIN,

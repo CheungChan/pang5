@@ -18,7 +18,7 @@ COOKIE_FILE = f'cookies/{COOKIE_DOMAIN[1:]}_{login_username}.cookie.json'
 
 class Upload:
     def __init__(self):
-        logger.info('开始')
+        logger.info(data)
 
     def process(self, mysql_id):
         g_mysqlid["mysql_id"] = mysql_id

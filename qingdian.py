@@ -19,7 +19,7 @@ COOKIE_FILE = f'cookies/{COOKIE_DOMAIN[1:]}_{LOGIN_USERNAME}.cookie.json'
 
 class Qingdian:
     def __init__(self):
-        logger.info('开始')
+        logger.info(data)
         self.driver = None
 
     def process(self, mysql_id):

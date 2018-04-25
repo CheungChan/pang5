@@ -8,7 +8,7 @@ from config import BROWSER_FIREFOX
 from config import LOGFILE_NAME
 from data import data
 from utils import open_driver, track_alert, get, get_current_url, clear_and_send_keys, \
-    scroll_to, click_by_pyautogui,g_mysqlid,Pang5Exception
+    scroll_to, click_by_pyautogui, g_mysqlid, Pang5Exception
 
 logzero.logfile(LOGFILE_NAME, encoding='utf-8', maxBytes=500_0000, backupCount=3)
 # 管理页面URL
@@ -29,7 +29,7 @@ CHAPTER_PNG = 'tencent.png'
 
 class Tencent:
     def __init__(self):
-        pass
+        logger.info(data)
 
     def process(self, mysql_id):
         g_mysqlid["mysql_id"] = mysql_id
