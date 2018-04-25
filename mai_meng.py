@@ -100,11 +100,13 @@ class MaiMeng:
         loading = self.driver.find_element_by_css_selector(
             '#create_chapter > div.container > div.inner-container > div:nth-child(5) > div > div.field-input > ul > div.el-loading-mask')
         while loading.is_displayed():
+            scroll_to()
             time.sleep(2)
         scroll_to()
         # 同意合同
         self.driver.find_element_by_css_selector(
             '#create_chapter > div:nth-child(2) > label > input[type="checkbox"]').click()
+        scroll_to()
         # 提交审核
         time.sleep(2)
         click_by_actionchains('ul.submit > li:nth-child(3) > button.confirm-btn')
