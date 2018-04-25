@@ -5,7 +5,7 @@ from logzero import logger
 
 from data import data
 from utils import open_driver, track_alert, get, get_current_url, clear_and_send_keys, \
-    scroll_to, click_by_actionchains,g_mysqlid,Pang5Exception
+    scroll_to, click_by_actionchains, g_mysqlid, Pang5Exception
 from config import LOGFILE_NAME
 
 logzero.logfile(LOGFILE_NAME, encoding='utf-8', maxBytes=500_0000, backupCount=3)
@@ -99,8 +99,8 @@ class MaiMeng:
         os.system(cmd)
         loading = self.driver.find_element_by_css_selector(
             '#create_chapter > div.container > div.inner-container > div:nth-child(5) > div > div.field-input > ul > div.el-loading-mask')
+        scroll_to()
         while loading.is_displayed():
-            scroll_to()
             time.sleep(2)
         scroll_to()
         # 同意合同
