@@ -106,9 +106,12 @@ class Qingdian:
             logger.info(a.find_element_by_css_selector('.mi-name-box').text)
             if "漫画名称：" + article_name == a.find_element_by_css_selector('.mi-name-box').text:
                 logger.info(a.find_element_by_css_selector('.mi-name-box').text)
-                a.find_element_by_css_selector(
-                    'div > div.bottom-btn-box > div:nth-child(1) > span:nth-child(3)').click()
-                return
+                btns = a.find_elements_by_css_selector(
+                    'div > div.bottom-btn-box > div:nth-child(1) > span:nth-child(3)')
+                if len(btns) == 0:
+                    raise Pang5Exception(f'作品"{article_name}"状态异常')
+                else:
+                    btns[0].click()
         btn = self.driver.find_element_by_css_selector('.btn-next')
         if 'disabled' not in btn.get_attribute('class'):
             logger.info('翻页')
