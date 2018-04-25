@@ -11,8 +11,8 @@ from utils import open_driver, get, track_alert, add_cookie, get_current_url, st
 logzero.logfile(LOGFILE_NAME, encoding='utf-8', maxBytes=500_0000, backupCount=3)
 MANAGE_URL = 'https://zz.manhua.163.com/'
 COOKIE_DOMAIN = ".manhua.163.com"
-login_username = 308602626  # data['net_username']
-login_password = 'DAhuang1991'  # data['net_password']
+login_username = data['net_username']
+login_password = data['net_password']
 COOKIE_FILE = f'cookies/{COOKIE_DOMAIN[1:]}_{login_username}.cookie.json'
 
 
