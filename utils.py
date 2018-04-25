@@ -92,8 +92,12 @@ class open_driver(object):
             update_status2fail("浏览器找不到了")
             return False
         if exc_tb:
-            self.driver.get_screenshot_as_file(
-                f"{SCREENSHOT_PATH}/excep_{datetime.now().strftime('%Y-%m-%d %H%M%S')}.png")
+            try:
+                self.driver.get_screenshot_as_file(
+                    f"{SCREENSHOT_PATH}/excep_{datetime.now().strftime('%Y-%m-%d %H%M%S')}.png")
+            except WebDriverException:
+                update_status2fail('截图失败,浏览器找不到了')
+                return False
         logger.info('屏蔽关闭提示框')
         self.driver.execute_script("window.onbeforeunload = function(e){};")
         logger.info("浏览器关闭")
