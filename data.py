@@ -20,7 +20,7 @@ data = {
     'net_password': 'qingdian',
     'net-use-appoint': True,
     'net-login': 'mobile',
-    'net_series_title': '万物皆娘',
+    'net_series_title': '为什么救赎',
     'net_title_text': '喝醉的妹子竟然扯开了衣服',
     'net_d': '2018-04-02',
     'net_h': '18',
