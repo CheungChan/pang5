@@ -7,7 +7,7 @@ import logzero
 from logzero import logger
 from selenium import webdriver
 from selenium.common.exceptions import UnexpectedAlertPresentException, TimeoutException, WebDriverException, \
-    SessionNotCreatedException
+    SessionNotCreatedException, NoSuchWindowException
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
@@ -88,7 +88,7 @@ class open_driver(object):
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         logger.info('退出')
-        if exc_type == WebDriverException or exc_type == SessionNotCreatedException:
+        if exc_type == SessionNotCreatedException or exc_type == NoSuchWindowException:
             update_status2fail("浏览器找不到了")
             return False
         if exc_tb:
@@ -107,6 +107,8 @@ class open_driver(object):
             if exc_type != Pang5Exception:
                 update_status2fail("出现异常,浏览器只能关闭")
             return False
+        else:
+            update_status2OK()
 
 
 class track_alert(object):
@@ -129,7 +131,6 @@ class track_alert(object):
 
 class Pang5Exception(Exception):
     def __init__(self, msg):
-        logger.error(msg)
         update_status2fail(msg)
 
 
@@ -137,14 +138,14 @@ def update_status2fail(msg):
     logger.error(msg)
     rows = db.query("update chapter_chapter set status=-1, fail_reason=:msg where id=:id", id=g_mysqlid['mysql_id'],
                     msg=msg)
-    logger.info(f'更新状态影响了 {len(rows)} 行')
+    logger.info(f'更新{g_mysqlid["mysql_id"]}状态影响了 {len(rows)} 行')
 
 
 def update_status2OK():
     # 没有异常, 更改数据库状态
     rows = db.query('update chapter_chapter set status=0, ok_time=:ok_time where id=:id', id=g_mysqlid["mysql_id"],
                     ok_time=datetime.now())
-    logger.info(f'更新状态影响了 {len(rows)} 行')
+    logger.info(f'更新{g_mysqlid["mysql_id"]}状态影响了 {len(rows)} 行')
 
 
 def refresh_recursion(url, num=3):
