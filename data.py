@@ -22,7 +22,7 @@ data = {
     'net-login': 'mobile',
     'net_series_title': '为什么救赎',
     'net_title_text': '喝醉的妹子竟然扯开了衣服',
-    'net_d': '2018-04-02',
+    'net_d': '2018-04-26',
     'net_h': '18',
     'net_m': '15',
     'net_image_pic': [f'{os.path.join(pwd,"images" ,"章节",d)}' for d in get_sorted_imgs(os.path.join(pwd, "images","章节"))],
