@@ -31,6 +31,7 @@ class Qingdian:
                 self.mobile_login(driver, LOGIN_USERNAME, LONGIN_PASSWORD)
                 store_cookie(driver, COOKIE_FILE)
                 get(MANAGE_URL)
+                time.sleep(2)
                 cur = get_current_url()
                 if cur != MANAGE_URL:
                     logger.error(MANAGE_URL)
