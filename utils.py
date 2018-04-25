@@ -101,6 +101,8 @@ class open_driver(object):
             logger.error(exc_tb)
             if exc_type == Pang5Exception:
                 pass
+            else:
+                update_status2fail("浏览器异常关闭")
             return False
 
 
