@@ -111,7 +111,7 @@ class Qingdian:
                 return
         btn = self.driver.find_element_by_css_selector('.btn-next')
         if 'disabled' not in btn.get_attribute('class'):
-            logger.info(f'翻页第{btn.text}页')
+            logger.info('翻页')
             btn.click()
             time.sleep(1)
         else:
