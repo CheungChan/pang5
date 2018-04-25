@@ -31,7 +31,7 @@ data = {
     # 'qingdian_username': '13000002726',
     # "qingdian_password": 'qingdiancmc',
     'qingdian_username': '13311095487',
-    "qingdian_password": '123456',
+    "qingdian_password": '12341234',
     'qingdian_series': '万物皆娘',
     'qingdian_chapter': os.path.join(pwd, 'images', '封面.jpg'),
     'qingdian_title': '喝醉的妹子竟然扯 开了衣服',

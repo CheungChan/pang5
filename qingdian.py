@@ -5,7 +5,7 @@ from logzero import logger
 
 from config import LOGFILE_NAME
 from data import data
-from utils import open_driver, track_alert, get, store_cookie, g_mysqlid
+from utils import open_driver, track_alert, get, store_cookie, g_mysqlid, get_current_url, Pang5Exception
 
 logzero.logfile(LOGFILE_NAME, encoding='utf-8', maxBytes=500_0000, backupCount=3)
 MANAGE_URL = 'http://page.qingdian.cn/center/comicManagement/upload'
@@ -31,6 +31,10 @@ class Qingdian:
                 self.mobile_login(driver, LOGIN_USERNAME, LONGIN_PASSWORD)
                 store_cookie(driver, COOKIE_FILE)
                 get(MANAGE_URL)
+                cur = get_current_url()
+                if cur != MANAGE_URL:
+                    logger.error(MANAGE_URL)
+                    raise Pang5Exception("登录失败")
                 self.driver.find_element_by_link_text('我的作品').click()
                 self.search_article(data['qingdian_series'])
                 self.form(driver, data['qingdian_title'], data['qingdian_pic'], data['qingdian_chapter'])
