@@ -6,7 +6,8 @@ from datetime import datetime
 import logzero
 from logzero import logger
 from selenium import webdriver
-from selenium.common.exceptions import UnexpectedAlertPresentException, TimeoutException
+from selenium.common.exceptions import UnexpectedAlertPresentException, TimeoutException, WebDriverException, \
+    SessionNotCreatedException
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
@@ -86,6 +87,9 @@ class open_driver(object):
         return self.driver
 
     def __exit__(self, exc_type, exc_val, exc_tb):
+        if exc_type == WebDriverException or exc_type == SessionNotCreatedException:
+            update_status2fail("浏览器找不到了")
+            return False
         if exc_tb:
             self.driver.get_screenshot_as_file(
                 f"{SCREENSHOT_PATH}/excep_{datetime.now().strftime('%Y-%m-%d %H%M%S')}.png")
@@ -99,10 +103,8 @@ class open_driver(object):
             logger.error(exc_type)
             logger.error(exc_val)
             logger.error(exc_tb)
-            if exc_type == Pang5Exception:
-                pass
-            else:
-                update_status2fail("浏览器异常关闭")
+            if exc_type != Pang5Exception:
+                update_status2fail("出现异常,浏览器只能关闭")
             return False
 
 
