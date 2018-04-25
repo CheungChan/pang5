@@ -87,6 +87,7 @@ class open_driver(object):
         return self.driver
 
     def __exit__(self, exc_type, exc_val, exc_tb):
+        logger.info('退出')
         if exc_type == WebDriverException or exc_type == SessionNotCreatedException:
             update_status2fail("浏览器找不到了")
             return False
