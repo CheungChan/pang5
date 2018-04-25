@@ -88,7 +88,7 @@ class MaiMeng:
             data['maimeng_comment'])
 
         # 漫画原稿
-        scroll_to(300)
+        scroll_to()
         self.driver.find_element_by_css_selector(
             '#create_chapter > div.container > div.inner-container > div:nth-child(5) > div > div.field-input > ul > li > img').click()
         img: str = ' '.join(data['maimeng_pic'])
