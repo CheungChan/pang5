@@ -103,14 +103,16 @@ class Qingdian:
         article_list = self.driver.find_elements_by_css_selector(
             '#app > div.center.shadow-bottom-line > div.center-main.ui-area > div.center-tab-content.clearfix > div.right-main > div > div > div:nth-child(1) > div > ul > li')
         for a in article_list:
-            logger.info(a.find_element_by_css_selector('.mi-name-box').text)
-            if "漫画名称：" + article_name == a.find_element_by_css_selector('.mi-name-box').text:
-                logger.info(a.find_element_by_css_selector('.mi-name-box').text)
+            article_name_css = a.find_element_by_css_selector('.mi-name-box').text
+            logger.info(article_name_css)
+            if "漫画名称：" + article_name == article_name_css:
+                logger.info(article_name_css)
                 btns = a.find_elements_by_css_selector(
                     'div > div.bottom-btn-box > div:nth-child(1) > span:nth-child(3)')
                 if len(btns) == 0:
                     raise Pang5Exception(f'作品"{article_name}"状态异常')
                 else:
+                    logger.info('找到')
                     btns[0].click()
                     return
         btn = self.driver.find_element_by_css_selector('.btn-next')
