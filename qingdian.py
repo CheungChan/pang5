@@ -98,10 +98,11 @@ class Qingdian:
         # 提交
         driver.find_element_by_css_selector(
             '#app > div.center.shadow-bottom-line > div.center-main.ui-area > div.center-tab-content.clearfix > div.right-main > div > div > div:nth-child(3) > div > div.mw-btn-box > span.btn-theme.btn-submit').click()
+        time.sleep(2)
+        # 捕获报错信息
         hint = driver.execute_script('return window.hint;')
         if hint:
             raise Pang5Exception(hint)
-        time.sleep(2)
 
     def search_article(self, article_name):
         article_list = self.driver.find_elements_by_css_selector(
