@@ -30,8 +30,10 @@ data = {
     # 轻点
     # 'qingdian_username': '13000002726',
     # "qingdian_password": 'qingdiancmc',
-    'qingdian_username': '13311095487',
-    "qingdian_password": '12341234',
+    # 'qingdian_username': '13311095487',# 杨浩
+    # "qingdian_password": '12341234',
+    'qingdian_username': '13000002729',  # 轻点酱
+    "qingdian_password": 'qingdian321',
     'qingdian_series': '杨浩测试 不要审核通过',
     'qingdian_chapter': os.path.join(pwd, 'images', '封面.jpg'),
     'qingdian_title': '喝醉的妹子竟然扯 开了衣服',
