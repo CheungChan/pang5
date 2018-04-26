@@ -1,4 +1,5 @@
 import json
+import pickle
 import os
 import time
 from datetime import datetime
@@ -172,7 +173,7 @@ def add_cookie(cookie_domain, driver, cookie_file):
         return False
     logger.info('加载cookie')
     driver.delete_all_cookies()
-    cookies = json.load(open(cookie_file, 'r'))
+    cookies = pickle.load(open(cookie_file, 'rb'))
     for c in cookies:
         if c.get('domain') != cookie_domain:
             continue
@@ -184,7 +185,7 @@ def add_cookie(cookie_domain, driver, cookie_file):
 def store_cookie(driver, cookie_file):
     logger.info('存储cookie')
     new_cookies = driver.get_cookies()
-    json.dump(new_cookies, open(cookie_file, 'w'))
+    pickle.dump(new_cookies, open(cookie_file, 'wb'))
     logger.info('加载完成')
 
 

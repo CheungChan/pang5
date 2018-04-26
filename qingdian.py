@@ -5,7 +5,7 @@ from logzero import logger
 
 from config import LOGFILE_NAME
 from data import data
-from utils import open_driver, track_alert, get, store_cookie, g_mysqlid, get_current_url, Pang5Exception
+from utils import open_driver, track_alert, get, store_cookie, g_mysqlid, get_current_url, Pang5Exception, add_cookie
 
 logzero.logfile(LOGFILE_NAME, encoding='utf-8', maxBytes=500_0000, backupCount=3)
 MANAGE_URL = 'http://page.qingdian.cn/center/comicManagement/upload'
@@ -14,7 +14,7 @@ LOGIN_URL = 'http://page.qingdian.cn/passport/login'
 COOKIE_DOMAIN = ".qingdian.cn"
 LOGIN_USERNAME = data['qingdian_username']
 LONGIN_PASSWORD = data['qingdian_password']
-COOKIE_FILE = f'cookies/{COOKIE_DOMAIN[1:]}_{LOGIN_USERNAME}.cookie.json'
+COOKIE_FILE = f'cookies/{COOKIE_DOMAIN[1:]}_{LOGIN_USERNAME}.cookie.pkl'
 
 
 class Qingdian:
@@ -28,7 +28,12 @@ class Qingdian:
                          cookie_file=COOKIE_FILE) as driver:
             self.driver = driver
             with track_alert(driver):
-                self.mobile_login(driver, LOGIN_USERNAME, LONGIN_PASSWORD)
+                # 处理登录
+                add_cookie(COOKIE_DOMAIN, driver, COOKIE_FILE)
+                get(MANAGE_URL)
+                if get_current_url() != MANAGE_URL:
+                    if not self.mobile_login(driver, LOGIN_USERNAME, LONGIN_PASSWORD):
+                        raise Pang5Exception('登录失败')
                 store_cookie(driver, COOKIE_FILE)
                 get(MANAGE_URL)
                 time.sleep(2)
@@ -51,13 +56,15 @@ class Qingdian:
             '#app > div:nth-child(1) > div.clearfix.ui-area.passport-content > div.passport-right > div > div > div.pic-box > div.qd-input-box.mb20 > div.qd-input > input[type="text"]')
         username.clear()
         username.send_keys(login_username)
+        time.sleep(2)
         password = driver.find_element_by_css_selector(
             '#app > div:nth-child(1) > div.clearfix.ui-area.passport-content > div.passport-right > div > div > div.pic-box > div.qd-input.mb20 > input[type="password"]')
         password.clear()
         password.send_keys(login_password)
+        time.sleep(2)
         driver.find_element_by_css_selector(
             '#app > div:nth-child(1) > div.clearfix.ui-area.passport-content > div.passport-right > div > div > div.pic-box > span').click()
-        return driver
+        return True
 
     def form(self, driver, title_text, dir_name, qingdian_chapter):
         '''
