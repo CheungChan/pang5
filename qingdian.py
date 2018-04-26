@@ -64,40 +64,36 @@ class Qingdian:
                     表单处理部分
                     '''
         # input处理readonly
-        try:
-            js = "document.getElementsByTagName(\"input\").readOnly=false"
-            time.sleep(1)
-            title = driver.find_element_by_css_selector(
-                '#app > div.center.shadow-bottom-line > div.center-main.ui-area > div.center-tab-content.clearfix > div.right-main > div > div > div:nth-child(3) > div > div:nth-child(2) > div.mw-right > div.qd-input-box.mw-comic-name > div.qd-input > input[type="text"]')
-            # 正文
-            title.send_keys(title_text)
-            time.sleep(1)
-            # 提示上传
-            # 上传多个文件
+        js = "document.getElementsByTagName(\"input\").readOnly=false"
+        time.sleep(1)
+        title = driver.find_element_by_css_selector(
+            '#app > div.center.shadow-bottom-line > div.center-main.ui-area > div.center-tab-content.clearfix > div.right-main > div > div > div:nth-child(3) > div > div:nth-child(2) > div.mw-right > div.qd-input-box.mw-comic-name > div.qd-input > input[type="text"]')
+        # 正文
+        title.send_keys(title_text)
+        time.sleep(1)
+        # 提示上传
+        # 上传多个文件
 
-            for i in dir_name:
-                file = driver.find_element_by_css_selector('#add-section-img > div:nth-child(2) > input')
-                logger.info('上传图片' + i)
-                file.send_keys(i)
+        for i in dir_name:
+            file = driver.find_element_by_css_selector('#add-section-img > div:nth-child(2) > input')
+            logger.info('上传图片' + i)
+            file.send_keys(i)
 
-            driver.find_element_by_css_selector('.show-dialog').click()
-            file = driver.find_element_by_css_selector(
-                '#app > div.center.shadow-bottom-line > div.center-main.ui-area > div.center-tab-content.clearfix > div.right-main > div > div > div:nth-child(3) > div > div.cut-image-dialog.dialog-content > div > div.dialog-middle.clearfix > div.dm-btn-box.clearfix > div > input[type="file"]')
-            file.send_keys(qingdian_chapter)
-            for i in range(20):
-                driver.find_element_by_css_selector('.minus-btn').click()
-            driver.find_element_by_css_selector(
-                '#app > div.center.shadow-bottom-line > div.center-main.ui-area > div.center-tab-content.clearfix > div.right-main > div > div > div:nth-child(3) > div > div.cut-image-dialog.dialog-content > div > div.dialog-bottom > span.btn-theme.db-save').click()
-            time.sleep(2)
-            self.stop(driver)
-            # 提交
-            driver.find_element_by_css_selector(
-                '#app > div.center.shadow-bottom-line > div.center-main.ui-area > div.center-tab-content.clearfix > div.right-main > div > div > div:nth-child(3) > div > div.mw-btn-box > span.btn-theme.btn-submit').click()
+        driver.find_element_by_css_selector('.show-dialog').click()
+        file = driver.find_element_by_css_selector(
+            '#app > div.center.shadow-bottom-line > div.center-main.ui-area > div.center-tab-content.clearfix > div.right-main > div > div > div:nth-child(3) > div > div.cut-image-dialog.dialog-content > div > div.dialog-middle.clearfix > div.dm-btn-box.clearfix > div > input[type="file"]')
+        file.send_keys(qingdian_chapter)
+        for i in range(20):
+            driver.find_element_by_css_selector('.minus-btn').click()
+        driver.find_element_by_css_selector(
+            '#app > div.center.shadow-bottom-line > div.center-main.ui-area > div.center-tab-content.clearfix > div.right-main > div > div > div:nth-child(3) > div > div.cut-image-dialog.dialog-content > div > div.dialog-bottom > span.btn-theme.db-save').click()
+        time.sleep(2)
+        self.stop(driver)
+        # 提交
+        driver.find_element_by_css_selector(
+            '#app > div.center.shadow-bottom-line > div.center-main.ui-area > div.center-tab-content.clearfix > div.right-main > div > div > div:nth-child(3) > div > div.mw-btn-box > span.btn-theme.btn-submit').click()
 
-            time.sleep(2)
-        except Exception as e:
-
-            logger.error(e)
+        time.sleep(2)
 
     def search_article(self, article_name):
         article_list = self.driver.find_elements_by_css_selector(
