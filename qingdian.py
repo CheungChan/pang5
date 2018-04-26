@@ -112,6 +112,7 @@ class Qingdian:
                     raise Pang5Exception(f'作品"{article_name}"状态异常')
                 else:
                     btns[0].click()
+                    return
         btn = self.driver.find_element_by_css_selector('.btn-next')
         if 'disabled' not in btn.get_attribute('class'):
             logger.info('翻页')
