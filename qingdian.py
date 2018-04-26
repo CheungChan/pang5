@@ -80,6 +80,7 @@ class Qingdian:
             file.send_keys(i)
 
         driver.find_element_by_css_selector('.show-dialog').click()
+        logger.info(f'上传封面图片{qingdian_chapter}')
         file = driver.find_element_by_css_selector(
             '#app > div.center.shadow-bottom-line > div.center-main.ui-area > div.center-tab-content.clearfix > div.right-main > div > div > div:nth-child(3) > div > div.cut-image-dialog.dialog-content > div > div.dialog-middle.clearfix > div.dm-btn-box.clearfix > div > input[type="file"]')
         file.send_keys(qingdian_chapter)
