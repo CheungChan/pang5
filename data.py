@@ -34,7 +34,8 @@ data = {
     # "qingdian_password": '12341234',
     'qingdian_username': '13000002729',  # 轻点酱
     "qingdian_password": 'qingdian321',
-    'qingdian_series': '杨浩测试 不要审核通过',
+    # 'qingdian_series': '杨浩测试 不要审核通过',
+    'qingdian_series': '轻点活动',
     'qingdian_chapter': os.path.join(pwd, 'images', '封面.jpg'),
     'qingdian_title': '喝醉的妹子竟然扯 开了衣服',
     'qingdian_pic': [f'{os.path.join(pwd,"images","章节",d)}' for d in get_sorted_imgs(os.path.join(pwd,"images","章节"))],
