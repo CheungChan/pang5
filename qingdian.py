@@ -83,6 +83,11 @@ class Qingdian:
         file = driver.find_element_by_css_selector(
             '#app > div.center.shadow-bottom-line > div.center-main.ui-area > div.center-tab-content.clearfix > div.right-main > div > div > div:nth-child(3) > div > div.cut-image-dialog.dialog-content > div > div.dialog-middle.clearfix > div.dm-btn-box.clearfix > div > input[type="file"]')
         file.send_keys(qingdian_chapter)
+        # 判断图片预览是否存在
+        css = "#app > div.center.shadow-bottom-line > div.center-main.ui-area > div.center-tab-content.clearfix > div.right-main > div > div > div:nth-child(3) > div > div.cut-image-dialog.dialog-content > div > div.dialog-middle.clearfix > div:nth-child(1) > div.dm-cropper-box > img"
+        nodisplay = 'display:none' in driver.find_element_by_css_selector(css).get_attribute('style')
+        if nodisplay:
+            raise Pang5Exception('封面图片不符合要求')
         for i in range(20):
             driver.find_element_by_css_selector('.minus-btn').click()
         driver.find_element_by_css_selector(
