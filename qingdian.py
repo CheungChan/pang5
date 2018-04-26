@@ -140,8 +140,9 @@ class Qingdian:
     });return a;
             '''
             stop = driver.execute_script(js)
-            print(stop)
+            logger.info(stop)
             if stop:
+                time.sleep(2)
                 break
 
 
