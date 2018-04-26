@@ -142,8 +142,9 @@ class Qingdian:
             stop = driver.execute_script(js)
             logger.info(stop)
             if stop:
-                time.sleep(2)
                 break
+            else:
+                time.sleep(2)
 
 
 def main(mysql_id):
