@@ -44,6 +44,7 @@ def callback(ch, method, properties, body):
 
     mysql_id = rabbitInfo['mysql_id']
     row = db.query('SELECT * FROM  chapter_chapter where id= :id_num', id_num=mysql_id)
+    logger.error(len(row))
     if  not len(row):
         return
     # 下载封面
@@ -157,4 +158,4 @@ if __name__ == '__main__':
     # row = db.query('SELECT * FROM  chapter_chapter where id= :id_num', id_num=17)
     # print(row[1])
     main()
-    # insert_rabbit({'mysql_id':10})
+    # insert_rabbit({'mysql_id':5})
