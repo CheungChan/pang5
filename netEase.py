@@ -6,14 +6,14 @@ from selenium.webdriver.support.ui import Select
 from data import data
 import logzero
 from config import LOGFILE_NAME
-from utils import open_driver, get, track_alert, add_cookie, get_current_url, store_cookie, g_mysqlid,Pang5Exception
+from utils import open_driver, get, track_alert, add_cookie, get_current_url, store_cookie, g_mysqlid, Pang5Exception
 
 logzero.logfile(LOGFILE_NAME, encoding='utf-8', maxBytes=500_0000, backupCount=3)
 MANAGE_URL = 'https://zz.manhua.163.com/'
 COOKIE_DOMAIN = ".manhua.163.com"
 login_username = data['net_username']
 login_password = data['net_password']
-COOKIE_FILE = f'cookies/{COOKIE_DOMAIN[1:]}_{login_username}.cookie.json'
+COOKIE_FILE = f'cookies/{COOKIE_DOMAIN[1:]}_{login_username}.cookie.pkl'
 
 
 class Upload:
@@ -78,7 +78,6 @@ class Upload:
         time.sleep(1)
         driver.find_element_by_id('dologin').click()
         time.sleep(2)
-        pass
 
     # qq登录
     def qq_login(self, driver, login_username, login_password):
@@ -107,17 +106,14 @@ class Upload:
         windows = driver.window_handles
         driver.switch_to.window(windows[-1])
 
-        pass
-
     # 微博登录
 
     def weibo_login(self, driver):
-        pass
+        raise Pang5Exception('暂时不支持微博登录')
 
     # 微信登录
     def weixin_login(self, driver):
-        logger.error('不支持微信')
-        return
+        raise Pang5Exception('不支持微信')
 
     # 手机登录
     def mobile_login(self, driver, login_username, login_password):
@@ -156,11 +152,16 @@ class Upload:
         time.sleep(1)
         # 提示上传
         # 上传多个文件
-        for i in dir_name:
+        logger.info('共有图片%d张' % len(dir_name))
+        for i, f in enumerate(dir_name):
             file = driver.find_element_by_css_selector('.webuploader-element-invisible')
-            file.send_keys(i)
-
-            self.stop(driver)
+            file.send_keys(f)
+            div = driver.find_element_by_css_selector('div.episode-upload-throbber')
+            while div.is_displayed():
+                percent = div.find_element_by_css_selector('div>span').text
+                logger.info(f'图片{i}, 上传进度 {percent}')
+                time.sleep(1)
+            logger.info('上传完成')
 
         driver.execute_script(js)
         # 定时
@@ -178,18 +179,16 @@ class Upload:
             m = Select(driver.find_element_by_css_selector('#timing > div > div:nth-child(4) > select'))
             # 分钟
             m.select_by_value(m_num)
-        # 判断是不是上传完成
-        self.stop(driver)
         # 提交
         time.sleep(2)
+        # 干掉小女生的遮挡
+        driver.execute_script('$("#j-epay-warning").remove();')
         driver.find_element_by_xpath('/html/body/section[1]/div/div[3]/div/form/div[5]/div[2]/button[2]').click()
-
-    # 看是否上传完
-    def stop(self, driver):
-        phui_backdrop = driver.find_element_by_class_name('phui-backdrop')
-        while phui_backdrop.is_displayed():
-            logger.info('暂停,文件未上传完成')
-            time.sleep(0.5)
+        errs = driver.find_elements_by_css_selector('#firstModal > div.reveal-modal-body.default > div:nth-child(1)')
+        if len(errs) > 0:
+            raise Pang5Exception(errs[0].text)
+        time.sleep(3)
+        logger.info('发布成功')
 
 
 def main(mysql_id):

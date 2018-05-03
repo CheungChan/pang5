@@ -1,6 +1,6 @@
 .idea/
 *.pyc
 *.log
-*.cookie.json
+*.cookie.pkl
 *.png
 !upload_btn_images/*/*.png

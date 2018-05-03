@@ -1,4 +1,5 @@
 import json
+import pickle
 import os
 import time
 from datetime import datetime
@@ -6,7 +7,8 @@ from datetime import datetime
 import logzero
 from logzero import logger
 from selenium import webdriver
-from selenium.common.exceptions import UnexpectedAlertPresentException, TimeoutException
+from selenium.common.exceptions import UnexpectedAlertPresentException, TimeoutException, WebDriverException, \
+    SessionNotCreatedException, NoSuchWindowException
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
@@ -86,9 +88,17 @@ class open_driver(object):
         return self.driver
 
     def __exit__(self, exc_type, exc_val, exc_tb):
+        logger.info('退出')
+        if exc_type == SessionNotCreatedException or exc_type == NoSuchWindowException:
+            update_status2fail("浏览器找不到了")
+            return False
         if exc_tb:
-            self.driver.get_screenshot_as_file(
-                f"{SCREENSHOT_PATH}/excep_{datetime.now().strftime('%Y-%m-%d %H%M%S')}.png")
+            try:
+                self.driver.get_screenshot_as_file(
+                    f"{SCREENSHOT_PATH}/excep_{datetime.now().strftime('%Y-%m-%d %H%M%S')}.png")
+            except WebDriverException:
+                update_status2fail('截图失败,浏览器找不到了')
+                return False
         logger.info('屏蔽关闭提示框')
         self.driver.execute_script("window.onbeforeunload = function(e){};")
         logger.info("浏览器关闭")
@@ -99,11 +109,11 @@ class open_driver(object):
             logger.error(exc_type)
             logger.error(exc_val)
             logger.error(exc_tb)
-            if exc_type == Pang5Exception:
-                pass
-            else:
-                update_status2fail("浏览器异常关闭")
+            if exc_type != Pang5Exception:
+                update_status2fail("出现异常,浏览器只能关闭")
             return False
+        else:
+            update_status2OK()
 
 
 class track_alert(object):
@@ -126,21 +136,21 @@ class track_alert(object):
 
 class Pang5Exception(Exception):
     def __init__(self, msg):
-        logger.error(msg)
         update_status2fail(msg)
 
 
 def update_status2fail(msg):
+    logger.error(msg)
     rows = db.query("update chapter_chapter set status=-1, fail_reason=:msg where id=:id", id=g_mysqlid['mysql_id'],
                     msg=msg)
-    logger.info(rows)
+    logger.info(f'更新{g_mysqlid["mysql_id"]}状态影响了 {len(rows)} 行')
 
 
 def update_status2OK():
     # 没有异常, 更改数据库状态
     rows = db.query('update chapter_chapter set status=0, ok_time=:ok_time where id=:id', id=g_mysqlid["mysql_id"],
                     ok_time=datetime.now())
-    logger.info(rows)
+    logger.info(f'更新{g_mysqlid["mysql_id"]}状态影响了 {len(rows)} 行')
 
 
 def refresh_recursion(url, num=3):
@@ -163,7 +173,7 @@ def add_cookie(cookie_domain, driver, cookie_file):
         return False
     logger.info('加载cookie')
     driver.delete_all_cookies()
-    cookies = json.load(open(cookie_file, 'r'))
+    cookies = pickle.load(open(cookie_file, 'rb'))
     for c in cookies:
         if c.get('domain') != cookie_domain:
             continue
@@ -175,7 +185,7 @@ def add_cookie(cookie_domain, driver, cookie_file):
 def store_cookie(driver, cookie_file):
     logger.info('存储cookie')
     new_cookies = driver.get_cookies()
-    json.dump(new_cookies, open(cookie_file, 'w'))
+    pickle.dump(new_cookies, open(cookie_file, 'wb'))
     logger.info('加载完成')
 
 

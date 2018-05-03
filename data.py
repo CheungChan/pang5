@@ -22,7 +22,7 @@ data = {
     'net-login': 'mobile',
     'net_series_title': '为什么救赎',
     'net_title_text': '喝醉的妹子竟然扯开了衣服',
-    'net_d': '2018-04-02',
+    'net_d': '2018-04-26',
     'net_h': '18',
     'net_m': '15',
     'net_image_pic': [f'{os.path.join(pwd,"images" ,"章节",d)}' for d in get_sorted_imgs(os.path.join(pwd, "images","章节"))],
@@ -30,10 +30,13 @@ data = {
     # 轻点
     # 'qingdian_username': '13000002726',
     # "qingdian_password": 'qingdiancmc',
-    'qingdian_username': '13311095487',
-    "qingdian_password": '123456',
-    'qingdian_series': '万物皆娘',
-    'qingdian_chapter': os.path.join(pwd, 'images', '封面.jpg'),
+    # 'qingdian_username': '13311095487',# 杨浩
+    # "qingdian_password": '12341234',
+    'qingdian_username': '13000002729',  # 轻点酱
+    "qingdian_password": 'qingdian321',
+    # 'qingdian_series': '杨浩测试 不要审核通过',
+    'qingdian_series': '轻点活动',
+    'qingdian_chapter': os.path.join(pwd, 'images', '轻点封面.jpg'),
     'qingdian_title': '喝醉的妹子竟然扯 开了衣服',
     'qingdian_pic': [f'{os.path.join(pwd,"images","章节",d)}' for d in get_sorted_imgs(os.path.join(pwd,"images","章节"))],
 

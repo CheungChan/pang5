@@ -8,7 +8,7 @@ from config import BROWSER_FIREFOX
 from config import LOGFILE_NAME
 from data import data
 from utils import open_driver, track_alert, get, get_current_url, clear_and_send_keys, \
-    scroll_to, click_by_pyautogui, g_mysqlid, Pang5Exception
+    scroll_to, click_by_pyautogui, g_mysqlid, Pang5Exception,add_cookie,store_cookie
 
 logzero.logfile(LOGFILE_NAME, encoding='utf-8', maxBytes=500_0000, backupCount=3)
 # 管理页面URL
@@ -17,7 +17,7 @@ MANAGE_URL = 'http://ac.qq.com/MyComic'
 AUTH_OK_URL = 'http://ac.qq.com/MyComic?auth=1'
 
 COOKIE_DOMAIN = ".ac.qq.com"
-COOKIE_FILE = f'cookies/{COOKIE_DOMAIN[1:]}_{data["qq_username"]}.cookie.json'
+COOKIE_FILE = f'cookies/{COOKIE_DOMAIN[1:]}_{data["qq_username"]}.cookie.pkl'
 
 FIRST_CHAPTER = True
 REAL_PUBLISH = True
@@ -39,14 +39,14 @@ class Tencent:
                 self.driver = driver
 
                 # 处理登录
-                # add_cookie(COOKIE_DOMAIN, driver, COOKIE_FILE)
+                add_cookie(COOKIE_DOMAIN, driver, COOKIE_FILE)
                 # driver.get('http://www.baidu.com')
                 time.sleep(5)
                 get(MANAGE_URL)
                 if get_current_url() != MANAGE_URL:
                     if not self.login():
                         raise Pang5Exception('登录失败')
-                # store_cookie(driver, COOKIE_FILE)
+                store_cookie(driver, COOKIE_FILE)
                 self.driver.switch_to.default_content()
                 logger.info('登录成功')
 

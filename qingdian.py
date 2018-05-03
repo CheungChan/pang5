@@ -5,7 +5,7 @@ from logzero import logger
 
 from config import LOGFILE_NAME
 from data import data
-from utils import open_driver, track_alert, get, store_cookie, g_mysqlid
+from utils import open_driver, track_alert, get, store_cookie, g_mysqlid, get_current_url, Pang5Exception, add_cookie
 
 logzero.logfile(LOGFILE_NAME, encoding='utf-8', maxBytes=500_0000, backupCount=3)
 MANAGE_URL = 'http://page.qingdian.cn/center/comicManagement/upload'
@@ -14,7 +14,7 @@ LOGIN_URL = 'http://page.qingdian.cn/passport/login'
 COOKIE_DOMAIN = ".qingdian.cn"
 LOGIN_USERNAME = data['qingdian_username']
 LONGIN_PASSWORD = data['qingdian_password']
-COOKIE_FILE = f'cookies/{COOKIE_DOMAIN[1:]}_{LOGIN_USERNAME}.cookie.json'
+COOKIE_FILE = f'cookies/{COOKIE_DOMAIN[1:]}_{LOGIN_USERNAME}.cookie.pkl'
 
 
 class Qingdian:
@@ -28,9 +28,19 @@ class Qingdian:
                          cookie_file=COOKIE_FILE) as driver:
             self.driver = driver
             with track_alert(driver):
-                self.mobile_login(driver, LOGIN_USERNAME, LONGIN_PASSWORD)
+                # 处理登录
+                add_cookie(COOKIE_DOMAIN, driver, COOKIE_FILE)
+                get(MANAGE_URL)
+                if get_current_url() != MANAGE_URL:
+                    if not self.mobile_login(driver, LOGIN_USERNAME, LONGIN_PASSWORD):
+                        raise Pang5Exception('登录失败')
                 store_cookie(driver, COOKIE_FILE)
                 get(MANAGE_URL)
+                time.sleep(2)
+                cur = get_current_url()
+                if cur != MANAGE_URL:
+                    logger.error(MANAGE_URL)
+                    raise Pang5Exception("登录失败")
                 self.driver.find_element_by_link_text('我的作品').click()
                 self.search_article(data['qingdian_series'])
                 self.form(driver, data['qingdian_title'], data['qingdian_pic'], data['qingdian_chapter'])
@@ -46,65 +56,84 @@ class Qingdian:
             '#app > div:nth-child(1) > div.clearfix.ui-area.passport-content > div.passport-right > div > div > div.pic-box > div.qd-input-box.mb20 > div.qd-input > input[type="text"]')
         username.clear()
         username.send_keys(login_username)
+        time.sleep(2)
         password = driver.find_element_by_css_selector(
             '#app > div:nth-child(1) > div.clearfix.ui-area.passport-content > div.passport-right > div > div > div.pic-box > div.qd-input.mb20 > input[type="password"]')
         password.clear()
         password.send_keys(login_password)
+        time.sleep(2)
         driver.find_element_by_css_selector(
             '#app > div:nth-child(1) > div.clearfix.ui-area.passport-content > div.passport-right > div > div > div.pic-box > span').click()
-        return driver
+        return True
 
     def form(self, driver, title_text, dir_name, qingdian_chapter):
         '''
                     表单处理部分
                     '''
         # input处理readonly
-        try:
-            js = "document.getElementsByTagName(\"input\").readOnly=false"
-            time.sleep(1)
-            title = driver.find_element_by_css_selector(
-                '#app > div.center.shadow-bottom-line > div.center-main.ui-area > div.center-tab-content.clearfix > div.right-main > div > div > div:nth-child(3) > div > div:nth-child(2) > div.mw-right > div.qd-input-box.mw-comic-name > div.qd-input > input[type="text"]')
-            # 正文
-            title.send_keys(title_text)
-            time.sleep(1)
-            # 提示上传
-            # 上传多个文件
+        js = "document.getElementsByTagName(\"input\").readOnly=false"
+        time.sleep(1)
+        title = driver.find_element_by_css_selector(
+            '#app > div.center.shadow-bottom-line > div.center-main.ui-area > div.center-tab-content.clearfix > div.right-main > div > div > div:nth-child(3) > div > div:nth-child(2) > div.mw-right > div.qd-input-box.mw-comic-name > div.qd-input > input[type="text"]')
+        # 正文
+        title.send_keys(title_text)
+        time.sleep(1)
+        # 提示上传
+        # 上传多个文件
 
-            for i in dir_name:
-                file = driver.find_element_by_css_selector('#add-section-img > div:nth-child(2) > input')
-                logger.info('上传图片' + i)
-                file.send_keys(i)
+        for i in dir_name:
+            file = driver.find_element_by_css_selector('#add-section-img > div:nth-child(2) > input')
+            logger.info('上传图片' + i)
+            file.send_keys(i)
 
-            driver.find_element_by_css_selector('.show-dialog').click()
-            file = driver.find_element_by_css_selector(
-                '#app > div.center.shadow-bottom-line > div.center-main.ui-area > div.center-tab-content.clearfix > div.right-main > div > div > div:nth-child(3) > div > div.cut-image-dialog.dialog-content > div > div.dialog-middle.clearfix > div.dm-btn-box.clearfix > div > input[type="file"]')
-            file.send_keys(qingdian_chapter)
-            for i in range(20):
-                driver.find_element_by_css_selector('.minus-btn').click()
-            driver.find_element_by_css_selector(
-                '#app > div.center.shadow-bottom-line > div.center-main.ui-area > div.center-tab-content.clearfix > div.right-main > div > div > div:nth-child(3) > div > div.cut-image-dialog.dialog-content > div > div.dialog-bottom > span.btn-theme.db-save').click()
-            time.sleep(2)
-            self.stop(driver)
-            # 提交
-            driver.find_element_by_css_selector(
-                '#app > div.center.shadow-bottom-line > div.center-main.ui-area > div.center-tab-content.clearfix > div.right-main > div > div > div:nth-child(3) > div > div.mw-btn-box > span.btn-theme.btn-submit').click()
-
-            time.sleep(2)
-        except Exception as e:
-
-            logger.error(e)
+        driver.find_element_by_css_selector('.show-dialog').click()
+        logger.info(f'上传封面图片{qingdian_chapter}')
+        file = driver.find_element_by_css_selector(
+            '#app > div.center.shadow-bottom-line > div.center-main.ui-area > div.center-tab-content.clearfix > div.right-main > div > div > div:nth-child(3) > div > div.cut-image-dialog.dialog-content > div > div.dialog-middle.clearfix > div.dm-btn-box.clearfix > div > input[type="file"]')
+        file.send_keys(qingdian_chapter)
+        # 判断图片预览是否存在
+        css = "#app > div.center.shadow-bottom-line > div.center-main.ui-area > div.center-tab-content.clearfix > div.right-main > div > div > div:nth-child(3) > div > div.cut-image-dialog.dialog-content > div > div.dialog-middle.clearfix > div:nth-child(1) > div.dm-cropper-box > img"
+        nodisplay = 'display: none' in driver.find_element_by_css_selector(css).get_attribute('style')
+        if nodisplay:
+            raise Pang5Exception('封面图片不符合要求')
+        for i in range(20):
+            driver.find_element_by_css_selector('.minus-btn').click()
+        driver.find_element_by_css_selector(
+            '#app > div.center.shadow-bottom-line > div.center-main.ui-area > div.center-tab-content.clearfix > div.right-main > div > div > div:nth-child(3) > div > div.cut-image-dialog.dialog-content > div > div.dialog-bottom > span.btn-theme.db-save').click()
+        time.sleep(2)
+        self.stop(driver)
+        # 提交
+        driver.find_element_by_css_selector(
+            '#app > div.center.shadow-bottom-line > div.center-main.ui-area > div.center-tab-content.clearfix > div.right-main > div > div > div:nth-child(3) > div > div.mw-btn-box > span.btn-theme.btn-submit').click()
+        time.sleep(2)
+        # 捕获报错信息
+        hint = driver.execute_script('return window.hint;')
+        if hint:
+            raise Pang5Exception(hint)
 
     def search_article(self, article_name):
         article_list = self.driver.find_elements_by_css_selector(
             '#app > div.center.shadow-bottom-line > div.center-main.ui-area > div.center-tab-content.clearfix > div.right-main > div > div > div:nth-child(1) > div > ul > li')
         for a in article_list:
-            print(a.find_element_by_css_selector('.mi-name-box').text)
-            if "漫画名称：" + article_name == a.find_element_by_css_selector('.mi-name-box').text:
-                print(a.find_element_by_css_selector('.mi-name-box').text)
-                a.find_element_by_css_selector(
-                    'div > div.bottom-btn-box > div:nth-child(1) > span:nth-child(3)').click()
-                return
-        self.driver.find_element_by_css_selector('.btn-next').click()
+            article_name_css = a.find_element_by_css_selector('.mi-name-box').text
+            logger.info(article_name_css)
+            if "漫画名称：" + article_name == article_name_css:
+                logger.info(article_name_css)
+                btns = a.find_elements_by_css_selector(
+                    'div > div.bottom-btn-box > div:nth-child(1) > span:nth-child(3)')
+                if len(btns) == 0:
+                    raise Pang5Exception(f'作品"{article_name}"状态异常')
+                else:
+                    logger.info('找到')
+                    btns[0].click()
+                    return
+        btn = self.driver.find_element_by_css_selector('.btn-next')
+        if 'disabled' not in btn.get_attribute('class'):
+            logger.info('翻页')
+            btn.click()
+            time.sleep(1)
+        else:
+            raise Pang5Exception(f'用户没有绑定作品 "{article_name}"')
         self.search_article(article_name)
 
     # 看是否上传完
@@ -121,9 +150,11 @@ class Qingdian:
     });return a;
             '''
             stop = driver.execute_script(js)
-            print(stop)
+            logger.info(stop)
             if stop:
                 break
+            else:
+                time.sleep(2)
 
 
 def main(mysql_id):
