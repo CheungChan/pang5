@@ -38,7 +38,7 @@ if DEBUG:
     RABBITMQ_USER = 'yanghao'
     RABBITMQ_PASSWORD = '123456'
 else:
-    MYSQL_URL = 'mysql://10.10.10.43/pang5?user=qd&password=123^%$-qwe&charset=utf8mb4'
+    MYSQL_URL = 'mysql://10.10.10.43/pang5?user=qd&password=123^%$-qwe-asd&charset=utf8mb4'
 
     RABBITMQ_HTOS = '10.10.10.3'
     RABBITMQ_POST = 5000
