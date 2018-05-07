@@ -47,7 +47,6 @@ def callback(ch, method, properties, body):
     if not len(row.all()):
         return
     # 下载封面
-    print(row.all())
     if row[0]['cover_img']:
         if row[0]['cover_img'][0:4]=='http':
             content = requests.get(row[0]['cover_img']).content
@@ -63,7 +62,9 @@ def callback(ch, method, properties, body):
             content = requests.get(img).content
 
         else:
-            content = requests.get('http://pang5web.oss-cn-beijing.aliyuncs.com/' + img).content
+            url='http://pang5web.oss-cn-beijing.aliyuncs.com/' + img
+            logger.info(url)
+            content = requests.get(url).content
         file = BytesIO()
         file.write(content)
         Image.open(file).convert("RGB").save(os.path.join(pwd, "images", "章节", str(i) + ".jpg"))
@@ -169,5 +170,5 @@ def insert_rabbit(format):
 if __name__ == '__main__':
     # row = db.query('SELECT * FROM  chapter_chapter where id= :id_num', id_num=17)
     # print(row[1])
-    # insert_rabbit({'mysql_id':5})
+    insert_rabbit({'mysql_id':17})
     main()
