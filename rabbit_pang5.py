@@ -52,11 +52,13 @@ def callback(ch, method, properties, body):
         for name in files:
             if name != '.gitkeep':
                 os.remove(os.path.join(root, name))
+                logger.info(f'删除图片{os.path.join(root, name)}')
 
     for root, dirs, files in os.walk('./images/'):
         for name in files:
             if name not in ['.gitkeep', '章节']:
                 os.remove(os.path.join(root, name))
+                logger.info(f'删除图片{os.path.join(root, name)}')
 
     # 下载封面
     if row[0]['cover_img']:
