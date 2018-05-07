@@ -91,14 +91,14 @@ class open_driver(object):
         logger.info('退出')
         if exc_type == SessionNotCreatedException or exc_type == NoSuchWindowException:
             update_status2fail("浏览器找不到了")
-            return False
+            return True
         if exc_tb:
             try:
                 self.driver.get_screenshot_as_file(
                     f"{SCREENSHOT_PATH}/excep_{datetime.now().strftime('%Y-%m-%d %H%M%S')}.png")
             except WebDriverException:
                 update_status2fail('截图失败,浏览器找不到了')
-                return False
+                return True
         logger.info('屏蔽关闭提示框')
         self.driver.execute_script("window.onbeforeunload = function(e){};")
         logger.info("浏览器关闭")
@@ -111,9 +111,10 @@ class open_driver(object):
             logger.error(exc_tb)
             if exc_type != Pang5Exception:
                 update_status2fail("出现异常,浏览器只能关闭")
-            return False
+            return True
         else:
             update_status2OK()
+        return True
 
 
 class track_alert(object):
