@@ -57,7 +57,9 @@ def callback(ch, method, properties, body):
         file.write(content)
         Image.open(file).convert("RGB").save('./images/封面.png')
     i = 1
-    for img in json.loads(row[0]['chapter_imgs']):
+    s=row[0]['chapter_imgs']
+    for img in json.loads(s):
+        logger.info(img)
         if img[0:4]=="http":
             content = requests.get(img).content
 
@@ -170,5 +172,5 @@ def insert_rabbit(format):
 if __name__ == '__main__':
     # row = db.query('SELECT * FROM  chapter_chapter where id= :id_num', id_num=17)
     # print(row[1])
-    insert_rabbit({'mysql_id':17})
+    # insert_rabbit({'mysql_id':13})
     main()
