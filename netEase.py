@@ -42,6 +42,8 @@ class Upload:
                     # 登录
                     # 继续中间页面
                     get('http://zz.manhua.163.com/')
+                if get_current_url() !='http://zz.manhua.163.com/':
+                    raise  Pang5Exception('登录失败')
                 time.sleep(1)
                 # try:
                 net_series = driver.find_elements_by_link_text(data['net_series_title'])
@@ -143,7 +145,8 @@ class Upload:
         # input处理readonly
         js = "$('input').removeAttr('readonly')"
         time.sleep(1)
-        title = driver.find_element_by_id('title')
+        title = driver.find_elements_by_id('title')
+
         # 正文
         title.send_keys(title_text)
         time.sleep(1)
