@@ -41,14 +41,26 @@ def callback(ch, method, properties, body):
     logger.info("[x] Received %r" % body)
     rabbitInfo = json.loads(body)
 
-
     mysql_id = rabbitInfo['mysql_id']
     row = db.query('SELECT * FROM  chapter_chapter where id= :id_num', id_num=mysql_id)
     if not len(row.all()):
         return
+
+    # 清空文件夹
+
+    for root, dirs, files in os.walk('./images/章节'):
+        for name in files:
+            if name != '.gitkeep':
+                os.remove(os.path.join(root, name))
+
+    for root, dirs, files in os.walk('./images/'):
+        for name in files:
+            if name not in ['.gitkeep', '章节']:
+                os.remove(os.path.join(root, name))
+
     # 下载封面
     if row[0]['cover_img']:
-        if row[0]['cover_img'][0:4]=='http':
+        if row[0]['cover_img'][0:4] == 'http':
             content = requests.get(row[0]['cover_img']).content
 
         else:
@@ -57,19 +69,19 @@ def callback(ch, method, properties, body):
         file.write(content)
         Image.open(file).convert("RGB").save('./images/封面.png')
     i = 1
-    s=row[0]['chapter_imgs']
+    s = row[0]['chapter_imgs']
     for img in json.loads(s):
         logger.info(img)
-        if img[0:4]=="http":
+        if img[0:4] == "http":
             content = requests.get(img).content
 
         else:
-            url='http://pang5web.oss-cn-beijing.aliyuncs.com/' + img
+            url = 'http://pang5web.oss-cn-beijing.aliyuncs.com/' + img
             logger.info(url)
             content = requests.get(url).content
         file = BytesIO()
         file.write(content)
-        Image.open(file).convert("RGB").save(os.path.join(pwd, "images", "章节", str(i) + ".jpg"))
+        Image.open(file).convert("RGB").save(os.path.join(pwd, "images", "章节", str(i) + os.path.splitext(img)[1]))
         i += 1
     from data import data
     import netEase
@@ -77,11 +89,12 @@ def callback(ch, method, properties, body):
     import tencent
     import mai_meng
     # 平台
-    works_info = db.query('SELECT * FROM work_works where id=:work_id',work_id=row[0]['works_id_id'])
+    works_info = db.query('SELECT * FROM work_works where id=:work_id', work_id=row[0]['works_id_id'])
     print(works_info.all())
     if not len(works_info.all()):
         return
-    userinfo=db.query('SELECT * FROM  subscriber_platformsubscriber where id =:id',id=works_info[0]['platform_subsriber_id_id'])
+    userinfo = db.query('SELECT * FROM  subscriber_platformsubscriber where id =:id',
+                        id=works_info[0]['platform_subsriber_id_id'])
     print(userinfo.all())
     if userinfo[0]['platform'] == 'qingdian':
         data['qingdian_username'] = userinfo[0]['platform_username']
@@ -130,7 +143,7 @@ def callback(ch, method, properties, body):
     elif userinfo[0]['platform'] == 'u17':
         data['u17_username'] = userinfo[0]['platform_username']
         data['u17_password'] = userinfo[0]['platform_password']
-        data['u17_comic_id'] =works_info[0]['third_id']
+        data['u17_comic_id'] = works_info[0]['third_id']
         data['u17_chapter'] = row[0]['name']
         data['u17_series'] = works_info[0]['name']
     else:
