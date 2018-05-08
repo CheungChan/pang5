@@ -88,7 +88,7 @@ class U17:
             time.sleep(2)
 
         logger.info('上传章节内容')
-        scroll_to(300)
+        scroll_to(500)
         time.sleep(1)
         # self.driver.find_element_by_css_selector('span.csbtn').click()
         # POSOTION_GREEN_BUTTON = (784, 1108)
