@@ -8,6 +8,7 @@ from config import LOGFILE_NAME
 from data import data
 from utils import open_driver, track_alert, get, get_current_url, clear_and_send_keys, \
     scroll_to, click_by_pyautogui, Pang5Exception, update_status2OK, g_mysqlid, add_cookie, store_cookie
+from selenium.common.exceptions import NoSuchElementException
 
 logzero.logfile(LOGFILE_NAME, encoding='utf-8', maxBytes=500_0000, backupCount=3)
 COOKIE_DOMAIN = '.u17.com'
@@ -53,8 +54,10 @@ class U17:
 
     def publish(self):
         logger.info('点击关闭提示')
-        self.driver.find_element_by_css_selector('a.close_tip:nth-child(2)').click()
-
+        try:
+            self.driver.find_element_by_css_selector('a.close_tip:nth-child(2)').click()
+        except NoSuchElementException:
+            logger.info('没有关闭提示')
         logger.info('填写章节名称')
         clear_and_send_keys("#chapter_name", data['u17_series'])
 
