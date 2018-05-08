@@ -15,6 +15,7 @@ from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.ui import WebDriverWait, Select
 import records
+from dingding_qun import dingdSendMsg
 
 from config import USE_FACE, CHROME_DRIVER_PATH, PHANTOMJS_PATH, SCREENSHOT_PATH, WAIT_CLICKABLE, WAIT_PRESENCE, \
     WAIT_VISIABLITY, CHROME_ARG, FIREFOX_DRIVER_PATH, RUN_SIKULIX_CMD, LOGFILE_NAME, MYSQL_URL
@@ -144,6 +145,9 @@ def update_status2fail(msg):
     logger.error(msg)
     rows = db.query("update chapter_chapter set status=-1, fail_reason=:msg where id=:id", id=g_mysqlid['mysql_id'],
                     msg=msg)
+    from data import data
+    dingding_s = f'漫画助手发布失败,mysql_id={g_mysqlid},msg={msg}, data={data}'
+    dingdSendMsg(dingding_s)
     logger.info(f'更新{g_mysqlid["mysql_id"]}状态')
 
 
