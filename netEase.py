@@ -27,6 +27,9 @@ class Upload:
                 # add_cookie(COOKIE_DOMAIN, driver, COOKIE_FILE)
                 login_username = data['net_username']
                 login_password = data['net_password']
+                logger.info(f'用户名{login_username}')
+                logger.info(f'密码{login_password}')
+
                 get(MANAGE_URL)
                 if get_current_url() != MANAGE_URL:
                     if data['net-login'] == 'mobile':
