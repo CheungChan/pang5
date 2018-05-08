@@ -182,7 +182,7 @@ def insert_rabbit(format):
     channel.basic_publish(exchange='',
                           routing_key='pang5_web',
                           body=format_json, )
-    logger.info("Sent success!!")
+    logger.info(f"Sent success!! {format_json}")
 
 
 if __name__ == '__main__':
