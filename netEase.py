@@ -12,6 +12,7 @@ logzero.logfile(LOGFILE_NAME, encoding='utf-8', maxBytes=500_0000, backupCount=3
 MANAGE_URL = 'https://zz.manhua.163.com/'
 COOKIE_DOMAIN = ".manhua.163.com"
 
+
 # COOKIE_FILE = f'cookies/{COOKIE_DOMAIN[1:]}_{login_username}.cookie.pkl'
 
 
@@ -34,7 +35,7 @@ class Upload:
                 if get_current_url() != MANAGE_URL:
                     if data['net-login'] == 'mobile':
                         self.mobile_login(driver, login_username, login_password)
-                    elif data['net-login'] in ('mail',''):
+                    elif data['net-login'] in ('mail', ''):
                         self.mail_login(driver, login_username, login_password)
                     elif data['net-login'] == 'qq':
                         self.qq_login(driver, login_username, login_password)
@@ -43,10 +44,10 @@ class Upload:
                     # store_cookie(driver, COOKIE_FILE)
                     # 登录
                     # 继续中间页面
-                    get('http://zz.manhua.163.com/')
+                    get('https://zz.manhua.163.com/')
                     time.sleep(3)
-                if get_current_url() !='http://zz.manhua.163.com/':
-                    raise  Pang5Exception('登录失败')
+                if get_current_url() not in ['http://zz.manhua.163.com/', 'https://zz.manhua.163.com/']:
+                    raise Pang5Exception('登录失败')
                 time.sleep(1)
                 logger.info('登录成功')
                 # try:
