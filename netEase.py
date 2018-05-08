@@ -11,11 +11,8 @@ from utils import open_driver, get, track_alert, add_cookie, get_current_url, st
 logzero.logfile(LOGFILE_NAME, encoding='utf-8', maxBytes=500_0000, backupCount=3)
 MANAGE_URL = 'https://zz.manhua.163.com/'
 COOKIE_DOMAIN = ".manhua.163.com"
-login_username = data['net_username']
-login_password = data['net_password']
-logger.info(f'用户名:{login_username}')
-logger.info(f'密码{login_password}')
-COOKIE_FILE = f'cookies/{COOKIE_DOMAIN[1:]}_{login_username}.cookie.pkl'
+
+# COOKIE_FILE = f'cookies/{COOKIE_DOMAIN[1:]}_{login_username}.cookie.pkl'
 
 
 class Upload:
@@ -24,27 +21,28 @@ class Upload:
 
     def process(self, mysql_id):
         g_mysqlid["mysql_id"] = mysql_id
-        with open_driver(cookie_domain=".manhua.163.com",
-                         cookie_file=COOKIE_FILE) as driver:
+        with open_driver() as driver:
             with track_alert(driver):
                 # 处理登录
                 # add_cookie(COOKIE_DOMAIN, driver, COOKIE_FILE)
+                login_username = data['net_username']
+                login_password = data['net_password']
                 get(MANAGE_URL)
                 if get_current_url() != MANAGE_URL:
                     if data['net-login'] == 'mobile':
-                        self.mobile_login(driver)
-                    elif data['net-login'] in ('mail', ''):
-                        self.mail_login(driver)
+                        self.mobile_login(driver, login_username, login_password)
+                    elif data['net-login'] in ('mail',''):
+                        self.mail_login(driver, login_username, login_password)
                     elif data['net-login'] == 'qq':
-                        self.qq_login(driver)
+                        self.qq_login(driver, login_username, login_password)
                     # self.mobile_login(driver)
 
                     # store_cookie(driver, COOKIE_FILE)
                     # 登录
                     # 继续中间页面
                     get('http://zz.manhua.163.com/')
-                if get_current_url() != 'http://zz.manhua.163.com/':
-                    raise Pang5Exception('登录失败')
+                if get_current_url() !='http://zz.manhua.163.com/':
+                    raise  Pang5Exception('登录失败')
                 time.sleep(1)
                 logger.info('登录成功')
                 # try:
@@ -65,7 +63,7 @@ class Upload:
                 #     logger.error('error')
 
     # 邮箱登录
-    def mail_login(self, driver):
+    def mail_login(self, driver, login_username, login_password):
         logger.info('用邮箱登录')
         get('https://manhua.163.com/')
         # click('.topbar-meta-user >ul >li:nth-child(1)>.js-login-required')
@@ -83,7 +81,7 @@ class Upload:
         time.sleep(2)
 
     # qq登录
-    def qq_login(self, driver):
+    def qq_login(self, driver, login_username, login_password):
         logger.info('用qq登录')
         get('https://manhua.163.com/')
         # click('.topbar-meta-user >ul >li:nth-child(1)>.js-login-required')
@@ -120,7 +118,7 @@ class Upload:
         raise Pang5Exception('不支持微信')
 
     # 手机登录
-    def mobile_login(self, driver):
+    def mobile_login(self, driver, login_username, login_password):
 
         logger.info('用手机号登录')
         get('https://manhua.163.com/')
