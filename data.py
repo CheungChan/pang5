@@ -10,7 +10,7 @@ data = {
     'qq_use-appoint': True,
     'qq_chapter-publish-time': '2018-03-24 14:00:00',
     'qq_chapter_title': '喝醉的妹子竟然扯开了衣服',
-    'qq_tips-chapter': os.path.join(pwd, 'images', '腾讯封面.jpg'),
+    'qq_tips-chapter': os.path.join(pwd, 'images', '封面.png'),
     'qq_pics': [f'"{os.path.join(pwd,"images","章节",d)}"' for d in get_sorted_imgs(os.path.join(pwd, 'images', '章节'))],
 
     # 网易
@@ -25,7 +25,8 @@ data = {
     'net_d': '2018-04-26',
     'net_h': '18',
     'net_m': '15',
-    'net_image_pic': [f'{os.path.join(pwd,"images" ,"章节",d)}' for d in get_sorted_imgs(os.path.join(pwd, "images","章节"))],
+    'net_image_pic': [f'{os.path.join(pwd,"images" ,"章节",d)}' for d in
+                      get_sorted_imgs(os.path.join(pwd, "images", "章节"))],
 
     # 轻点
     # 'qingdian_username': '13000002726',
@@ -36,26 +37,28 @@ data = {
     "qingdian_password": 'qingdian321',
     # 'qingdian_series': '杨浩测试 不要审核通过',
     'qingdian_series': '轻点活动',
-    'qingdian_chapter': os.path.join(pwd, 'images', '轻点封面.jpg'),
+    'qingdian_chapter': os.path.join(pwd, 'images', '封面.png'),
     'qingdian_title': '喝醉的妹子竟然扯 开了衣服',
-    'qingdian_pic': [f'{os.path.join(pwd,"images","章节",d)}' for d in get_sorted_imgs(os.path.join(pwd,"images","章节"))],
+    'qingdian_pic': [f'{os.path.join(pwd,"images","章节",d)}' for d in
+                     get_sorted_imgs(os.path.join(pwd, "images", "章节"))],
 
     # 麦萌
     'maimeng_username': '18101038354',
     'maimeng_password': 'qingdian17',
     'maimeng_series': '为什么救赎',
-    'maimeng_chapter': os.path.join(pwd, 'series', '封面.jpg'),
+    'maimeng_chapter': os.path.join(pwd, 'images', '封面.png'),
     'maimeng_title': '喝醉的妹子竟然扯 开了衣服',
     'maimeng_desp': '',
-    'maimeng_comment':'无特殊要求',
+    'maimeng_comment': '无特殊要求',
     'maimeng_publish_time': '2019-10-10 10:17:17',
-    'maimeng_pic': [f'"{os.path.join(pwd,"images","章节",d)}"' for d in get_sorted_imgs(os.path.join(pwd,"images","章节"))],
+    'maimeng_pic': [f'"{os.path.join(pwd,"images","章节",d)}"' for d in
+                    get_sorted_imgs(os.path.join(pwd, "images", "章节"))],
 
     # 有妖气
-    'u17_username':'1042521247@qq.com',
-    'u17_password':'qingdian17',
-    'u17_series':'为什么救赎',
-    'u17_comic_id':'171154',
-    'u17_chapter':os.path.join(pwd, 'series', '封面.jpg'),
-    'u17_pic':[f'"{os.path.join(pwd,"images","章节",d)}"' for d in get_sorted_imgs(os.path.join(pwd,"images","章节"))],
+    'u17_username': '1042521247@qq.com',
+    'u17_password': 'qingdian17',
+    'u17_series': '为什么救赎',
+    'u17_comic_id': '171154',
+    'u17_chapter': os.path.join(pwd, 'images', '封面.png'),
+    'u17_pic': [f'"{os.path.join(pwd,"images","章节",d)}"' for d in get_sorted_imgs(os.path.join(pwd, "images", "章节"))],
 }
