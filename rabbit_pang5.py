@@ -87,9 +87,10 @@ def callback(ch, method, properties, body):
         Image.open(file).convert("RGB").save(os.path.join(pwd, "images", "章节", str(i) + os.path.splitext(img)[1]))
         i += 1
     # 在本脚本生命周期内,多次重新引入data
-    from data import data
+    import data
     from importlib import reload
     reload(data)
+    data = data.data
 
     import netEase
     import qingdian
