@@ -31,7 +31,7 @@ class Upload:
                 if get_current_url() != MANAGE_URL:
                     if data['net-login'] == 'mobile':
                         self.mobile_login(driver, login_username, login_password)
-                    elif data['net-login'] == 'mail':
+                    elif data['net-login'] in ('mail',''):
                         self.mail_login(driver, login_username, login_password)
                     elif data['net-login'] == 'qq':
                         self.qq_login(driver, login_username, login_password)
