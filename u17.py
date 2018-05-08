@@ -54,6 +54,7 @@ class U17:
     def publish(self):
         logger.info('点击关闭提示')
         try:
+            scroll_to()
             self.driver.find_element_by_css_selector('a.close_tip:nth-child(2)').click()
         except:
             logger.info('没有关闭提示')

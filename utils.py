@@ -294,7 +294,7 @@ def click_by_pyautogui(image_path):
             retry_times -= 1
             if retry_times > 0:
                 logger.info(f'重试{retry_times}')
-                time.sleep(2)
+                time.sleep(1)
             else:
                 logger.error(f'{image_path} 在页面上不能找到')
                 raise Pang5Exception('发布失败,会在稍后重试')
