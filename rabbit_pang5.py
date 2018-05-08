@@ -156,6 +156,7 @@ def callback(ch, method, properties, body):
     else:
         logger.error('未知平台')
 
+    logger.info('\n\n\n\n')
     # except Exception as e:
     #     logger.error(e)
     #     logger.error('数据错误')
