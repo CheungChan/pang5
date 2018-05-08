@@ -20,7 +20,7 @@ from config import LOGFILE_NAME
 
 logzero.logfile(LOGFILE_NAME, encoding='utf-8', maxBytes=500_0000, backupCount=3)
 
-db = records.Database(config.MYSQL_URL)
+
 
 pwd = os.path.abspath(os.curdir)
 
@@ -42,6 +42,7 @@ def callback(ch, method, properties, body):
     rabbitInfo = json.loads(body)
 
     mysql_id = rabbitInfo['mysql_id']
+    db = records.Database(config.MYSQL_URL)
     row = db.query('SELECT * FROM  chapter_chapter where id= :id_num', id_num=mysql_id)
     if not len(row.all()):
         return
