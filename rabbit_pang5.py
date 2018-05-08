@@ -35,7 +35,6 @@ def main():
 
 
 def callback(ch, method, properties, body):
-
     # 接收消息
     i = 0
     logger.info("[x] Received %r" % body)
@@ -67,7 +66,8 @@ def callback(ch, method, properties, body):
             content = requests.get(chapter_records[0]['cover_img']).content
 
         else:
-            content = requests.get('http://pang5web.oss-cn-beijing.aliyuncs.com/' + chapter_records[0]['cover_img']).content
+            content = requests.get(
+                'http://pang5web.oss-cn-beijing.aliyuncs.com/' + chapter_records[0]['cover_img']).content
         file = BytesIO()
         file.write(content)
         Image.open(file).convert("RGB").save('./images/封面.png')
@@ -86,7 +86,11 @@ def callback(ch, method, properties, body):
         file.write(content)
         Image.open(file).convert("RGB").save(os.path.join(pwd, "images", "章节", str(i) + os.path.splitext(img)[1]))
         i += 1
+    # 在本脚本生命周期内,多次重新引入data
     from data import data
+    from importlib import reload
+    reload(data)
+
     import netEase
     import qingdian
     import tencent
@@ -99,7 +103,7 @@ def callback(ch, method, properties, body):
         logger.error('没有找到作品信息')
         return
     user_records = db.query('SELECT * FROM  subscriber_platformsubscriber where id =:id',
-                        id=works_records[0]['platform_subsriber_id_id'])
+                            id=works_records[0]['platform_subsriber_id_id'])
     logger.info(user_records.all())
     if not len(user_records.all()):
         logger.error('没有找到用户信息')
