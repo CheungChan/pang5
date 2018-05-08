@@ -44,6 +44,7 @@ class Upload:
                     # 登录
                     # 继续中间页面
                     get('http://zz.manhua.163.com/')
+                    time.sleep(3)
                 if get_current_url() !='http://zz.manhua.163.com/':
                     raise  Pang5Exception('登录失败')
                 time.sleep(1)
@@ -68,6 +69,8 @@ class Upload:
     # 邮箱登录
     def mail_login(self, driver, login_username, login_password):
         logger.info('用邮箱登录')
+        if '@' not in login_username:
+            raise Pang5Exception('登录方式是邮箱,但是输入的用户名不是邮箱')
         get('https://manhua.163.com/')
         # click('.topbar-meta-user >ul >li:nth-child(1)>.js-login-required')
         driver.find_element_by_css_selector('.topbar-meta-user >ul >li:nth-child(1)>.js-login-required').click()
