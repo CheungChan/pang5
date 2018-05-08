@@ -94,10 +94,14 @@ def callback(ch, method, properties, body):
     works_info = db.query('SELECT * FROM work_works where id=:work_id', work_id=row[0]['works_id_id'])
     logger.info(works_info.all())
     if not len(works_info.all()):
+        logger.error('没有找到作品信息')
         return
     userinfo = db.query('SELECT * FROM  subscriber_platformsubscriber where id =:id',
                         id=works_info[0]['platform_subsriber_id_id'])
     logger.info(userinfo.all())
+    if not len(userinfo.all()):
+        logger.error('没有找到用户信息')
+        return
     if userinfo[0]['platform'] == 'qingdian':
         data['qingdian_username'] = userinfo[0]['platform_username']
         data['qingdian_password'] = userinfo[0]['platform_password']
