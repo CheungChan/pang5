@@ -26,7 +26,7 @@ class Upload:
                          cookie_file=COOKIE_FILE) as driver:
             with track_alert(driver):
                 # 处理登录
-                add_cookie(COOKIE_DOMAIN, driver, COOKIE_FILE)
+                # add_cookie(COOKIE_DOMAIN, driver, COOKIE_FILE)
                 get(MANAGE_URL)
                 if get_current_url() != MANAGE_URL:
                     if data['net-login'] == 'mobile':
@@ -37,7 +37,7 @@ class Upload:
                         self.qq_login(driver, login_username, login_password)
                     # self.mobile_login(driver)
 
-                    store_cookie(driver, COOKIE_FILE)
+                    # store_cookie(driver, COOKIE_FILE)
                     logger.info('登录成功')
                     # 登录
                     # 继续中间页面

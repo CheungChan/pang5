@@ -29,12 +29,12 @@ class Qingdian:
             self.driver = driver
             with track_alert(driver):
                 # 处理登录
-                add_cookie(COOKIE_DOMAIN, driver, COOKIE_FILE)
+                # add_cookie(COOKIE_DOMAIN, driver, COOKIE_FILE)
                 get(MANAGE_URL)
                 if get_current_url() != MANAGE_URL:
                     if not self.mobile_login(driver, LOGIN_USERNAME, LONGIN_PASSWORD):
                         raise Pang5Exception('登录失败')
-                store_cookie(driver, COOKIE_FILE)
+                # store_cookie(driver, COOKIE_FILE)
                 get(MANAGE_URL)
                 time.sleep(2)
                 cur = get_current_url()

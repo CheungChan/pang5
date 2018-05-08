@@ -30,12 +30,12 @@ class U17:
                          cookie_file=COOKIE_FILE, browser='firefox') as driver:
             with track_alert(driver):
                 self.driver = driver
-                add_cookie(COOKIE_DOMAIN, driver, COOKIE_FILE)
+                # add_cookie(COOKIE_DOMAIN, driver, COOKIE_FILE)
                 get(AUTH_OK_URL)
                 if get_current_url() != AUTH_OK_URL:
                     if not self.login():
                         raise Pang5Exception("登录失败")
-                store_cookie(driver, COOKIE_FILE)
+                # store_cookie(driver, COOKIE_FILE)
                 logger.info('登录成功')
 
                 logger.info('点击新建章节')

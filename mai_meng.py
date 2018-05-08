@@ -27,12 +27,12 @@ class MaiMeng:
             with track_alert(driver):
                 self.driver = driver
                 # 处理登录
-                add_cookie(COOKIE_DOMAIN, driver, COOKIE_FILE)
+                # add_cookie(COOKIE_DOMAIN, driver, COOKIE_FILE)
                 get(MANAGE_URL)
                 if get_current_url() != MANAGE_URL:
                     if not self.login():
                         raise Pang5Exception('登录失败')
-                store_cookie(driver, COOKIE_FILE)
+                # store_cookie(driver, COOKIE_FILE)
                 logger.info('登录成功')
 
                 # 根据作品名称点击对应的新建章节
