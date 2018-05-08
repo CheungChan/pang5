@@ -58,6 +58,10 @@ class U17:
             self.driver.find_element_by_css_selector('a.close_tip:nth-child(2)').click()
         except:
             logger.info('没有关闭提示')
+        logger.info('隐藏选择适合自己的字号')
+        js = '$("body > div.font_tip_dialog").hide()'
+        self.driver.execute_script(js)
+        time.sleep(1)
         logger.info('填写章节名称')
         clear_and_send_keys("#chapter_name", data['u17_chapter_name'])
 
