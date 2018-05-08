@@ -59,7 +59,7 @@ class U17:
         except NoSuchElementException:
             logger.info('没有关闭提示')
         logger.info('填写章节名称')
-        clear_and_send_keys("#chapter_name", data['u17_series'])
+        clear_and_send_keys("#chapter_name", data['u17_chapter_name'])
 
         logger.info('上传封面图片')
         time.sleep(2)
@@ -71,7 +71,7 @@ class U17:
         # click_by_pg(*POSOTION_GREEN_BUTTON)
         click_by_pyautogui(TITLE_PNG)
         time.sleep(2)
-        img: str = data['u17_chapter']
+        img: str = data['u17_chapter_images']
         cmd = f'D:/uploadImg.exe 打开 {img}'
         logger.info(cmd)
         os.system(cmd)

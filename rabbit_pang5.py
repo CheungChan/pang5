@@ -146,8 +146,8 @@ def callback(ch, method, properties, body):
         data['u17_username'] = userinfo[0]['platform_username']
         data['u17_password'] = userinfo[0]['platform_password']
         data['u17_comic_id'] = works_info[0]['third_id']
-        data['u17_chapter'] = row[0]['name']
-        data['u17_series'] = works_info[0]['name']
+        data['u17_chapter_name'] = row[0]['name']
+        data['u17_series_name'] = works_info[0]['name']
         u17.main(mysql_id)
     else:
         logger.error('未知平台')
