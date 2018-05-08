@@ -20,8 +20,6 @@ from config import LOGFILE_NAME
 
 logzero.logfile(LOGFILE_NAME, encoding='utf-8', maxBytes=500_0000, backupCount=3)
 
-
-
 pwd = os.path.abspath(os.curdir)
 
 
@@ -159,13 +157,13 @@ def callback(ch, method, properties, body):
     try:
         os.remove('./images/封面.jpg')
     except:
-        logger.error('no find')
+        pass
 
     for num in range(i):
         try:
             os.remove('./images/章节/' + str(num + 1) + '.jpg')
         except:
-            logger.error('no find')
+            pass
 
 
 def insert_rabbit(format):
