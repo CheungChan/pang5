@@ -35,6 +35,8 @@ def main():
 
 
 def callback(ch, method, properties, body):
+
+    # 接收消息
     i = 0
     logger.info("[x] Received %r" % body)
     rabbitInfo = json.loads(body)
