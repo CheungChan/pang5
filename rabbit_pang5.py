@@ -113,7 +113,7 @@ def callback(ch, method, properties, body):
         data['qq_use-appoint'] = row[0]['is_publish_clock']
         data['qq_chapter-publish-time'] = row[0]['publish_clock_time']
         tencent.main(mysql_id)
-    elif userinfo[0]['platform'] == '':
+    elif userinfo[0]['platform'] == 'netEase':
         data['net_username'] = userinfo[0]['platform_username']
         data['net_password'] = userinfo[0]['platform_password']
         data['net-use-appoint'] = row[0]['is_publish_clock']
