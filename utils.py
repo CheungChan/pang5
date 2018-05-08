@@ -275,21 +275,29 @@ def click_by_pyautogui(image_path):
     根据pyautogui提供的图像识别技术，点击屏幕上的像素点
     :return:
     """
+    retry_times = 3
     import pyautogui
     width, height = pyautogui.size()
     if not os.path.isabs(image_path):
         # 适配不同分辨率的图片， 仿大安卓
         image_path = os.path.join(os.path.abspath('.'), 'upload_btn_images', f'{width}_{height}', image_path)
     assert os.path.exists(image_path), logger.error(f'{image_path}文件不存在')
-    loc = pyautogui.locateCenterOnScreen(image_path)
-    if loc:
-        x, y = loc
-        logger.info(f'x={x}, y={y}')
-        pyautogui.moveTo(x, y)
-        pyautogui.click(x, y)
-    else:
-        logger.error(f'{image_path} 在页面上不能找到')
-        raise Pang5Exception('发布失败,会在稍后重试')
+    while retry_times > 0:
+        loc = pyautogui.locateCenterOnScreen(image_path)
+        if loc:
+            x, y = loc
+            logger.info(f'x={x}, y={y}')
+            pyautogui.moveTo(x, y)
+            pyautogui.click(x, y)
+            break
+        else:
+            retry_times -= 1
+            if retry_times > 0:
+                logger.info(f'重试{retry_times}')
+                time.sleep(2)
+            else:
+                logger.error(f'{image_path} 在页面上不能找到')
+                raise Pang5Exception('发布失败,会在稍后重试')
 
 
 def click_by_sikulix(image_path):
