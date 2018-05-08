@@ -12,9 +12,8 @@ MANAGE_URL = 'http://page.qingdian.cn/center/comicManagement/upload'
 LOGIN_URL = 'http://page.qingdian.cn/passport/login'
 
 COOKIE_DOMAIN = ".qingdian.cn"
-LOGIN_USERNAME = data['qingdian_username']
-LONGIN_PASSWORD = data['qingdian_password']
-COOKIE_FILE = f'cookies/{COOKIE_DOMAIN[1:]}_{LOGIN_USERNAME}.cookie.pkl'
+
+# COOKIE_FILE = f'cookies/{COOKIE_DOMAIN[1:]}_{LOGIN_USERNAME}.cookie.pkl'
 
 
 class Qingdian:
@@ -24,15 +23,18 @@ class Qingdian:
 
     def process(self, mysql_id):
         g_mysqlid["mysql_id"] = mysql_id
-        with open_driver(cookie_domain=COOKIE_DOMAIN,
-                         cookie_file=COOKIE_FILE) as driver:
+        with open_driver() as driver:
             self.driver = driver
             with track_alert(driver):
+                LOGIN_USERNAME = data['qingdian_username']
+                LOGIN_PASSWORD = data['qingdian_password']
+                logger.info(f'用户名{LOGIN_USERNAME}')
+                logger.info(f'密码{LOGIN_PASSWORD}')
                 # 处理登录
                 # add_cookie(COOKIE_DOMAIN, driver, COOKIE_FILE)
                 get(MANAGE_URL)
                 if get_current_url() != MANAGE_URL:
-                    if not self.mobile_login(driver, LOGIN_USERNAME, LONGIN_PASSWORD):
+                    if not self.mobile_login(driver, LOGIN_USERNAME, LOGIN_PASSWORD):
                         raise Pang5Exception('登录失败')
                 # store_cookie(driver, COOKIE_FILE)
                 get(MANAGE_URL)
