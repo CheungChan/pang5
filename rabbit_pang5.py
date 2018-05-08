@@ -92,12 +92,12 @@ def callback(ch, method, properties, body):
     import u17
     # 平台
     works_info = db.query('SELECT * FROM work_works where id=:work_id', work_id=row[0]['works_id_id'])
-    print(works_info.all())
+    logger.info(works_info.all())
     if not len(works_info.all()):
         return
     userinfo = db.query('SELECT * FROM  subscriber_platformsubscriber where id =:id',
                         id=works_info[0]['platform_subsriber_id_id'])
-    print(userinfo.all())
+    logger.info(userinfo.all())
     if userinfo[0]['platform'] == 'qingdian':
         data['qingdian_username'] = userinfo[0]['platform_username']
         data['qingdian_password'] = userinfo[0]['platform_password']
