@@ -89,6 +89,7 @@ def callback(ch, method, properties, body):
     import qingdian
     import tencent
     import mai_meng
+    import u17
     # 平台
     works_info = db.query('SELECT * FROM work_works where id=:work_id', work_id=row[0]['works_id_id'])
     print(works_info.all())
@@ -147,6 +148,7 @@ def callback(ch, method, properties, body):
         data['u17_comic_id'] = works_info[0]['third_id']
         data['u17_chapter'] = row[0]['name']
         data['u17_series'] = works_info[0]['name']
+        u17.main(mysql_id)
     else:
         logger.error('未知平台')
 
