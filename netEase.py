@@ -38,13 +38,13 @@ class Upload:
                     # self.mobile_login(driver)
 
                     # store_cookie(driver, COOKIE_FILE)
-                    logger.info('登录成功')
                     # 登录
                     # 继续中间页面
                     get('http://zz.manhua.163.com/')
                 if get_current_url() !='http://zz.manhua.163.com/':
                     raise  Pang5Exception('登录失败')
                 time.sleep(1)
+                logger.info('登录成功')
                 # try:
                 net_series = driver.find_elements_by_link_text(data['net_series_title'])
                 if len(net_series) == 0:
@@ -64,6 +64,7 @@ class Upload:
 
     # 邮箱登录
     def mail_login(self, driver, login_username, login_password):
+        logger.info('用邮箱登录')
         get('https://manhua.163.com/')
         # click('.topbar-meta-user >ul >li:nth-child(1)>.js-login-required')
         driver.find_element_by_css_selector('.topbar-meta-user >ul >li:nth-child(1)>.js-login-required').click()
@@ -81,6 +82,7 @@ class Upload:
 
     # qq登录
     def qq_login(self, driver, login_username, login_password):
+        logger.info('用qq登录')
         get('https://manhua.163.com/')
         # click('.topbar-meta-user >ul >li:nth-child(1)>.js-login-required')
         driver.find_element_by_css_selector('.topbar-meta-user >ul >li:nth-child(1)>.js-login-required').click()
@@ -118,6 +120,7 @@ class Upload:
     # 手机登录
     def mobile_login(self, driver, login_username, login_password):
 
+        logger.info('用手机号登录')
         get('https://manhua.163.com/')
         # click('.topbar-meta-user >ul >li:nth-child(1)>.js-login-required')
         driver.find_element_by_css_selector('.topbar-meta-user >ul >li:nth-child(1)>.js-login-required').click()
