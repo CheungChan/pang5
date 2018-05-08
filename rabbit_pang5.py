@@ -42,6 +42,8 @@ def callback(ch, method, properties, body):
 
     mysql_id = rabbitInfo['mysql_id']
     db = records.Database(config.MYSQL_URL)
+
+    # 查询章节信息
     chapter_records = db.query('SELECT * FROM  chapter_chapter where id= :id_num', id_num=mysql_id)
     if not len(chapter_records.all()):
         return
@@ -71,6 +73,7 @@ def callback(ch, method, properties, body):
         file = BytesIO()
         file.write(content)
         Image.open(file).convert("RGB").save('./images/封面.png')
+    # 下载章节图片
     i = 1
     s = chapter_records[0]['chapter_imgs']
     for img in json.loads(s):
@@ -97,18 +100,24 @@ def callback(ch, method, properties, body):
     import tencent
     import mai_meng
     import u17
-    # 平台
+
+    # 查询作品信息
     works_records = db.query('SELECT * FROM work_works where id=:work_id', work_id=chapter_records[0]['works_id_id'])
     logger.info(works_records.all())
     if not len(works_records.all()):
         logger.error('没有找到作品信息')
         return
+
+    # 查询用户信息
     user_records = db.query('SELECT * FROM  subscriber_platformsubscriber where id =:id',
                             id=works_records[0]['platform_subsriber_id_id'])
     logger.info(user_records.all())
     if not len(user_records.all()):
         logger.error('没有找到用户信息')
         return
+
+
+
     if user_records[0]['platform'] == 'qingdian':
         data['qingdian_username'] = user_records[0]['platform_username']
         data['qingdian_password'] = user_records[0]['platform_password']
