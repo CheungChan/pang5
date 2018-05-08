@@ -43,8 +43,8 @@ def callback(ch, method, properties, body):
 
     mysql_id = rabbitInfo['mysql_id']
     db = records.Database(config.MYSQL_URL)
-    row = db.query('SELECT * FROM  chapter_chapter where id= :id_num', id_num=mysql_id)
-    if not len(row.all()):
+    chapter_records = db.query('SELECT * FROM  chapter_chapter where id= :id_num', id_num=mysql_id)
+    if not len(chapter_records.all()):
         return
 
     # 清空文件夹
@@ -62,17 +62,17 @@ def callback(ch, method, properties, body):
                 logger.info(f'删除图片{os.path.join(root, name)}')
 
     # 下载封面
-    if row[0]['cover_img']:
-        if row[0]['cover_img'][0:4] == 'http':
-            content = requests.get(row[0]['cover_img']).content
+    if chapter_records[0]['cover_img']:
+        if chapter_records[0]['cover_img'][0:4] == 'http':
+            content = requests.get(chapter_records[0]['cover_img']).content
 
         else:
-            content = requests.get('http://pang5web.oss-cn-beijing.aliyuncs.com/' + row[0]['cover_img']).content
+            content = requests.get('http://pang5web.oss-cn-beijing.aliyuncs.com/' + chapter_records[0]['cover_img']).content
         file = BytesIO()
         file.write(content)
         Image.open(file).convert("RGB").save('./images/封面.png')
     i = 1
-    s = row[0]['chapter_imgs']
+    s = chapter_records[0]['chapter_imgs']
     for img in json.loads(s):
         logger.info(img)
         if img[0:4] == "http":
@@ -93,44 +93,44 @@ def callback(ch, method, properties, body):
     import mai_meng
     import u17
     # 平台
-    works_info = db.query('SELECT * FROM work_works where id=:work_id', work_id=row[0]['works_id_id'])
-    logger.info(works_info.all())
-    if not len(works_info.all()):
+    works_records = db.query('SELECT * FROM work_works where id=:work_id', work_id=chapter_records[0]['works_id_id'])
+    logger.info(works_records.all())
+    if not len(works_records.all()):
         logger.error('没有找到作品信息')
         return
-    userinfo = db.query('SELECT * FROM  subscriber_platformsubscriber where id =:id',
-                        id=works_info[0]['platform_subsriber_id_id'])
-    logger.info(userinfo.all())
-    if not len(userinfo.all()):
+    user_records = db.query('SELECT * FROM  subscriber_platformsubscriber where id =:id',
+                        id=works_records[0]['platform_subsriber_id_id'])
+    logger.info(user_records.all())
+    if not len(user_records.all()):
         logger.error('没有找到用户信息')
         return
-    if userinfo[0]['platform'] == 'qingdian':
-        data['qingdian_username'] = userinfo[0]['platform_username']
-        data['qingdian_password'] = userinfo[0]['platform_password']
-        data['qingdian_series'] = works_info[0]['name']
-        data['qingdian_title'] = row[0]['name']
+    if user_records[0]['platform'] == 'qingdian':
+        data['qingdian_username'] = user_records[0]['platform_username']
+        data['qingdian_password'] = user_records[0]['platform_password']
+        data['qingdian_series'] = works_records[0]['name']
+        data['qingdian_title'] = chapter_records[0]['name']
 
         qingdian.main(mysql_id)
-    elif userinfo[0]['platform'] == 'qq':
-        data['qq_username'] = userinfo[0]['platform_username']
-        data['qq_password'] = userinfo[0]['platform_password']
-        data['qq_comic_id'] = works_info[0]['third_id']
-        data['qq_chapter_title'] = row[0]['name']
-        data['qq_use-appoint'] = row[0]['is_publish_clock']
-        data['qq_chapter-publish-time'] = row[0]['publish_clock_time']
+    elif user_records[0]['platform'] == 'qq':
+        data['qq_username'] = user_records[0]['platform_username']
+        data['qq_password'] = user_records[0]['platform_password']
+        data['qq_comic_id'] = works_records[0]['third_id']
+        data['qq_chapter_title'] = chapter_records[0]['name']
+        data['qq_use-appoint'] = chapter_records[0]['is_publish_clock']
+        data['qq_chapter-publish-time'] = chapter_records[0]['publish_clock_time']
         tencent.main(mysql_id)
-    elif userinfo[0]['platform'] == 'netEase':
-        data['net_username'] = userinfo[0]['platform_username']
-        data['net_password'] = userinfo[0]['platform_password']
-        data['net-use-appoint'] = row[0]['is_publish_clock']
-        data['net_series_title'] = works_info[0]['name']
-        data['net_title_text'] = row[0]['name']
-        data['net-login'] = userinfo[0]['platform_login_type']
+    elif user_records[0]['platform'] == 'netEase':
+        data['net_username'] = user_records[0]['platform_username']
+        data['net_password'] = user_records[0]['platform_password']
+        data['net-use-appoint'] = chapter_records[0]['is_publish_clock']
+        data['net_series_title'] = works_records[0]['name']
+        data['net_title_text'] = chapter_records[0]['name']
+        data['net-login'] = user_records[0]['platform_login_type']
 
-        if row[0]['is_publish_clock']:
-            data['net_d'] = row[0]['publish_clock_time'].split(' ')[0]
-            data['net_h'] = row[0]['publish_clock_time'].split(' ')[1].split(':')[0]
-            m_num = int(row[0]['publish_clock_time'].split(' ')[1].split(':')[1])
+        if chapter_records[0]['is_publish_clock']:
+            data['net_d'] = chapter_records[0]['publish_clock_time'].split(' ')[0]
+            data['net_h'] = chapter_records[0]['publish_clock_time'].split(' ')[1].split(':')[0]
+            m_num = int(chapter_records[0]['publish_clock_time'].split(' ')[1].split(':')[1])
             if m_num < 15:
                 data['net_m'] = 0
             elif m_num >= 15 and m_num < 30:
@@ -141,19 +141,19 @@ def callback(ch, method, properties, body):
                 data['net_m'] = 45
 
         netEase.main(mysql_id)
-    elif userinfo[0]['platform'] == 'maimeng':
-        data['maimeng_username'] = userinfo[0]['platform_username']
-        data['maimeng_password'] = userinfo[0]['platform_password']
-        data['maimeng_series'] = works_info[0]['name']
-        data['maimeng_title'] = row[0]['name']
-        data['maimeng_publish_time'] = row[0]['publish_clock_time']
+    elif user_records[0]['platform'] == 'maimeng':
+        data['maimeng_username'] = user_records[0]['platform_username']
+        data['maimeng_password'] = user_records[0]['platform_password']
+        data['maimeng_series'] = works_records[0]['name']
+        data['maimeng_title'] = chapter_records[0]['name']
+        data['maimeng_publish_time'] = chapter_records[0]['publish_clock_time']
         mai_meng.main(mysql_id)
-    elif userinfo[0]['platform'] == 'u17':
-        data['u17_username'] = userinfo[0]['platform_username']
-        data['u17_password'] = userinfo[0]['platform_password']
-        data['u17_comic_id'] = works_info[0]['third_id']
-        data['u17_chapter_name'] = row[0]['name']
-        data['u17_series_name'] = works_info[0]['name']
+    elif user_records[0]['platform'] == 'u17':
+        data['u17_username'] = user_records[0]['platform_username']
+        data['u17_password'] = user_records[0]['platform_password']
+        data['u17_comic_id'] = works_records[0]['third_id']
+        data['u17_chapter_name'] = chapter_records[0]['name']
+        data['u17_series_name'] = works_records[0]['name']
         u17.main(mysql_id)
     else:
         logger.error('未知平台')
