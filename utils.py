@@ -157,7 +157,7 @@ def update_status2fail():
     rows = db.query("update chapter_chapter set status=-1, fail_reason=:msg where id=:id", id=g_mysqlid['mysql_id'],
                     msg=g_msg)
     from data import data
-    dingding_s = f'漫画助手发布失败\nmysql_id={g_mysqlid["mysql_id"]}\nmsg={g_msg}\ndata={data}\ntraceback={g_traceback}'
+    dingding_s = f'漫画助手发布失败\n\nmysql_id={g_mysqlid["mysql_id"]}\n\nmsg={g_msg}\n\ndata={data}\n\ntraceback={g_traceback}'
     dingdSendMsg(dingding_s)
     logger.info(f'更新{g_mysqlid["mysql_id"]}状态')
 
