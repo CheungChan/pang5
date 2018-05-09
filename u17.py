@@ -8,7 +8,7 @@ from config import LOGFILE_NAME, DATA_CHAPTER_IMAGE, DATA_CHAPTER_NAME, DATA_PAS
     DATA_WORKS_IMAGE
 from data import data
 from utils import open_driver, track_alert, get, get_current_url, clear_and_send_keys, \
-    scroll_to, click_by_pyautogui, Pang5Exception, update_status2OK, g_mysqlid,scroll_to_id
+    scroll_to, click_by_pyautogui, Pang5Exception, update_status2OK, g_mysqlid, scroll_to_id
 
 logzero.logfile(LOGFILE_NAME, encoding='utf-8', maxBytes=500_0000, backupCount=3)
 LOGIN_URL = 'http://passport.u17.com/member_v2/login.php?url=http%3A%2F%2Fcomic.user.u17.com/index.php'
@@ -100,6 +100,7 @@ class U17:
         logger.info('点击开始上传')
         scroll_to_id('btn_start')
         click_by_pyautogui(START_UPLOAD_PNG)
+        start = time.time()
 
         while True:
             li_ele = self.driver.find_elements_by_css_selector('#image_list > li')
@@ -110,6 +111,10 @@ class U17:
             if count_lack == 0:
                 logger.info('上传完毕')
                 break
+            if time.time() - start > 2 * 60:
+                logger.error('上传图片超时')
+                js = 'return $(".tipsFont").text()'
+                raise Pang5Exception(self.driver.execute_script(js))
             logger.info(f'上传中, 共{count_all}个， {count_ok}个上传成功， {count_lack}个正在上传中。。。')
             time.sleep(4)
 
