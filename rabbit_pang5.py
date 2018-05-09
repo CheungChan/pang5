@@ -67,32 +67,41 @@ def callback(ch, method, properties, body):
                 logger.info(f'删除图片{os.path.join(root, name)}')
 
     # 下载封面
-    if chapter_record['cover_img']:
-        if chapter_record['cover_img'][0:4] == 'http':
-            content = requests.get(chapter_record['cover_img']).content
+    try:
+        if chapter_record['cover_img']:
+            if chapter_record['cover_img'][0:4] == 'http':
+                content = requests.get(chapter_record['cover_img']).content
 
-        else:
-            content = requests.get(
-                'http://pang5web.oss-cn-beijing.aliyuncs.com/' + chapter_record['cover_img']).content
-        file = BytesIO()
-        file.write(content)
-        Image.open(file).convert("RGB").save('./images/封面.png')
+            else:
+                content = requests.get(
+                    'http://pang5web.oss-cn-beijing.aliyuncs.com/' + chapter_record['cover_img']).content
+            file = BytesIO()
+            file.write(content)
+            Image.open(file).convert("RGB").save('./images/封面.png')
+    except Exception as e:
+        logger.error(e)
+        logger.error('封面图片下载失败')
+        return
     # 下载章节图片
-    i = 1
-    s = chapter_record['chapter_imgs']
-    for img in json.loads(s):
-        logger.info(img)
-        if img[0:4] == "http":
-            content = requests.get(img).content
+    try:
+        i = 1
+        s = chapter_record['chapter_imgs']
+        for img in json.loads(s):
+            logger.info(img)
+            if img[0:4] == "http":
+                content = requests.get(img).content
 
-        else:
-            url = 'http://pang5web.oss-cn-beijing.aliyuncs.com/' + img
-            logger.info(url)
-            content = requests.get(url).content
-        file = BytesIO()
-        file.write(content)
-        Image.open(file).convert("RGB").save(os.path.join(pwd, "images", "章节", str(i) + os.path.splitext(img)[1]))
-        i += 1
+            else:
+                url = 'http://pang5web.oss-cn-beijing.aliyuncs.com/' + img
+                logger.info(url)
+                content = requests.get(url).content
+            file = BytesIO()
+            file.write(content)
+            Image.open(file).convert("RGB").save(os.path.join(pwd, "images", "章节", str(i) + os.path.splitext(img)[1]))
+            i += 1
+    except Exception as e:
+        logger.error(e)
+        logger.error('章节图片下载失败')
     # 在本脚本生命周期内,多次重新引入data
     import data
     from importlib import reload
