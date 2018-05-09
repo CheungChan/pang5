@@ -4,7 +4,8 @@ import time
 import logzero
 from logzero import logger
 
-from config import LOGFILE_NAME, DATA_CHAPTER_IMAGE, DATA_CHAPTER_NAME, DATA_PASSWORD, DATA_USERNAME, DATA_THIRD_ID
+from config import LOGFILE_NAME, DATA_CHAPTER_IMAGE, DATA_CHAPTER_NAME, DATA_PASSWORD, DATA_USERNAME, DATA_THIRD_ID, \
+    DATA_WORKS_IMAGE
 from data import data
 from utils import open_driver, track_alert, get, get_current_url, clear_and_send_keys, \
     scroll_to, click_by_pyautogui, Pang5Exception, update_status2OK, g_mysqlid
@@ -70,7 +71,7 @@ class U17:
         # click_by_pg(*POSOTION_GREEN_BUTTON)
         click_by_pyautogui(TITLE_PNG)
         time.sleep(2)
-        img: str = data[DATA_CHAPTER_IMAGE]
+        img: str = data[DATA_WORKS_IMAGE]
         cmd = f'D:/uploadImg.exe 打开 {img}'
         logger.info(cmd)
         os.system(cmd)
