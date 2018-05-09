@@ -149,7 +149,7 @@ def callback(ch, method, properties, body):
     logger.info(data)
     import netEase
     import qingdian
-    import tencent
+    import qq
     import mai_meng
     import u17
 
@@ -157,7 +157,7 @@ def callback(ch, method, properties, body):
         'netEase': netEase,
         'qingdian': qingdian,
         'maimeng': mai_meng,
-        'qq': tencent,
+        'qq': qq,
         'u17': u17,
     }
     if data[DATA_PLATFORM] in platforms:

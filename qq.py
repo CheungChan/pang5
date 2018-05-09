@@ -25,7 +25,7 @@ DELETE_OK_PNG = 'tencent_delete_ok.png'
 CHAPTER_PNG = 'tencent.png'
 
 
-class Tencent:
+class Qq:
     def __init__(self):
         logger.info(data)
 
@@ -67,6 +67,7 @@ class Tencent:
         self.driver.switch_to.frame('login_ifr')
         self.driver.find_element_by_css_selector("#switcher_plogin").click()
         clear_and_send_keys("#u", data[DATA_USERNAME])
+        time.sleep(1)
         clear_and_send_keys("#p", data[DATA_PASSWORD])
         time.sleep(2)
         self.driver.find_element_by_css_selector("#login_button").click()
@@ -153,7 +154,7 @@ class Tencent:
 
 
 def main(mysql_id):
-    Tencent().process(mysql_id)
+    Qq().process(mysql_id)
 
 
 if __name__ == '__main__':
