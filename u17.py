@@ -111,12 +111,12 @@ class U17:
             if count_lack == 0:
                 logger.info('上传完毕')
                 break
-            if time.time() - start > 2 * 60:
+            if time.time() - start > 60:
                 logger.error('上传图片超时')
                 js = 'return $(".tipsFont").text()'
                 raise Pang5Exception(self.driver.execute_script(js))
             logger.info(f'上传中, 共{count_all}个， {count_ok}个上传成功， {count_lack}个正在上传中。。。')
-            time.sleep(4)
+            time.sleep(2)
 
         logger.info('提交审核')
         self.driver.find_element_by_css_selector('#main > div.borbox > div > div.tc > a').click()
