@@ -15,7 +15,6 @@ LOGIN_URL = 'http://page.qingdian.cn/passport/login'
 COOKIE_DOMAIN = ".qingdian.cn"
 
 
-# COOKIE_FILE = f'cookies/{COOKIE_DOMAIN[1:]}_{LOGIN_USERNAME}.cookie.pkl'
 
 
 class Qingdian:
@@ -33,12 +32,10 @@ class Qingdian:
                 logger.info(f'用户名{LOGIN_USERNAME}')
                 logger.info(f'密码{LOGIN_PASSWORD}')
                 # 处理登录
-                # add_cookie(COOKIE_DOMAIN, driver, COOKIE_FILE)
                 get(MANAGE_URL)
                 if get_current_url() != MANAGE_URL:
                     if not self.mobile_login(driver, LOGIN_USERNAME, LOGIN_PASSWORD):
                         raise Pang5Exception('登录失败')
-                # store_cookie(driver, COOKIE_FILE)
                 get(MANAGE_URL)
                 time.sleep(2)
                 cur = get_current_url()

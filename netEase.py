@@ -26,7 +26,6 @@ class Upload:
         with open_driver() as driver:
             with track_alert(driver):
                 # 处理登录
-                # add_cookie(COOKIE_DOMAIN, driver, COOKIE_FILE)
                 login_username = data[DATA_USERNAME]
                 login_password = data[DATA_PASSWORD]
                 logger.info(f'用户名{login_username}')
@@ -42,7 +41,6 @@ class Upload:
                         self.qq_login(driver, login_username, login_password)
                     # self.mobile_login(driver)
 
-                    # store_cookie(driver, COOKIE_FILE)
                     # 登录
                     # 继续中间页面
                     get('https://zz.manhua.163.com/')

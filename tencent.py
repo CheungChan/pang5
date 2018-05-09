@@ -17,9 +17,6 @@ MANAGE_URL = 'http://ac.qq.com/MyComic'
 # 登录成功之后跳转的URL
 AUTH_OK_URL = 'http://ac.qq.com/MyComic?auth=1'
 
-COOKIE_DOMAIN = ".ac.qq.com"
-COOKIE_FILE = f'cookies/{COOKIE_DOMAIN[1:]}_{data[DATA_USERNAME]}.cookie.pkl'
-
 FIRST_CHAPTER = True
 REAL_PUBLISH = True
 browser = BROWSER_FIREFOX
@@ -34,8 +31,7 @@ class Tencent:
 
     def process(self, mysql_id):
         g_mysqlid["mysql_id"] = mysql_id
-        with open_driver(cookie_domain=COOKIE_DOMAIN,
-                         cookie_file=COOKIE_FILE, browser=browser) as driver:
+        with open_driver(browser=browser) as driver:
             with track_alert(driver):
                 self.driver = driver
 

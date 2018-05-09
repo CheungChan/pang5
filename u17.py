@@ -10,8 +10,6 @@ from utils import open_driver, track_alert, get, get_current_url, clear_and_send
     scroll_to, click_by_pyautogui, Pang5Exception, update_status2OK, g_mysqlid
 
 logzero.logfile(LOGFILE_NAME, encoding='utf-8', maxBytes=500_0000, backupCount=3)
-COOKIE_DOMAIN = '.u17.com'
-COOKIE_FILE = f'cookies/{COOKIE_DOMAIN[1:]}_{data[DATA_USERNAME]}.cookie.pkl'
 LOGIN_URL = 'http://passport.u17.com/member_v2/login.php?url=http%3A%2F%2Fcomic.user.u17.com/index.php'
 AUTH_OK_URL = 'http://comic.user.u17.com/index.php'
 TITLE_PNG = 'u17_title.png'
@@ -25,16 +23,13 @@ class U17:
 
     def process(self, mysql_id):
         g_mysqlid["mysql_id"] = mysql_id
-        with open_driver(cookie_domain=COOKIE_DOMAIN,
-                         cookie_file=COOKIE_FILE, browser='firefox') as driver:
+        with open_driver(browser='firefox') as driver:
             with track_alert(driver):
                 self.driver = driver
-                # add_cookie(COOKIE_DOMAIN, driver, COOKIE_FILE)
                 get(AUTH_OK_URL)
                 if get_current_url() != AUTH_OK_URL:
                     if not self.login():
                         raise Pang5Exception("登录失败")
-                # store_cookie(driver, COOKIE_FILE)
                 logger.info('登录成功')
 
                 logger.info('点击新建章节')

@@ -11,8 +11,6 @@ from utils import open_driver, track_alert, get, get_current_url, clear_and_send
     scroll_to, click_by_actionchains, g_mysqlid, Pang5Exception
 
 logzero.logfile(LOGFILE_NAME, encoding='utf-8', maxBytes=500_0000, backupCount=3)
-COOKIE_DOMAIN = '.author.maimengjun.com'
-COOKIE_FILE = f'cookies/{COOKIE_DOMAIN[1:]}_{data[DATA_USERNAME]}.cookie.pkl'
 MANAGE_URL = 'http://author.maimengjun.com/submission'
 AUTH_OK_URL = 'http://author.maimengjun.com/submission'
 CREATE_CHAPTER_URL = 'http://author.maimengjun.com/submission/create_chapter'
@@ -24,17 +22,14 @@ class MaiMeng:
 
     def process(self, mysql_id):
         g_mysqlid["mysql_id"] = mysql_id
-        with open_driver(cookie_domain=COOKIE_DOMAIN,
-                         cookie_file=COOKIE_FILE, browser='firefox') as driver:
+        with open_driver(browser='firefox') as driver:
             with track_alert(driver):
                 self.driver = driver
                 # 处理登录
-                # add_cookie(COOKIE_DOMAIN, driver, COOKIE_FILE)
                 get(MANAGE_URL)
                 if get_current_url() != MANAGE_URL:
                     if not self.login():
                         raise Pang5Exception('登录失败')
-                # store_cookie(driver, COOKIE_FILE)
                 logger.info('登录成功')
 
                 # 根据作品名称点击对应的新建章节
