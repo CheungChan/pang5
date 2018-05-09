@@ -98,6 +98,7 @@ class U17:
         os.system(cmd)
         time.sleep(2)
         logger.info('点击开始上传')
+        scroll_to()
         click_by_pyautogui(START_UPLOAD_PNG)
 
         while True:
