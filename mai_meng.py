@@ -5,7 +5,7 @@ import logzero
 from logzero import logger
 
 from config import LOGFILE_NAME, DATA_CHAPTER_IMAGE, DATA_CLOCK_PUBLISH_DATETIME, \
-    DATA_IS_CLOCK, DATA_CHAPTER_NAME, DATA_WORKS_NAME, DATA_PASSWORD, DATA_USERNAME, DATA_PLATFORM
+    DATA_IS_CLOCK, DATA_CHAPTER_NAME, DATA_WORKS_NAME, DATA_PASSWORD, DATA_USERNAME
 from data import data
 from utils import open_driver, track_alert, get, get_current_url, clear_and_send_keys, \
     scroll_to, click_by_actionchains, g_mysqlid, Pang5Exception

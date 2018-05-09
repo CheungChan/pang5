@@ -117,6 +117,7 @@ class Qingdian:
         hint = driver.execute_script('return window.hint;')
         if hint:
             raise Pang5Exception(hint)
+        logger.info('发布成功')
 
     def search_article(self, article_name):
         article_list = self.driver.find_elements_by_css_selector(
@@ -131,7 +132,7 @@ class Qingdian:
                 if len(btns) == 0:
                     raise Pang5Exception(f'作品"{article_name}"状态异常')
                 else:
-                    logger.info('找到')
+                    logger.info(f'找到{article_name}')
                     btns[0].click()
                     return
         btn = self.driver.find_element_by_css_selector('.btn-next')

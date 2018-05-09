@@ -5,6 +5,7 @@ import time
 from datetime import datetime
 
 import logzero
+import traceback
 from logzero import logger
 from selenium import webdriver
 from selenium.common.exceptions import UnexpectedAlertPresentException, TimeoutException, WebDriverException, \
@@ -22,6 +23,8 @@ from config import USE_FACE, CHROME_DRIVER_PATH, PHANTOMJS_PATH, SCREENSHOT_PATH
 
 g_driver = None
 g_mysqlid = {"mysql_id": None}
+g_msg = ''
+g_traceback = ''
 # 此变量要在平台的脚本中修改值,所有采用了dict的结构,为可变对象,才能修改.平台脚本必须修改该值.
 logzero.logfile(LOGFILE_NAME, encoding='utf-8', maxBytes=500_0000, backupCount=3)
 db = records.Database(MYSQL_URL)
@@ -89,6 +92,8 @@ class open_driver(object):
         return self.driver
 
     def __exit__(self, exc_type, exc_val, exc_tb):
+        global g_traceback
+        global g_msg
         logger.info('退出')
         if exc_type == SessionNotCreatedException or exc_type == NoSuchWindowException:
             update_status2fail("浏览器找不到了")
@@ -110,8 +115,11 @@ class open_driver(object):
             logger.error(exc_type)
             logger.error(exc_val)
             logger.error(exc_tb)
+            g_traceback = traceback.format_exc()
+            logger.error(g_traceback)
             if exc_type != Pang5Exception:
-                update_status2fail("出现异常,浏览器只能关闭")
+                g_msg = ("出现异常,浏览器只能关闭")
+            update_status2fail()
             return True
         else:
             update_status2OK()
@@ -138,15 +146,16 @@ class track_alert(object):
 
 class Pang5Exception(Exception):
     def __init__(self, msg):
-        update_status2fail(msg)
+        global g_msg
+        g_msg = msg
 
 
-def update_status2fail(msg):
-    logger.error(msg)
+def update_status2fail():
+    logger.error(g_msg)
     rows = db.query("update chapter_chapter set status=-1, fail_reason=:msg where id=:id", id=g_mysqlid['mysql_id'],
-                    msg=msg)
+                    msg=g_msg)
     from data import data
-    dingding_s = f'漫画助手发布失败\nmysql_id={g_mysqlid["mysql_id"]}\nmsg={msg}\ndata={data}'
+    dingding_s = f'漫画助手发布失败\nmysql_id={g_mysqlid["mysql_id"]}\nmsg={g_msg}\ndata={data}\ntraceback={g_traceback}'
     dingdSendMsg(dingding_s)
     logger.info(f'更新{g_mysqlid["mysql_id"]}状态')
 

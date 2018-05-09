@@ -18,7 +18,7 @@ from logzero import logger
 import config
 from config import LOGFILE_NAME, DATA_CHAPTER_IMAGE, DATA_CLOCK_PUBLISH_DATETIME, DATA_CHAPTER_NAME, DATA_IS_CLOCK, \
     DATA_PASSWORD, DATA_PLATFORM, DATA_THIRD_ID, DATA_USERNAME, DATA_WORKS_IMAGE, DATA_WORKS_NAME, DATA_LOGIN_TYPE, \
-    NEED_FLASH_PLATFORM, DATA_CLOCK_PUBLISH_SEC, DATA_CLOCK_PUBLISH_MIN, DATA_CLOCK_PUBLISH_HOUR, DATA_CLOCK_PUBLISH_DAY
+    NEED_FLASH_PLATFORM
 from utils import get_sorted_imgs
 
 logzero.logfile(LOGFILE_NAME, encoding='utf-8', maxBytes=500_0000, backupCount=3)
@@ -133,14 +133,14 @@ def callback(ch, method, properties, body):
     data[DATA_IS_CLOCK] = chapter_record['is_publish_clock']
     data[DATA_CLOCK_PUBLISH_DATETIME] = chapter_record['publish_clock_time']
     data[DATA_LOGIN_TYPE] = user_record['platform_login_type']
-    data[DATA_WORKS_IMAGE] = os.path.join(pwd, 'images', '封面.png'),
+    data[DATA_WORKS_IMAGE] = os.path.join(pwd, 'images', '封面.png')
 
     if user_record['platform'] in NEED_FLASH_PLATFORM:
         data[DATA_CHAPTER_IMAGE] = [f'"{os.path.join(pwd,"images","章节",d)}"' for d in
-                                    get_sorted_imgs(os.path.join(pwd, 'images', '章节'))],
+                                    get_sorted_imgs(os.path.join(pwd, 'images', '章节'))]
     else:
         data[DATA_CHAPTER_IMAGE] = [f'{os.path.join(pwd,"images" ,"章节",d)}' for d in
-                                    get_sorted_imgs(os.path.join(pwd, "images", "章节"))],
+                                    get_sorted_imgs(os.path.join(pwd, "images", "章节"))]
 
     platforms = {
         'netEase': netEase,

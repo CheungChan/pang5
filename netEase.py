@@ -4,9 +4,8 @@ import logzero
 from logzero import logger
 from selenium.webdriver.support.ui import Select
 
-from config import LOGFILE_NAME, DATA_PLATFORM, DATA_CHAPTER_IMAGE, DATA_WORKS_NAME, DATA_CHAPTER_NAME, DATA_PASSWORD, \
-    DATA_USERNAME, DATA_IS_CLOCK, DATA_CLOCK_PUBLISH_DATETIME, DATA_LOGIN_TYPE, DATA_CLOCK_PUBLISH_HOUR, \
-    DATA_CLOCK_PUBLISH_MIN
+from config import LOGFILE_NAME, DATA_CHAPTER_IMAGE, DATA_WORKS_NAME, DATA_CHAPTER_NAME, DATA_PASSWORD, \
+    DATA_USERNAME, DATA_IS_CLOCK, DATA_CLOCK_PUBLISH_DATETIME, DATA_LOGIN_TYPE
 from data import data
 from utils import open_driver, get, track_alert, get_current_url, g_mysqlid, Pang5Exception
 
