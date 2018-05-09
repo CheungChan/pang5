@@ -52,6 +52,24 @@ def callback(ch, method, properties, body):
         return
     chapter_record = chapter_records[0]
 
+    # 查询作品信息
+    works_records = db.query('SELECT * FROM work_works where id=:work_id', work_id=chapter_record['works_id_id'])
+    logger.info(works_records.all())
+    if not len(works_records.all()):
+        logger.error('没有找到作品信息')
+        return
+    works_record = works_records[0]
+
+    # 查询用户信息
+    user_records = db.query('SELECT * FROM  subscriber_platformsubscriber where id =:id',
+                            id=works_record['platform_subsriber_id_id'])
+    logger.info(user_records.all())
+    if not len(user_records.all()):
+        logger.error('没有找到用户信息')
+        return
+    user_record = user_records[0]
+
+    logger.info(f"-------------{user_record['platform']}-----------")
     # 清空文件夹
 
     for root, dirs, files in os.walk('./images/章节'):
@@ -69,6 +87,7 @@ def callback(ch, method, properties, body):
     # 下载封面
     try:
         if chapter_record['cover_img']:
+            logger.info(chapter_record['cover_img'])
             if chapter_record['cover_img'][0:4] == 'http':
                 content = requests.get(chapter_record['cover_img']).content
 
@@ -108,29 +127,6 @@ def callback(ch, method, properties, body):
     reload(data)
     data = data.data
 
-    import netEase
-    import qingdian
-    import tencent
-    import mai_meng
-    import u17
-
-    # 查询作品信息
-    works_records = db.query('SELECT * FROM work_works where id=:work_id', work_id=chapter_record['works_id_id'])
-    logger.info(works_records.all())
-    if not len(works_records.all()):
-        logger.error('没有找到作品信息')
-        return
-    works_record = works_records[0]
-
-    # 查询用户信息
-    user_records = db.query('SELECT * FROM  subscriber_platformsubscriber where id =:id',
-                            id=works_record['platform_subsriber_id_id'])
-    logger.info(user_records.all())
-    if not len(user_records.all()):
-        logger.error('没有找到用户信息')
-        return
-    user_record = user_records[0]
-
     # 赋值data
 
     data[DATA_PLATFORM] = user_record['platform']
@@ -150,6 +146,12 @@ def callback(ch, method, properties, body):
     else:
         data[DATA_CHAPTER_IMAGE] = [f'{os.path.join(pwd,"images" ,"章节",d)}' for d in
                                     get_sorted_imgs(os.path.join(pwd, "images", "章节"))]
+    logger.info(data)
+    import netEase
+    import qingdian
+    import tencent
+    import mai_meng
+    import u17
 
     platforms = {
         'netEase': netEase,
@@ -159,7 +161,10 @@ def callback(ch, method, properties, body):
         'u17': u17,
     }
     if data[DATA_PLATFORM] in platforms:
-        platforms[data[DATA_PLATFORM]].main(mysql_id)
+        p = platforms[data[DATA_PLATFORM]]
+        reload(p)
+        # 不许重新导入平台模块,这样平台模块里的data才是最新的
+        p.main(mysql_id)
     else:
         logger.error('未知平台')
 
