@@ -414,3 +414,8 @@ def use_flash():
 def scroll_to(height="document.body.scrollHeight"):
     js = f"window.scrollTo(0, {height})"
     g_driver.execute_script(js)
+
+
+def scroll_to_id(id):
+    js = f'location.href="#{id}"'
+    g_driver.execute_script(js)

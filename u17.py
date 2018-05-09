@@ -8,7 +8,7 @@ from config import LOGFILE_NAME, DATA_CHAPTER_IMAGE, DATA_CHAPTER_NAME, DATA_PAS
     DATA_WORKS_IMAGE
 from data import data
 from utils import open_driver, track_alert, get, get_current_url, clear_and_send_keys, \
-    scroll_to, click_by_pyautogui, Pang5Exception, update_status2OK, g_mysqlid
+    scroll_to, click_by_pyautogui, Pang5Exception, update_status2OK, g_mysqlid,scroll_to_id
 
 logzero.logfile(LOGFILE_NAME, encoding='utf-8', maxBytes=500_0000, backupCount=3)
 LOGIN_URL = 'http://passport.u17.com/member_v2/login.php?url=http%3A%2F%2Fcomic.user.u17.com/index.php'
@@ -98,7 +98,7 @@ class U17:
         os.system(cmd)
         time.sleep(2)
         logger.info('点击开始上传')
-        scroll_to()
+        scroll_to_id('btn_start')
         click_by_pyautogui(START_UPLOAD_PNG)
 
         while True:
