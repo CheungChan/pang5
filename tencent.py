@@ -4,11 +4,12 @@ import time
 import logzero
 from logzero import logger
 
-from config import BROWSER_FIREFOX
-from config import LOGFILE_NAME
+from config import BROWSER_FIREFOX, LOGFILE_NAME, DATA_WORKS_IMAGE, DATA_CHAPTER_IMAGE, DATA_CHAPTER_NAME, \
+    DATA_PASSWORD, DATA_USERNAME, DATA_THIRD_ID, DATA_IS_CLOCK, \
+    DATA_CLOCK_PUBLISH_DATETIME
 from data import data
 from utils import open_driver, track_alert, get, get_current_url, clear_and_send_keys, \
-    scroll_to, click_by_pyautogui, g_mysqlid, Pang5Exception,add_cookie,store_cookie
+    scroll_to, click_by_pyautogui, g_mysqlid, Pang5Exception
 
 logzero.logfile(LOGFILE_NAME, encoding='utf-8', maxBytes=500_0000, backupCount=3)
 # 管理页面URL
@@ -17,7 +18,7 @@ MANAGE_URL = 'http://ac.qq.com/MyComic'
 AUTH_OK_URL = 'http://ac.qq.com/MyComic?auth=1'
 
 COOKIE_DOMAIN = ".ac.qq.com"
-COOKIE_FILE = f'cookies/{COOKIE_DOMAIN[1:]}_{data["qq_username"]}.cookie.pkl'
+COOKIE_FILE = f'cookies/{COOKIE_DOMAIN[1:]}_{data[DATA_USERNAME]}.cookie.pkl'
 
 FIRST_CHAPTER = True
 REAL_PUBLISH = True
@@ -51,7 +52,7 @@ class Tencent:
                 logger.info('登录成功')
 
                 # 点击章节管理
-                url = f'http://ac.qq.com/MyComic/chapterList/id/{data["qq_comic_id"]}'
+                url = f'http://ac.qq.com/MyComic/chapterList/id/{data[DATA_THIRD_ID]}'
                 logger.info(url)
                 driver.get(url)
                 # self.driver.find_element_by_css_selector(".h_btn_section").click()
@@ -69,8 +70,8 @@ class Tencent:
         login_url = get_current_url()
         self.driver.switch_to.frame('login_ifr')
         self.driver.find_element_by_css_selector("#switcher_plogin").click()
-        clear_and_send_keys("#u", data["qq_username"])
-        clear_and_send_keys("#p", data["qq_password"])
+        clear_and_send_keys("#u", data[DATA_USERNAME])
+        clear_and_send_keys("#p", data[DATA_PASSWORD])
         time.sleep(2)
         self.driver.find_element_by_css_selector("#login_button").click()
         time.sleep(3)
@@ -87,22 +88,22 @@ class Tencent:
         if not FIRST_CHAPTER:
 
             # 有了第一章之后才会出来是否定时发布和发布日期,请提前发布好第一章
-            if data['qq_use-appoint'] == False:
+            if data[DATA_IS_CLOCK] == False:
                 # 定时发布选否
                 self.driver.find_element_by_css_selector(
                     'table > tbody > tr:nth-child(2) > td.chapter-publish-time > label:nth-child(2) > input[type="radio"]').click()
             else:
                 # 发布日期
                 self.driver.find_element_by_css_selector("#chapter_date").send_keys(
-                    data['qq_chapter-publish-time'])
+                    data[DATA_CLOCK_PUBLISH_DATETIME])
 
         # 章节名称
-        clear_and_send_keys("#chapter_title", data['qq_chapter_title'])
+        clear_and_send_keys("#chapter_title", data[DATA_CHAPTER_NAME])
         # 确定修改
         self.driver.find_element_by_css_selector("#chapterTitleSubmit").click()
 
         # 章节封面
-        tips_chapter = data["qq_tips-chapter"]
+        tips_chapter = data[DATA_WORKS_IMAGE]
         logger.info(tips_chapter)
         self.driver.find_element_by_css_selector("#Filedata").send_keys(tips_chapter)
 
@@ -119,7 +120,7 @@ class Tencent:
         # printt(d['x'],d['y'])
         click_by_pyautogui(CHAPTER_PNG)
         # click_by_pg(*POSOTION_GREEN_BUTTON)
-        img: str = ' '.join(data['qq_pics'])
+        img: str = ' '.join(data[DATA_CHAPTER_IMAGE])
         cmd = f'D:/uploadImg.exe 打开 {img}'
         logger.info(cmd)
         os.system(cmd)

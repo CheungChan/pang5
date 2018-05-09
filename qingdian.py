@@ -3,15 +3,17 @@ import time
 import logzero
 from logzero import logger
 
-from config import LOGFILE_NAME
+from config import LOGFILE_NAME, DATA_CHAPTER_IMAGE, \
+    DATA_CHAPTER_NAME, DATA_WORKS_NAME, DATA_PASSWORD, DATA_USERNAME, DATA_WORKS_IMAGE
 from data import data
-from utils import open_driver, track_alert, get, store_cookie, g_mysqlid, get_current_url, Pang5Exception, add_cookie
+from utils import open_driver, track_alert, get, g_mysqlid, get_current_url, Pang5Exception
 
 logzero.logfile(LOGFILE_NAME, encoding='utf-8', maxBytes=500_0000, backupCount=3)
 MANAGE_URL = 'http://page.qingdian.cn/center/comicManagement/upload'
 LOGIN_URL = 'http://page.qingdian.cn/passport/login'
 
 COOKIE_DOMAIN = ".qingdian.cn"
+
 
 # COOKIE_FILE = f'cookies/{COOKIE_DOMAIN[1:]}_{LOGIN_USERNAME}.cookie.pkl'
 
@@ -26,8 +28,8 @@ class Qingdian:
         with open_driver() as driver:
             self.driver = driver
             with track_alert(driver):
-                LOGIN_USERNAME = data['qingdian_username']
-                LOGIN_PASSWORD = data['qingdian_password']
+                LOGIN_USERNAME = data[DATA_USERNAME]
+                LOGIN_PASSWORD = data[DATA_PASSWORD]
                 logger.info(f'用户名{LOGIN_USERNAME}')
                 logger.info(f'密码{LOGIN_PASSWORD}')
                 # 处理登录
@@ -44,8 +46,8 @@ class Qingdian:
                     logger.error(MANAGE_URL)
                     raise Pang5Exception("登录失败")
                 self.driver.find_element_by_link_text('我的作品').click()
-                self.search_article(data['qingdian_series'])
-                self.form(driver, data['qingdian_title'], data['qingdian_pic'], data['qingdian_chapter'])
+                self.search_article(data[DATA_WORKS_NAME])
+                self.form(driver)
 
     # 手机登录
 
@@ -68,31 +70,34 @@ class Qingdian:
             '#app > div:nth-child(1) > div.clearfix.ui-area.passport-content > div.passport-right > div > div > div.pic-box > span').click()
         return True
 
-    def form(self, driver, title_text, dir_name, qingdian_chapter):
+    def form(self, driver):
         '''
                     表单处理部分
                     '''
+        chapter_name = data[DATA_CHAPTER_NAME]
+        chapter_image = data[DATA_CHAPTER_IMAGE]
+        works_image = data[DATA_WORKS_IMAGE]
         # input处理readonly
         js = "document.getElementsByTagName(\"input\").readOnly=false"
         time.sleep(1)
         title = driver.find_element_by_css_selector(
             '#app > div.center.shadow-bottom-line > div.center-main.ui-area > div.center-tab-content.clearfix > div.right-main > div > div > div:nth-child(3) > div > div:nth-child(2) > div.mw-right > div.qd-input-box.mw-comic-name > div.qd-input > input[type="text"]')
         # 正文
-        title.send_keys(title_text)
+        title.send_keys(chapter_name)
         time.sleep(1)
         # 提示上传
         # 上传多个文件
 
-        for i in dir_name:
+        for i in chapter_image:
             file = driver.find_element_by_css_selector('#add-section-img > div:nth-child(2) > input')
             logger.info('上传图片' + i)
             file.send_keys(i)
 
         driver.find_element_by_css_selector('.show-dialog').click()
-        logger.info(f'上传封面图片{qingdian_chapter}')
+        logger.info(f'上传封面图片{works_image}')
         file = driver.find_element_by_css_selector(
             '#app > div.center.shadow-bottom-line > div.center-main.ui-area > div.center-tab-content.clearfix > div.right-main > div > div > div:nth-child(3) > div > div.cut-image-dialog.dialog-content > div > div.dialog-middle.clearfix > div.dm-btn-box.clearfix > div > input[type="file"]')
-        file.send_keys(qingdian_chapter)
+        file.send_keys(works_image)
         # 判断图片预览是否存在
         css = "#app > div.center.shadow-bottom-line > div.center-main.ui-area > div.center-tab-content.clearfix > div.right-main > div > div > div:nth-child(3) > div > div.cut-image-dialog.dialog-content > div > div.dialog-middle.clearfix > div:nth-child(1) > div.dm-cropper-box > img"
         nodisplay = 'display: none' in driver.find_element_by_css_selector(css).get_attribute('style')

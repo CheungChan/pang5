@@ -1,16 +1,18 @@
 import os
 import time
+
 import logzero
 from logzero import logger
 
+from config import LOGFILE_NAME, DATA_CHAPTER_IMAGE, DATA_CLOCK_PUBLISH_DATETIME, \
+    DATA_IS_CLOCK, DATA_CHAPTER_NAME, DATA_WORKS_NAME, DATA_PASSWORD, DATA_USERNAME, DATA_PLATFORM
 from data import data
 from utils import open_driver, track_alert, get, get_current_url, clear_and_send_keys, \
-    scroll_to, click_by_actionchains, g_mysqlid, Pang5Exception, add_cookie, store_cookie
-from config import LOGFILE_NAME
+    scroll_to, click_by_actionchains, g_mysqlid, Pang5Exception
 
 logzero.logfile(LOGFILE_NAME, encoding='utf-8', maxBytes=500_0000, backupCount=3)
 COOKIE_DOMAIN = '.author.maimengjun.com'
-COOKIE_FILE = f'cookies/{COOKIE_DOMAIN[1:]}_{data["maimeng_username"]}.cookie.pkl'
+COOKIE_FILE = f'cookies/{COOKIE_DOMAIN[1:]}_{data[DATA_USERNAME]}.cookie.pkl'
 MANAGE_URL = 'http://author.maimengjun.com/submission'
 AUTH_OK_URL = 'http://author.maimengjun.com/submission'
 CREATE_CHAPTER_URL = 'http://author.maimengjun.com/submission/create_chapter'
@@ -39,14 +41,14 @@ class MaiMeng:
                 items = driver.find_elements_by_css_selector('#submission > div.container > ul > li')
                 for item in items:
                     work_name = item.find_element_by_css_selector('div.content > h3').text
-                    logger.debug(f'发现章节{work_name}')
-                    if work_name.strip() == data['maimeng_series'].strip():
+                    logger.debug(f'发现作品{work_name}')
+                    if work_name.strip() == data[DATA_WORKS_NAME].strip():
                         new_chapter = item.find_element_by_css_selector('nav > a:nth-child(2)')
                         new_chapter.click()
                         time.sleep(5)
                 handles = driver.window_handles
                 if len(handles) == 1:
-                    logger.error(f'点击创建章节失败 maimeng_series={data["maimeng_series"]}')
+                    logger.error(f'点击创建章节失败 maimeng_series={data[DATA_WORKS_NAME]}')
                     return
                 else:
                     driver.switch_to_window(handles[1])
@@ -54,8 +56,8 @@ class MaiMeng:
 
     def login(self):
         login_url = get_current_url()
-        clear_and_send_keys(".username-field > input:nth-child(2)", data["maimeng_username"])
-        clear_and_send_keys(".password-field > input:nth-child(2)", data["maimeng_password"])
+        clear_and_send_keys(".username-field > input:nth-child(2)", data[DATA_USERNAME])
+        clear_and_send_keys(".password-field > input:nth-child(2)", data[DATA_PASSWORD])
         time.sleep(3)
         self.driver.find_element_by_css_selector(".login-btn").click()
         time.sleep(3)
@@ -68,30 +70,30 @@ class MaiMeng:
         # 章节名称
         self.driver.find_element_by_css_selector(
             '#create_chapter > div.container > div.inner-container > div:nth-child(1) > div > div.field-input > input[type="text"]').send_keys(
-            data['maimeng_title'])
-        # 章节介绍
-        self.driver.find_element_by_css_selector(
-            '#create_chapter > div.container > div.inner-container > div:nth-child(2) > div > div.field-input > textarea').send_keys(
-            data['maimeng_desp'])
+            data[DATA_CHAPTER_NAME])
+        # # 章节介绍
+        # self.driver.find_element_by_css_selector(
+        #     '#create_chapter > div.container > div.inner-container > div:nth-child(2) > div > div.field-input > textarea').send_keys(
+        #     data['maimeng_desp'])
         # 展示时间
-        if data['maimeng_publish_time']:
+        if data[DATA_IS_CLOCK]:
             self.driver.find_element_by_css_selector(
                 '#create_chapter > div.container > div.inner-container > div:nth-child(3) > div > div.field-input > div > input').send_keys(
-                data['maimeng_publish_time'])
+                data[DATA_CLOCK_PUBLISH_DATETIME])
             # 点击确定
             time.sleep(2)
             self.driver.find_element_by_css_selector(
                 'button.el-button.el-picker-panel__link-btn.el-button--default.el-button--mini.is-plain > span').click()
-        # 备注
-        self.driver.find_element_by_css_selector(
-            '#create_chapter > div.container > div.inner-container > div:nth-child(4) > div > div.field-input > textarea').send_keys(
-            data['maimeng_comment'])
+        # # 备注
+        # self.driver.find_element_by_css_selector(
+        #     '#create_chapter > div.container > div.inner-container > div:nth-child(4) > div > div.field-input > textarea').send_keys(
+        #     data['maimeng_comment'])
 
         # 漫画原稿
         scroll_to()
         self.driver.find_element_by_css_selector(
             '#create_chapter > div.container > div.inner-container > div:nth-child(5) > div > div.field-input > ul > li > img').click()
-        img: str = ' '.join(data['maimeng_pic'])
+        img: str = ' '.join(data[DATA_CHAPTER_IMAGE])
         logger.info(data)
         logger.info(img)
         cmd = f'D:/uploadImg.exe 文件上传 {img}'

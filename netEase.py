@@ -1,12 +1,14 @@
 import time
 
+import logzero
 from logzero import logger
 from selenium.webdriver.support.ui import Select
 
+from config import LOGFILE_NAME, DATA_PLATFORM, DATA_CHAPTER_IMAGE, DATA_WORKS_NAME, DATA_CHAPTER_NAME, DATA_PASSWORD, \
+    DATA_USERNAME, DATA_IS_CLOCK, DATA_CLOCK_PUBLISH_DATETIME, DATA_LOGIN_TYPE, DATA_CLOCK_PUBLISH_HOUR, \
+    DATA_CLOCK_PUBLISH_MIN
 from data import data
-import logzero
-from config import LOGFILE_NAME
-from utils import open_driver, get, track_alert, add_cookie, get_current_url, store_cookie, g_mysqlid, Pang5Exception
+from utils import open_driver, get, track_alert, get_current_url, g_mysqlid, Pang5Exception
 
 logzero.logfile(LOGFILE_NAME, encoding='utf-8', maxBytes=500_0000, backupCount=3)
 MANAGE_URL = 'https://zz.manhua.163.com/'
@@ -26,18 +28,18 @@ class Upload:
             with track_alert(driver):
                 # 处理登录
                 # add_cookie(COOKIE_DOMAIN, driver, COOKIE_FILE)
-                login_username = data['net_username']
-                login_password = data['net_password']
+                login_username = data[DATA_USERNAME]
+                login_password = data[DATA_PASSWORD]
                 logger.info(f'用户名{login_username}')
                 logger.info(f'密码{login_password}')
 
                 get(MANAGE_URL)
                 if get_current_url() != MANAGE_URL:
-                    if data['net-login'] == 'mobile':
+                    if data[DATA_LOGIN_TYPE] == 'mobile':
                         self.mobile_login(driver, login_username, login_password)
-                    elif data['net-login'] in ('mail', ''):
+                    elif data[DATA_LOGIN_TYPE] in ('mail', ''):
                         self.mail_login(driver, login_username, login_password)
-                    elif data['net-login'] == 'qq':
+                    elif data[DATA_LOGIN_TYPE] == 'qq':
                         self.qq_login(driver, login_username, login_password)
                     # self.mobile_login(driver)
 
@@ -51,7 +53,7 @@ class Upload:
                 time.sleep(1)
                 logger.info('登录成功')
                 # try:
-                net_series = driver.find_elements_by_link_text(data['net_series_title'])
+                net_series = driver.find_elements_by_link_text(data[DATA_WORKS_NAME])
                 if len(net_series) == 0:
                     raise Pang5Exception("该用户下没有该作品")
                 net_series[0].click()
@@ -62,8 +64,7 @@ class Upload:
                 js = "window.scrollTo(0, document.body.scrollHeight)"
                 driver.execute_script(js)
                 driver.find_element_by_css_selector('#panel1 > div > div > a').click()
-                self.form(driver, data['net_title_text'], data['net_image_pic'], data['net_d'], data['net_h'],
-                          data['net_m'], data['net-use-appoint'])
+                self.form(driver)
                 # except:
                 #     logger.error('error')
 
@@ -148,22 +149,37 @@ class Upload:
 
         return driver
 
-    def form(self, driver, title_text, dir_name, d, h_num, m_num, net_use_appoint):
+    def form(self, driver):
         '''
                     表单处理部分
                     '''
+        chapter_name = data[DATA_CHAPTER_NAME]
+        chapter_img = data[DATA_CHAPTER_IMAGE]
+        is_clock = data[DATA_IS_CLOCK]
+        if is_clock:
+            publish_day = data[DATA_CLOCK_PUBLISH_DATETIME].split(' ')[0]
+            pubish_hour = data[DATA_CLOCK_PUBLISH_DATETIME].split(' ')[1].split(':')[0]
+            min = int(data[DATA_CLOCK_PUBLISH_DATETIME].split(' ')[1].split(':')[1])
+            if min < 15:
+                publish_min = 0
+            elif min >= 15 and min < 30:
+                publish_min = 15
+            elif min >= 30 and min < 45:
+                publish_min = 30
+            elif min >= 45 and min < 60:
+                publish_min = 45
         # input处理readonly
         js = "$('input').removeAttr('readonly')"
         time.sleep(1)
         title = driver.find_element_by_id('title')
 
         # 正文
-        title.send_keys(title_text)
+        title.send_keys(chapter_name)
         time.sleep(1)
         # 提示上传
         # 上传多个文件
-        logger.info('共有图片%d张' % len(dir_name))
-        for i, f in enumerate(dir_name):
+        logger.info('共有图片%d张' % len(chapter_img))
+        for i, f in enumerate(chapter_img):
             file = driver.find_element_by_css_selector('.webuploader-element-invisible')
             file.send_keys(f)
             div = driver.find_element_by_css_selector('div.episode-upload-throbber')
@@ -175,20 +191,20 @@ class Upload:
 
         driver.execute_script(js)
         # 定时
-        if net_use_appoint:
+        if is_clock:
             driver.find_element_by_id('timing_flag').click()
 
             autoPublishDate = driver.find_element_by_css_selector(
                 '#timing > div > div.small-4.columns > input[type="text"]')
             autoPublishDate.clear()
             # 日期
-            autoPublishDate.send_keys(d)
+            autoPublishDate.send_keys(publish_day)
             h = Select(driver.find_element_by_css_selector('#timing > div > div:nth-child(2) > select'))
             # 小时
-            h.select_by_value(h_num)
+            h.select_by_value(pubish_hour)
             m = Select(driver.find_element_by_css_selector('#timing > div > div:nth-child(4) > select'))
             # 分钟
-            m.select_by_value(m_num)
+            m.select_by_value(publish_min)
         # 提交
         time.sleep(2)
         # 干掉小女生的遮挡

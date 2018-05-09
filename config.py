@@ -45,10 +45,10 @@ else:
     RABBITMQ_USER = 'hgz'
     RABBITMQ_PASSWORD = 'hgz123^%$'
 
-
 # 数据常量
 # 所有的数据的键都必须用这里的常量,来确保所有平台的一致性.
 DATA_PLATFORM = 'platform'  # 平台名称
+DATA_LOGIN_TYPE = 'login_type'  # 登录类型
 DATA_USERNAME = 'username'  # 用户名
 DATA_PASSWORD = 'password'  # 密码
 DATA_WORKS_NAME = 'works_name'  # 作品名称
@@ -59,5 +59,6 @@ DATA_CLOCK_PUBLISH_DATETIME = 'clock_publish_datetime'  # 定时发布时间
 DATA_WORKS_IMAGE = 'works_image'  # 作品图片
 DATA_CHAPTER_IMAGE = 'chapter_image'  # 章节图片
 
+NEED_FLASH_PLATFORM = ('qq', 'maimeng', 'u17')
 if __name__ == '__main__':
     print(DEBUG)

@@ -4,14 +4,14 @@ import time
 import logzero
 from logzero import logger
 
-from config import LOGFILE_NAME
+from config import LOGFILE_NAME, DATA_CHAPTER_IMAGE, DATA_CHAPTER_NAME, DATA_PASSWORD, DATA_USERNAME, DATA_THIRD_ID
 from data import data
 from utils import open_driver, track_alert, get, get_current_url, clear_and_send_keys, \
     scroll_to, click_by_pyautogui, Pang5Exception, update_status2OK, g_mysqlid
 
 logzero.logfile(LOGFILE_NAME, encoding='utf-8', maxBytes=500_0000, backupCount=3)
 COOKIE_DOMAIN = '.u17.com'
-COOKIE_FILE = f'cookies/{COOKIE_DOMAIN[1:]}_{data["u17_username"]}.cookie.pkl'
+COOKIE_FILE = f'cookies/{COOKIE_DOMAIN[1:]}_{data[DATA_USERNAME]}.cookie.pkl'
 LOGIN_URL = 'http://passport.u17.com/member_v2/login.php?url=http%3A%2F%2Fcomic.user.u17.com/index.php'
 AUTH_OK_URL = 'http://comic.user.u17.com/index.php'
 TITLE_PNG = 'u17_title.png'
@@ -38,13 +38,13 @@ class U17:
                 logger.info('登录成功')
 
                 logger.info('点击新建章节')
-                new_chapter_url = f'http://comic.user.u17.com/chapter/chapter_add.php?comic_id={data["u17_comic_id"]}'
+                new_chapter_url = f'http://comic.user.u17.com/chapter/chapter_add.php?comic_id={data[DATA_THIRD_ID]}'
                 self.driver.get(new_chapter_url)
                 self.publish()
 
     def login(self):
         login_url = get_current_url()
-        js = f'''$("#login_username").val("{data['u17_username']}"); $("#login_pwd").val("{data["u17_password"]}"); $("a.login_btn:nth-child(4)").click();'''
+        js = f'''$("#login_username").val("{data[DATA_USERNAME]}"); $("#login_pwd").val("{data[DATA_PASSWORD]}"); $("a.login_btn:nth-child(4)").click();'''
         self.driver.execute_script(js)
         time.sleep(3)
         if get_current_url() != AUTH_OK_URL:
@@ -63,7 +63,7 @@ class U17:
         self.driver.execute_script(js)
         time.sleep(1)
         logger.info('填写章节名称')
-        clear_and_send_keys("#chapter_name", data['u17_chapter_name'])
+        clear_and_send_keys("#chapter_name", data[DATA_CHAPTER_NAME])
 
         logger.info('上传封面图片')
         time.sleep(2)
@@ -75,7 +75,7 @@ class U17:
         # click_by_pg(*POSOTION_GREEN_BUTTON)
         click_by_pyautogui(TITLE_PNG)
         time.sleep(2)
-        img: str = data['u17_chapter_images']
+        img: str = data[DATA_CHAPTER_IMAGE]
         cmd = f'D:/uploadImg.exe 打开 {img}'
         logger.info(cmd)
         os.system(cmd)
@@ -96,7 +96,7 @@ class U17:
         #
         # click_by_pg(*POSOTION_GREEN_BUTTON)
         click_by_pyautogui(CHAPTER_PNG)
-        img: str = ' '.join(data['u17_pic'])
+        img: str = ' '.join(data[DATA_CHAPTER_IMAGE])
         cmd = f'D:/uploadImg.exe 打开 {img}'
         logger.info(cmd)
         os.system(cmd)
