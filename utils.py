@@ -19,7 +19,8 @@ import records
 from dingding_qun import dingdSendMsg
 
 from config import USE_FACE, CHROME_DRIVER_PATH, PHANTOMJS_PATH, SCREENSHOT_PATH, WAIT_CLICKABLE, WAIT_PRESENCE, \
-    WAIT_VISIABLITY, CHROME_ARG, FIREFOX_DRIVER_PATH, RUN_SIKULIX_CMD, LOGFILE_NAME, MYSQL_URL, DATA_PASSWORD, DEBUG
+    WAIT_VISIABLITY, CHROME_ARG, FIREFOX_DRIVER_PATH, RUN_SIKULIX_CMD, LOGFILE_NAME, MYSQL_URL, DATA_PASSWORD, DEBUG, \
+    DATA_PLATFORM
 
 g_driver = None
 g_mysqlid = {"mysql_id": None}
@@ -158,7 +159,12 @@ def update_status2fail():
     env = '测试环境' if DEBUG else '生产环境'
     from data import data
     data.update({DATA_PASSWORD: "*******"})
-    dingding_s = f'{env}: 漫画助手发布失败\n\nmysql_id={g_mysqlid["mysql_id"]}\n\nmsg={g_msg}\n\ndata={data}\n\ntraceback={g_traceback}'
+    dingding_s = f'{env}: 漫画助手发布失败\n\n' \
+                 f'platform={data[DATA_PLATFORM]}\n\n' \
+                 f'mysql_id={g_mysqlid["mysql_id"]}\n\n' \
+                 f'msg={g_msg}\n\nd' \
+                 f'ata={data}\n\n' \
+                 f'traceback={g_traceback}'
     logger.error(dingding_s)
     dingdSendMsg(dingding_s)
     logger.info(f'{env}: 更新{g_mysqlid["mysql_id"]}状态')
