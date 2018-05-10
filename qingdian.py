@@ -4,17 +4,16 @@ import logzero
 from logzero import logger
 
 from config import LOGFILE_NAME, DATA_CHAPTER_IMAGE, \
-    DATA_CHAPTER_NAME, DATA_WORKS_NAME, DATA_PASSWORD, DATA_USERNAME, DATA_WORKS_IMAGE
+    DATA_CHAPTER_NAME, DATA_WORKS_NAME, DATA_PASSWORD, DATA_USERNAME, DATA_WORKS_IMAGE, PLATFORM_STATUS_AUTH_OK, \
+    PLATFORM_STATUS_AUTH_FAIL, DATA_PLATFORM
 from data import data
-from utils import open_driver, track_alert, get, g_mysqlid, get_current_url, Pang5Exception
+from utils import open_driver, track_alert, get, g_mysqlid, get_current_url, Pang5Exception, update_login_status
 
 logzero.logfile(LOGFILE_NAME, encoding='utf-8', maxBytes=500_0000, backupCount=3)
 MANAGE_URL = 'http://page.qingdian.cn/center/comicManagement/upload'
 LOGIN_URL = 'http://page.qingdian.cn/passport/login'
 
 COOKIE_DOMAIN = ".qingdian.cn"
-
-
 
 
 class Qingdian:
@@ -35,13 +34,23 @@ class Qingdian:
                 get(MANAGE_URL)
                 if get_current_url() != MANAGE_URL:
                     if not self.mobile_login(driver, LOGIN_USERNAME, LOGIN_PASSWORD):
+                        status = PLATFORM_STATUS_AUTH_FAIL
+                        update_login_status(platform=data[DATA_PLATFORM], platform_username=data[DATA_USERNAME],
+                                            platform_password=data[DATA_PASSWORD], platform_status=status)
                         raise Pang5Exception('登录失败')
                 get(MANAGE_URL)
                 time.sleep(2)
                 cur = get_current_url()
                 if cur != MANAGE_URL:
                     logger.error(MANAGE_URL)
+                    status = PLATFORM_STATUS_AUTH_FAIL
+                    update_login_status(platform=data[DATA_PLATFORM], platform_username=data[DATA_USERNAME],
+                                        platform_password=data[DATA_PASSWORD], platform_status=status)
                     raise Pang5Exception("登录失败")
+                logger.info('登录成功')
+                status = PLATFORM_STATUS_AUTH_OK
+                update_login_status(platform=data[DATA_PLATFORM], platform_username=data[DATA_USERNAME],
+                                    platform_password=data[DATA_PASSWORD], platform_status=status)
                 self.driver.find_element_by_link_text('我的作品').click()
                 self.search_article(data[DATA_WORKS_NAME])
                 self.form(driver)

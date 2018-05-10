@@ -5,9 +5,10 @@ from logzero import logger
 from selenium.webdriver.support.ui import Select
 
 from config import LOGFILE_NAME, DATA_CHAPTER_IMAGE, DATA_WORKS_NAME, DATA_CHAPTER_NAME, DATA_PASSWORD, \
-    DATA_USERNAME, DATA_IS_CLOCK, DATA_CLOCK_PUBLISH_DATETIME, DATA_LOGIN_TYPE
+    DATA_USERNAME, DATA_IS_CLOCK, DATA_CLOCK_PUBLISH_DATETIME, DATA_LOGIN_TYPE, PLATFORM_STATUS_AUTH_FAIL, \
+    PLATFORM_STATUS_AUTH_OK, DATA_PLATFORM
 from data import data
-from utils import open_driver, get, track_alert, get_current_url, g_mysqlid, Pang5Exception
+from utils import open_driver, get, track_alert, get_current_url, g_mysqlid, Pang5Exception, update_login_status
 
 logzero.logfile(LOGFILE_NAME, encoding='utf-8', maxBytes=500_0000, backupCount=3)
 MANAGE_URL = 'https://zz.manhua.163.com/'
@@ -46,9 +47,15 @@ class Upload:
                     get('https://zz.manhua.163.com/')
                     time.sleep(3)
                 if get_current_url() not in ['http://zz.manhua.163.com/', 'https://zz.manhua.163.com/']:
+                    status = PLATFORM_STATUS_AUTH_FAIL
+                    update_login_status(platform=data[DATA_PLATFORM], platform_username=data[DATA_USERNAME],
+                                        platform_password=data[DATA_PASSWORD], platform_status=status)
                     raise Pang5Exception('登录失败')
                 time.sleep(1)
                 logger.info('登录成功')
+                status = PLATFORM_STATUS_AUTH_OK
+                update_login_status(platform=data[DATA_PLATFORM], platform_username=data[DATA_USERNAME],
+                                    platform_password=data[DATA_PASSWORD], platform_status=status)
                 # try:
                 net_series = driver.find_elements_by_link_text(data[DATA_WORKS_NAME])
                 if len(net_series) == 0:
@@ -69,6 +76,9 @@ class Upload:
     def mail_login(self, driver, login_username, login_password):
         logger.info('用邮箱登录')
         if '@' not in login_username:
+            status = PLATFORM_STATUS_AUTH_FAIL
+            update_login_status(platform=data[DATA_PLATFORM], platform_username=data[DATA_USERNAME],
+                                platform_password=data[DATA_PASSWORD], platform_status=status)
             raise Pang5Exception('登录方式是邮箱,但是输入的用户名不是邮箱')
         get('https://manhua.163.com/')
         # click('.topbar-meta-user >ul >li:nth-child(1)>.js-login-required')

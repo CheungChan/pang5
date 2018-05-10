@@ -19,7 +19,7 @@ import records
 from dingding_qun import dingdSendMsg
 
 from config import USE_FACE, CHROME_DRIVER_PATH, PHANTOMJS_PATH, SCREENSHOT_PATH, WAIT_CLICKABLE, WAIT_PRESENCE, \
-    WAIT_VISIABLITY, CHROME_ARG, FIREFOX_DRIVER_PATH, RUN_SIKULIX_CMD, LOGFILE_NAME, MYSQL_URL,DATA_PASSWORD
+    WAIT_VISIABLITY, CHROME_ARG, FIREFOX_DRIVER_PATH, RUN_SIKULIX_CMD, LOGFILE_NAME, MYSQL_URL, DATA_PASSWORD,DEBUG
 
 g_driver = None
 g_mysqlid = {"mysql_id": None}
@@ -155,19 +155,38 @@ class Pang5Exception(Exception):
 def update_status2fail():
     rows = db.query("update chapter_chapter set status=-1, fail_reason=:msg where id=:id", id=g_mysqlid['mysql_id'],
                     msg=g_msg)
+    env = '测试环境' if DEBUG else '生产环境'
     from data import data
-    data.update({DATA_PASSWORD:"*******"})
-    dingding_s = f'漫画助手发布失败\n\nmysql_id={g_mysqlid["mysql_id"]}\n\nmsg={g_msg}\n\ndata={data}\n\ntraceback={g_traceback}'
+    data.update({DATA_PASSWORD: "*******"})
+    dingding_s = f'{env}: 漫画助手发布失败\n\nmysql_id={g_mysqlid["mysql_id"]}\n\nmsg={g_msg}\n\ndata={data}\n\ntraceback={g_traceback}'
     logger.error(dingding_s)
     dingdSendMsg(dingding_s)
-    logger.info(f'更新{g_mysqlid["mysql_id"]}状态')
+    logger.info(f'{env}: 更新{g_mysqlid["mysql_id"]}状态')
 
 
 def update_status2OK():
     # 没有异常, 更改数据库状态
     rows = db.query('update chapter_chapter set status=0, ok_time=:ok_time where id=:id', id=g_mysqlid["mysql_id"],
                     ok_time=datetime.now())
-    logger.info(f'更新{g_mysqlid["mysql_id"]}状态')
+    env = '测试环境' if DEBUG else '生产环境'
+    logger.info(f'{env}: 更新{g_mysqlid["mysql_id"]}状态')
+
+
+def update_login_status(platform, platform_username, platform_password, platform_status):
+    """
+    更改登录的账号状态, 0待校验 1 校验通过 2 校验失败
+    :param platform:
+    :param platform_username:
+    :param password:
+    :return:
+    """
+    rows = db.query("update subscriber_platformsubscriber set platform_status=:platform_status where "
+                    "platform=:platform and "
+                    "platform_username=:platform_username and "
+                    "platform_password=:platform_password", platform_status=platform_status, platform=platform,
+                    platform_username=platform_username, platform_password=platform_password)
+    env = '测试环境' if DEBUG else '生产环境'
+    logger.info(f'{env}: 更改账号状态,{locals()}')
 
 
 def refresh_recursion(url, num=3):

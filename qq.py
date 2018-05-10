@@ -6,10 +6,10 @@ from logzero import logger
 
 from config import BROWSER_FIREFOX, LOGFILE_NAME, DATA_WORKS_IMAGE, DATA_CHAPTER_IMAGE, DATA_CHAPTER_NAME, \
     DATA_PASSWORD, DATA_USERNAME, DATA_THIRD_ID, DATA_IS_CLOCK, \
-    DATA_CLOCK_PUBLISH_DATETIME
+    DATA_CLOCK_PUBLISH_DATETIME, DATA_PLATFORM, PLATFORM_STATUS_AUTH_FAIL, PLATFORM_STATUS_AUTH_OK
 from data import data
 from utils import open_driver, track_alert, get, get_current_url, clear_and_send_keys, \
-    scroll_to, click_by_pyautogui, g_mysqlid, Pang5Exception
+    scroll_to, click_by_pyautogui, g_mysqlid, Pang5Exception, update_login_status
 
 logzero.logfile(LOGFILE_NAME, encoding='utf-8', maxBytes=500_0000, backupCount=3)
 # 管理页面URL
@@ -42,6 +42,9 @@ class Qq:
                 get(MANAGE_URL)
                 if get_current_url() != MANAGE_URL:
                     if not self.login():
+                        status = PLATFORM_STATUS_AUTH_FAIL
+                        update_login_status(platform=data[DATA_PLATFORM], platform_username=data[DATA_USERNAME],
+                                            platform_password=data[DATA_PASSWORD], platform_status=status)
                         raise Pang5Exception('登录失败')
                 # store_cookie(driver, COOKIE_FILE)
                 self.driver.switch_to.default_content()
@@ -74,8 +77,14 @@ class Qq:
         time.sleep(3)
         if get_current_url() != AUTH_OK_URL:
             logger.info(get_current_url())
+            status = PLATFORM_STATUS_AUTH_FAIL
+            update_login_status(platform=data[DATA_PLATFORM], platform_username=data[DATA_USERNAME],
+                                platform_password=data[DATA_PASSWORD], platform_status=status)
             raise Pang5Exception("登录异常")
-        return get_current_url() != login_url
+        ok = get_current_url() != login_url
+        status = PLATFORM_STATUS_AUTH_OK if ok else PLATFORM_STATUS_AUTH_FAIL
+        update_login_status(platform=data[DATA_PLATFORM], platform_username=data[DATA_USERNAME],
+                            platform_password=data[DATA_PASSWORD], platform_status=status)
 
     def publish(self):
         # 让网站允许Flash

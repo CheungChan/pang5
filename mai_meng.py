@@ -5,10 +5,11 @@ import logzero
 from logzero import logger
 
 from config import LOGFILE_NAME, DATA_CHAPTER_IMAGE, DATA_CLOCK_PUBLISH_DATETIME, \
-    DATA_IS_CLOCK, DATA_CHAPTER_NAME, DATA_WORKS_NAME, DATA_PASSWORD, DATA_USERNAME
+    DATA_IS_CLOCK, DATA_CHAPTER_NAME, DATA_WORKS_NAME, DATA_PASSWORD, DATA_USERNAME, DATA_PLATFORM, \
+    PLATFORM_STATUS_AUTH_OK, PLATFORM_STATUS_AUTH_FAIL
 from data import data
 from utils import open_driver, track_alert, get, get_current_url, clear_and_send_keys, \
-    scroll_to, click_by_actionchains, g_mysqlid, Pang5Exception
+    scroll_to, click_by_actionchains, g_mysqlid, Pang5Exception, update_login_status
 
 logzero.logfile(LOGFILE_NAME, encoding='utf-8', maxBytes=500_0000, backupCount=3)
 MANAGE_URL = 'http://author.maimengjun.com/submission'
@@ -58,8 +59,14 @@ class MaiMeng:
         time.sleep(3)
         if get_current_url() != AUTH_OK_URL:
             logger.error(get_current_url())
+            status = PLATFORM_STATUS_AUTH_FAIL
+            update_login_status(platform=data[DATA_PLATFORM], platform_username=data[DATA_USERNAME],
+                                platform_password=data[DATA_PASSWORD], platform_status=status)
             raise Pang5Exception("登录异常")
-        return get_current_url() != login_url
+        ok = get_current_url() != login_url
+        status = PLATFORM_STATUS_AUTH_OK if ok else PLATFORM_STATUS_AUTH_FAIL
+        update_login_status(platform=data[DATA_PLATFORM], platform_username=data[DATA_USERNAME],
+                            platform_password=data[DATA_PASSWORD], platform_status=status)
 
     def publish(self):
         # 章节名称

@@ -60,5 +60,11 @@ DATA_WORKS_IMAGE = 'works_image'  # 作品图片
 DATA_CHAPTER_IMAGE = 'chapter_image'  # 章节图片
 
 NEED_FLASH_PLATFORM = ('qq', 'maimeng', 'u17')
+
+# 0待校验 1 校验通过 2 校验失败
+PLATFORM_STATUS_WAIT_AUTH = 0
+PLATFORM_STATUS_AUTH_OK = 1
+PLATFORM_STATUS_AUTH_FAIL = 2
+
 if __name__ == '__main__':
     print(DEBUG)

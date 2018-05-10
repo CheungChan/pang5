@@ -5,10 +5,10 @@ import logzero
 from logzero import logger
 
 from config import LOGFILE_NAME, DATA_CHAPTER_IMAGE, DATA_CHAPTER_NAME, DATA_PASSWORD, DATA_USERNAME, DATA_THIRD_ID, \
-    DATA_WORKS_IMAGE
+    DATA_WORKS_IMAGE, PLATFORM_STATUS_AUTH_OK, PLATFORM_STATUS_AUTH_FAIL, DATA_PLATFORM
 from data import data
 from utils import open_driver, track_alert, get, get_current_url, clear_and_send_keys, \
-    scroll_to, click_by_pyautogui, Pang5Exception, update_status2OK, g_mysqlid, scroll_to_id
+    scroll_to, click_by_pyautogui, Pang5Exception, update_status2OK, g_mysqlid, scroll_to_id, update_login_status
 
 logzero.logfile(LOGFILE_NAME, encoding='utf-8', maxBytes=500_0000, backupCount=3)
 LOGIN_URL = 'http://passport.u17.com/member_v2/login.php?url=http%3A%2F%2Fcomic.user.u17.com/index.php'
@@ -30,6 +30,9 @@ class U17:
                 get(AUTH_OK_URL)
                 if get_current_url() != AUTH_OK_URL:
                     if not self.login():
+                        status = PLATFORM_STATUS_AUTH_FAIL
+                        update_login_status(platform=data[DATA_PLATFORM], platform_username=data[DATA_USERNAME],
+                                            platform_password=data[DATA_PASSWORD], platform_status=status)
                         raise Pang5Exception("登录失败")
                 logger.info('登录成功')
 
@@ -44,8 +47,14 @@ class U17:
         self.driver.execute_script(js)
         time.sleep(3)
         if get_current_url() != AUTH_OK_URL:
+            status = PLATFORM_STATUS_AUTH_FAIL
+            update_login_status(platform=data[DATA_PLATFORM], platform_username=data[DATA_USERNAME],
+                                platform_password=data[DATA_PASSWORD], platform_status=status)
             raise Pang5Exception("登录失败")
-        return get_current_url() != login_url
+        ok = get_current_url() != login_url
+        status = PLATFORM_STATUS_AUTH_OK if ok else PLATFORM_STATUS_AUTH_FAIL
+        update_login_status(platform=data[DATA_PLATFORM], platform_username=data[DATA_USERNAME],
+                            platform_password=data[DATA_PASSWORD], platform_status=status)
 
     def publish(self):
         logger.info('点击关闭提示')
