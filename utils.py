@@ -19,7 +19,7 @@ import records
 from dingding_qun import dingdSendMsg
 
 from config import USE_FACE, CHROME_DRIVER_PATH, PHANTOMJS_PATH, SCREENSHOT_PATH, WAIT_CLICKABLE, WAIT_PRESENCE, \
-    WAIT_VISIABLITY, CHROME_ARG, FIREFOX_DRIVER_PATH, RUN_SIKULIX_CMD, LOGFILE_NAME, MYSQL_URL
+    WAIT_VISIABLITY, CHROME_ARG, FIREFOX_DRIVER_PATH, RUN_SIKULIX_CMD, LOGFILE_NAME, MYSQL_URL,DATA_PASSWORD
 
 g_driver = None
 g_mysqlid = {"mysql_id": None}
@@ -153,11 +153,12 @@ class Pang5Exception(Exception):
 
 
 def update_status2fail():
-    logger.error(g_msg)
     rows = db.query("update chapter_chapter set status=-1, fail_reason=:msg where id=:id", id=g_mysqlid['mysql_id'],
                     msg=g_msg)
     from data import data
+    data.update({DATA_PASSWORD:"*******"})
     dingding_s = f'漫画助手发布失败\n\nmysql_id={g_mysqlid["mysql_id"]}\n\nmsg={g_msg}\n\ndata={data}\n\ntraceback={g_traceback}'
+    logger.error(dingding_s)
     dingdSendMsg(dingding_s)
     logger.info(f'更新{g_mysqlid["mysql_id"]}状态')
 
