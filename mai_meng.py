@@ -50,7 +50,7 @@ class MaiMeng:
                     driver.switch_to_window(handles[1])
                 self.publish()
 
-    def login(self):
+    def login(self) -> bool:
         login_url = get_current_url()
         clear_and_send_keys(".username-field > input:nth-child(2)", data[DATA_USERNAME])
         clear_and_send_keys(".password-field > input:nth-child(2)", data[DATA_PASSWORD])
@@ -63,10 +63,10 @@ class MaiMeng:
             update_login_status(platform=data[DATA_PLATFORM], platform_username=data[DATA_USERNAME],
                                 platform_password=data[DATA_PASSWORD], platform_status=status)
             raise Pang5Exception("登录异常")
-        ok = get_current_url() != login_url
-        status = PLATFORM_STATUS_AUTH_OK if ok else PLATFORM_STATUS_AUTH_FAIL
+        status = PLATFORM_STATUS_AUTH_OK
         update_login_status(platform=data[DATA_PLATFORM], platform_username=data[DATA_USERNAME],
                             platform_password=data[DATA_PASSWORD], platform_status=status)
+        return True
 
     def publish(self):
         # 章节名称

@@ -41,7 +41,7 @@ class U17:
                 self.driver.get(new_chapter_url)
                 self.publish()
 
-    def login(self):
+    def login(self) -> bool:
         login_url = get_current_url()
         js = f'''$("#login_username").val("{data[DATA_USERNAME]}"); $("#login_pwd").val("{data[DATA_PASSWORD]}"); $("a.login_btn:nth-child(4)").click();'''
         self.driver.execute_script(js)
@@ -51,10 +51,10 @@ class U17:
             update_login_status(platform=data[DATA_PLATFORM], platform_username=data[DATA_USERNAME],
                                 platform_password=data[DATA_PASSWORD], platform_status=status)
             raise Pang5Exception("登录失败")
-        ok = get_current_url() != login_url
-        status = PLATFORM_STATUS_AUTH_OK if ok else PLATFORM_STATUS_AUTH_FAIL
+        status = PLATFORM_STATUS_AUTH_OK
         update_login_status(platform=data[DATA_PLATFORM], platform_username=data[DATA_USERNAME],
                             platform_password=data[DATA_PASSWORD], platform_status=status)
+        return True
 
     def publish(self):
         logger.info('点击关闭提示')

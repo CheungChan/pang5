@@ -73,7 +73,7 @@ class Upload:
                 #     logger.error('error')
 
     # 邮箱登录
-    def mail_login(self, driver, login_username, login_password):
+    def mail_login(self, driver, login_username, login_password) -> bool:
         logger.info('用邮箱登录')
         if '@' not in login_username:
             status = PLATFORM_STATUS_AUTH_FAIL
@@ -94,9 +94,10 @@ class Upload:
         time.sleep(1)
         driver.find_element_by_id('dologin').click()
         time.sleep(2)
+        return True
 
     # qq登录
-    def qq_login(self, driver, login_username, login_password):
+    def qq_login(self, driver, login_username, login_password) -> bool:
         logger.info('用qq登录')
         get('https://manhua.163.com/')
         # click('.topbar-meta-user >ul >li:nth-child(1)>.js-login-required')
@@ -122,6 +123,7 @@ class Upload:
 
         windows = driver.window_handles
         driver.switch_to.window(windows[-1])
+        return True
 
     # 微博登录
 
@@ -133,7 +135,7 @@ class Upload:
         raise Pang5Exception('不支持微信')
 
     # 手机登录
-    def mobile_login(self, driver, login_username, login_password):
+    def mobile_login(self, driver, login_username, login_password) -> bool:
 
         logger.info('用手机号登录')
         get('https://manhua.163.com/')
@@ -154,7 +156,7 @@ class Upload:
 
         driver.find_element_by_css_selector('form.login-classic > div:nth-child(8) > button').click()
 
-        return driver
+        return True
 
     def form(self, driver):
         '''

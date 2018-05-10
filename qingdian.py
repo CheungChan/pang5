@@ -57,7 +57,7 @@ class Qingdian:
 
     # 手机登录
 
-    def mobile_login(self, driver, login_username, login_password):
+    def mobile_login(self, driver, login_username, login_password) -> bool:
 
         get('http://page.qingdian.cn/passport/login')
         # click('.topbar-meta-user >ul >li:nth-child(1)>.js-login-required')

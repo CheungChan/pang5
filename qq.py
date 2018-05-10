@@ -65,7 +65,7 @@ class Qq:
                 # self.delete_all_chaptor()
                 # time.sleep(1000000)
 
-    def login(self):
+    def login(self) -> bool:
         login_url = get_current_url()
         self.driver.switch_to.frame('login_ifr')
         self.driver.find_element_by_css_selector("#switcher_plogin").click()
@@ -85,6 +85,7 @@ class Qq:
         status = PLATFORM_STATUS_AUTH_OK if ok else PLATFORM_STATUS_AUTH_FAIL
         update_login_status(platform=data[DATA_PLATFORM], platform_username=data[DATA_USERNAME],
                             platform_password=data[DATA_PASSWORD], platform_status=status)
+        return True
 
     def publish(self):
         # 让网站允许Flash
