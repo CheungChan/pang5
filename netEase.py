@@ -7,9 +7,10 @@ from selenium.webdriver.support.ui import Select
 from config import LOGFILE_NAME, DATA_CHAPTER_IMAGE, DATA_WORKS_NAME, DATA_CHAPTER_NAME, DATA_PASSWORD, \
     DATA_USERNAME, DATA_IS_CLOCK, DATA_CLOCK_PUBLISH_DATETIME, DATA_LOGIN_TYPE, PLATFORM_STATUS_AUTH_FAIL, \
     PLATFORM_STATUS_AUTH_OK, DATA_PLATFORM
-from data import data
+#from data import data
 from utils import open_driver, get, track_alert, get_current_url, g_mysqlid, Pang5Exception, update_login_status
-
+data_import=__import__("data")
+data=data_import.data
 logzero.logfile(LOGFILE_NAME, encoding='utf-8', maxBytes=500_0000, backupCount=3)
 MANAGE_URL = 'https://zz.manhua.163.com/'
 COOKIE_DOMAIN = ".manhua.163.com"
@@ -165,18 +166,20 @@ class Upload:
         chapter_name = data[DATA_CHAPTER_NAME]
         chapter_img = data[DATA_CHAPTER_IMAGE]
         is_clock = data[DATA_IS_CLOCK]
+        logger.error(data)
         if is_clock:
             publish_day = data[DATA_CLOCK_PUBLISH_DATETIME].split(' ')[0]
             pubish_hour = data[DATA_CLOCK_PUBLISH_DATETIME].split(' ')[1].split(':')[0]
+            logger.error(pubish_hour)
             min = int(data[DATA_CLOCK_PUBLISH_DATETIME].split(' ')[1].split(':')[1])
             if min < 15:
-                publish_min = 0
+                publish_min = "0"
             elif min >= 15 and min < 30:
-                publish_min = 15
+                publish_min = "15"
             elif min >= 30 and min < 45:
-                publish_min = 30
+                publish_min = "30"
             elif min >= 45 and min < 60:
-                publish_min = 45
+                publish_min = "45"
         # input处理readonly
         js = "$('input').removeAttr('readonly')"
         time.sleep(1)
