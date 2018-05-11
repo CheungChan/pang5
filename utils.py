@@ -112,7 +112,11 @@ class open_driver(object):
         self.driver.execute_script("window.onbeforeunload = function(e){};")
         logger.info("浏览器关闭")
         # quit是关闭所有窗口  close是关闭当前窗口
-        self.driver.quit()
+        try:
+            self.driver.close()
+            self.driver.quit()
+        except:
+            pass
         if exc_tb:
             logger.error("出现异常")
             logger.error(exc_type)
