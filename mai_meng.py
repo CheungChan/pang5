@@ -84,8 +84,9 @@ class MaiMeng:
                 data[DATA_CLOCK_PUBLISH_DATETIME])
             # 点击确定
             time.sleep(2)
-            # js = 'jQuery("button.el-button:nth-child(2)").click();'
+            # js = '$("button.el-button:nth-child(2)").click();'
             # self.driver.execute_script(js)
+            # 点击确定按钮居然会变成现在的时间,把他注释掉居然可以了,神奇!!!!!!!
         # # 备注
         # self.driver.find_element_by_css_selector(
         #     '#create_chapter > div.container > div.inner-container > div:nth-child(4) > div > div.field-input > textarea').send_keys(
