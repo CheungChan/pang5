@@ -7,10 +7,8 @@ from selenium.webdriver.support.ui import Select
 from config import LOGFILE_NAME, DATA_CHAPTER_IMAGE, DATA_WORKS_NAME, DATA_CHAPTER_NAME, DATA_PASSWORD, \
     DATA_USERNAME, DATA_IS_CLOCK, DATA_CLOCK_PUBLISH_DATETIME, DATA_LOGIN_TYPE, PLATFORM_STATUS_AUTH_FAIL, \
     PLATFORM_STATUS_AUTH_OK, DATA_PLATFORM
-#from data import data
+from data import data
 from utils import open_driver, get, track_alert, get_current_url, g_mysqlid, Pang5Exception, update_login_status
-data_import=__import__("data")
-data=data_import.data
 logzero.logfile(LOGFILE_NAME, encoding='utf-8', maxBytes=500_0000, backupCount=3)
 MANAGE_URL = 'https://zz.manhua.163.com/'
 COOKIE_DOMAIN = ".manhua.163.com"
