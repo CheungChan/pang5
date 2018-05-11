@@ -84,7 +84,7 @@ class MaiMeng:
                 data[DATA_CLOCK_PUBLISH_DATETIME])
             # 点击确定
             time.sleep(2)
-            js = '$("button.el-button:nth-child(2)").click();'
+            js = 'jQuery("button.el-button:nth-child(2)").click();'
             self.driver.execute_script(js)
         # # 备注
         # self.driver.find_element_by_css_selector(
@@ -92,7 +92,7 @@ class MaiMeng:
         #     data['maimeng_comment'])
 
         # 漫画原稿
-        scroll_to()
+        # scroll_to()
         self.driver.find_element_by_css_selector(
             '#create_chapter > div.container > div.inner-container > div:nth-child(5) > div > div.field-input > ul > li > img').click()
         img: str = ' '.join(data[DATA_CHAPTER_IMAGE])
