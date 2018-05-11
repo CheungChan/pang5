@@ -84,8 +84,9 @@ class MaiMeng:
                 data[DATA_CLOCK_PUBLISH_DATETIME])
             # 点击确定
             time.sleep(2)
+
             self.driver.find_element_by_css_selector(
-                'button.el-button.el-picker-panel__link-btn.el-button--default.el-button--mini.is-plain > span').click()
+                '#create_chapter > div.container > div.inner-container > div:nth-child(3) > div > div.field-name').click()
         # # 备注
         # self.driver.find_element_by_css_selector(
         #     '#create_chapter > div.container > div.inner-container > div:nth-child(4) > div > div.field-input > textarea').send_keys(
