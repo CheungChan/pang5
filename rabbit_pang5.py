@@ -132,8 +132,8 @@ def callback(ch, method, properties, body):
     data[DATA_PLATFORM] = user_record['platform']
     data[DATA_USERNAME] = user_record['platform_username']
     data[DATA_PASSWORD] = user_record['platform_password']
-    data[DATA_WORKS_NAME] = works_record['name']
-    data[DATA_CHAPTER_NAME] = chapter_record['name']
+    data[DATA_WORKS_NAME] = works_record['name'].strip()
+    data[DATA_CHAPTER_NAME] = chapter_record['name'].strip()
     data[DATA_THIRD_ID] = works_record['third_id']
     data[DATA_IS_CLOCK] = chapter_record['is_publish_clock']
     data[DATA_CLOCK_PUBLISH_DATETIME] = chapter_record['publish_clock_time']
