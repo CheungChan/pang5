@@ -86,7 +86,7 @@ class MaiMeng:
             time.sleep(2)
 
             self.driver.find_element_by_css_selector(
-                '#create_chapter > div.container > div.inner-container > div:nth-child(3) > div > div.field-name').click()
+                'button.el-button:nth-child(2)').click()
         # # 备注
         # self.driver.find_element_by_css_selector(
         #     '#create_chapter > div.container > div.inner-container > div:nth-child(4) > div > div.field-input > textarea').send_keys(
