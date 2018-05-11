@@ -173,7 +173,7 @@ class Upload:
             logger.error(pubish_hour)
             min = int(data[DATA_CLOCK_PUBLISH_DATETIME].split(' ')[1].split(':')[1])
             if min < 15:
-                publish_min = "0"
+                publish_min = "00"
             elif min >= 15 and min < 30:
                 publish_min = "15"
             elif min >= 30 and min < 45:
@@ -213,10 +213,10 @@ class Upload:
             autoPublishDate.send_keys(publish_day)
             h = Select(driver.find_element_by_css_selector('#timing > div > div:nth-child(2) > select'))
             # 小时
-            h.select_by_value(pubish_hour)
+            h.select_by_visible_text(pubish_hour)
             m = Select(driver.find_element_by_css_selector('#timing > div > div:nth-child(4) > select'))
             # 分钟
-            m.select_by_value(publish_min)
+            m.select_by_visible_text(publish_min)
         # 提交
         time.sleep(2)
         # 干掉小女生的遮挡
