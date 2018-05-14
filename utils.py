@@ -358,7 +358,7 @@ def click_by_pyautogui(image_path):
     根据pyautogui提供的图像识别技术，点击屏幕上的像素点
     :return:
     """
-    retry_times = 3
+    retry_times = 2
     import pyautogui
     width, height = pyautogui.size()
     if not os.path.isabs(image_path):
