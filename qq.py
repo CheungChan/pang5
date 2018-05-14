@@ -17,7 +17,7 @@ MANAGE_URL = 'http://ac.qq.com/MyComic'
 # 登录成功之后跳转的URL
 AUTH_OK_URL = 'http://ac.qq.com/MyComic?auth=1'
 
-FIRST_CHAPTER = True
+FIRST_CHAPTER = False
 REAL_PUBLISH = True
 browser = BROWSER_FIREFOX
 
