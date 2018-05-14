@@ -116,7 +116,7 @@ def callback(ch, method, properties, body):
                 content = requests.get(url).content
             file = BytesIO()
             file.write(content)
-            Image.open(file).convert("RGB").save(os.path.join(pwd, "images", "章节", str(i) + os.path.splitext(img)[1]))
+            Image.open(file).convert("RGB").save(os.path.join(pwd, "images", "章节", '%03d' % i + os.path.splitext(img)[1]))
             i += 1
     except Exception as e:
         logger.error(e)
