@@ -1,11 +1,15 @@
 import json
-import pickle
 import os
+import pickle
+import random
+import string
 import time
+import traceback
 from datetime import datetime
 
 import logzero
-import traceback
+import oss2
+import records
 from logzero import logger
 from selenium import webdriver
 from selenium.common.exceptions import UnexpectedAlertPresentException, TimeoutException, WebDriverException, \
@@ -15,20 +19,19 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.ui import WebDriverWait, Select
-import records
-from dingding_qun import dingdSendMsg
 
 from config import USE_FACE, CHROME_DRIVER_PATH, PHANTOMJS_PATH, SCREENSHOT_PATH, WAIT_CLICKABLE, WAIT_PRESENCE, \
     WAIT_VISIABLITY, CHROME_ARG, FIREFOX_DRIVER_PATH, RUN_SIKULIX_CMD, LOGFILE_NAME, MYSQL_URL, DATA_PASSWORD, DEBUG, \
     DATA_PLATFORM
+from dingding_qun import dingdSendMsg, dingSendMarkdown
 
 g_driver = None
 g_mysqlid = {"mysql_id": None}
 g_msg = ''
 g_traceback = ''
+g_screenshot = ''
 # 此变量要在平台的脚本中修改值,所有采用了dict的结构,为可变对象,才能修改.平台脚本必须修改该值.
 logzero.logfile(LOGFILE_NAME, encoding='utf-8', maxBytes=500_0000, backupCount=3)
-
 
 
 class open_driver(object):
@@ -95,6 +98,7 @@ class open_driver(object):
     def __exit__(self, exc_type, exc_val, exc_tb):
         global g_traceback
         global g_msg
+        global g_screenshot
         logger.info('退出')
         if exc_type == SessionNotCreatedException or exc_type == NoSuchWindowException:
             g_msg = "浏览器找不到了"
@@ -102,10 +106,11 @@ class open_driver(object):
             return True
         if exc_tb:
             try:
-                self.driver.get_screenshot_as_file(
-                    f"{SCREENSHOT_PATH}/excep_{datetime.now().strftime('%Y-%m-%d %H%M%S')}.png")
+                g_screenshot = f"{SCREENSHOT_PATH}/excep_{datetime.now().strftime('%Y-%m-%d %H%M%S')}.png"
+                self.driver.get_screenshot_as_file(g_screenshot)
             except WebDriverException:
                 g_msg = '截图失败,浏览器找不到了'
+                g_screenshot = ''
                 update_status2fail()
                 return True
         logger.info('屏蔽关闭提示框')
@@ -161,17 +166,47 @@ def update_status2fail():
     db = records.Database(MYSQL_URL)
     rows = db.query("update chapter_chapter set status=-1, fail_reason=:msg where id=:id", id=g_mysqlid['mysql_id'],
                     msg=g_msg)
+
+    # 发送钉钉群
     env = '测试环境' if DEBUG else '生产环境'
     from data import data
     data.update({DATA_PASSWORD: "*******"})
-    dingding_s = f'{env}: 漫画助手发布失败\n\n' \
-                 f'platform={data[DATA_PLATFORM]}\n\n' \
-                 f'mysql_id={g_mysqlid["mysql_id"]}\n\n' \
-                 f'msg={g_msg}\n\nd' \
-                 f'ata={data}\n\n' \
-                 f'traceback={g_traceback}'
-    logger.error(dingding_s)
-    dingdSendMsg(dingding_s)
+
+    if g_screenshot:
+
+        # 将截图上传到网络
+        IMG_URL = 'http://pang5web.oss-cn-beijing.aliyuncs.com/'
+        file_name = set_file_name()
+        image_name = 'pang5web/error/' + file_name + '.png'
+        put_object_from_file(g_screenshot, image_name, 'pang5web')
+        screen_url = IMG_URL + image_name
+
+        # 发送markdown
+        title = f'{env}: 漫画助手发布失败'
+        markdown = f"""
+# platform={data[DATA_PLATFORM]}\n\n
+# mysql_id={g_mysqlid["mysql_id"]}\n\n
+# msg={g_msg}\n\n
+- data={data}\n\n
+- traceback={g_traceback}\n\n
+# 以下是截图
+![screenshot]({screen_url})\n\n
+        """
+        logger.info(title)
+        logger.info(markdown)
+        dingSendMarkdown(title, markdown)
+    else:
+        # 发送text
+        dingding_s = f'{env}: 漫画助手发布失败\n\n' \
+                     f'platform={data[DATA_PLATFORM]}\n\n' \
+                     f'mysql_id={g_mysqlid["mysql_id"]}\n\n' \
+                     f'msg={g_msg}\n\n' \
+                     f'data={data}\n\n' \
+                     f'traceback={g_traceback}\n\n' \
+                     f'没有截图'
+        logger.error(dingding_s)
+        dingdSendMsg(dingding_s)
+
     logger.info(f'{env}: 更新{g_mysqlid["mysql_id"]}状态')
 
 
@@ -452,3 +487,19 @@ def scroll_to(height="document.body.scrollHeight"):
 def scroll_to_id(id):
     js = f'location.href="#{id}"'
     g_driver.execute_script(js)
+
+
+auth = oss2.Auth('LTAI0OrY1GUzZxD2', 'G9lgeS1ogDUl1ex6N2pHsmqlmqNGIX')
+
+
+def put_object_from_file(file, file_name, bucket):
+    endpoint = 'http://pang5web.oss-cn-beijing.aliyuncs.com/'  # 假设你的Bucket处于杭州区域
+    bucket = oss2.Bucket(auth, endpoint, bucket, is_cname=True, enable_crc=False)
+    bucket.put_object_from_file(file_name, file)
+
+
+def set_file_name():
+    file_name = time.strftime("%Y%m%d%H%M%S", time.localtime()) + '_' + ''.join(
+        random.sample(string.ascii_letters + string.digits, 8))
+
+    return file_name
