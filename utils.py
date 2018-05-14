@@ -28,7 +28,7 @@ g_msg = ''
 g_traceback = ''
 # 此变量要在平台的脚本中修改值,所有采用了dict的结构,为可变对象,才能修改.平台脚本必须修改该值.
 logzero.logfile(LOGFILE_NAME, encoding='utf-8', maxBytes=500_0000, backupCount=3)
-db = records.Database(MYSQL_URL)
+
 
 
 class open_driver(object):
@@ -158,6 +158,7 @@ class Pang5Exception(Exception):
 
 
 def update_status2fail():
+    db = records.Database(MYSQL_URL)
     rows = db.query("update chapter_chapter set status=-1, fail_reason=:msg where id=:id", id=g_mysqlid['mysql_id'],
                     msg=g_msg)
     env = '测试环境' if DEBUG else '生产环境'
@@ -176,6 +177,7 @@ def update_status2fail():
 
 def update_status2OK():
     # 没有异常, 更改数据库状态
+    db = records.Database(MYSQL_URL)
     rows = db.query('update chapter_chapter set status=0, ok_time=:ok_time where id=:id', id=g_mysqlid["mysql_id"],
                     ok_time=datetime.now())
     env = '测试环境' if DEBUG else '生产环境'
@@ -190,6 +192,7 @@ def update_login_status(platform, platform_username, platform_password, platform
     :param password:
     :return:
     """
+    db = records.Database(MYSQL_URL)
     rows = db.query("update subscriber_platformsubscriber set platform_status=:platform_status where "
                     "platform=:platform and "
                     "platform_username=:platform_username and "
