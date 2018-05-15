@@ -79,7 +79,8 @@ class U17:
         except:
             logger.info('没有关闭提示')
         logger.info('隐藏选择适合自己的字号')
-        js = '$("body > div.font_tip_dialog").hide()'
+        # js = '$("body > div.font_tip_dialog").hide()'
+        js = 'document.querySelector("body > div.font_tip_dialog").style.display = "none";'
         self.driver.execute_script(js)
         time.sleep(1)
         logger.info('填写章节名称')
