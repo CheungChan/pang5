@@ -3,6 +3,7 @@ import time
 
 import logzero
 from logzero import logger
+from selenium.common.exceptions import JavascriptException
 
 from config import LOGFILE_NAME, DATA_CHAPTER_IMAGE, DATA_CHAPTER_NAME, DATA_PASSWORD, DATA_USERNAME, DATA_THIRD_ID, \
     DATA_WORKS_IMAGE, PLATFORM_STATUS_AUTH_OK, PLATFORM_STATUS_AUTH_FAIL, DATA_PLATFORM
@@ -79,9 +80,12 @@ class U17:
         except:
             logger.info('没有关闭提示')
         logger.info('隐藏选择适合自己的字号')
-        # js = '$("body > div.font_tip_dialog").hide()'
-        js = 'document.querySelector("body > div.font_tip_dialog").style.display = "none";'
-        self.driver.execute_script(js)
+        try:
+            # js = '$("body > div.font_tip_dialog").hide()'
+            js = 'document.querySelector("body > div.font_tip_dialog").style.display = "none";'
+            self.driver.execute_script(js)
+        except JavascriptException as e:
+            logger.error(e)
         time.sleep(1)
         logger.info('填写章节名称')
         clear_and_send_keys("#chapter_name", data[DATA_CHAPTER_NAME])
