@@ -40,6 +40,9 @@ class U17:
                 logger.info('点击新建章节')
                 new_chapter_url = f'http://comic.user.u17.com/chapter/chapter_add.php?comic_id={data[DATA_THIRD_ID]}'
                 self.driver.get(new_chapter_url)
+                time.sleep(3)
+                if get_current_url() != new_chapter_url:
+                    raise Pang5Exception('有妖气作品id有误')
                 self.publish()
 
     def login(self) -> bool:
