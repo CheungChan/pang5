@@ -35,7 +35,7 @@ class U17:
 
                     # 登录方式
                     login_type = data[DATA_LOGIN_TYPE]
-                    if login_type in ('', 'mobile', 'email', 'mail'):
+                    if login_type in ('', 'mobile', 'email', 'mail', 'username'):
                         login = self.login_mobile
                     elif login_type == 'qq':
                         login = self.login_mobile_qq
