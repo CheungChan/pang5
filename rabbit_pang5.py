@@ -49,6 +49,7 @@ def callback(ch, method, properties, body):
     # 查询章节信息
     chapter_records = db.query('SELECT * FROM  chapter_chapter where id= :id_num', id_num=mysql_id)
     if not len(chapter_records.all()):
+        logger.error('没有查到对应的章节记录')
         return
     chapter_record = chapter_records[0]
 

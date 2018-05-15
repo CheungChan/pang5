@@ -41,7 +41,7 @@ class Qq:
                 time.sleep(5)
                 get(MANAGE_URL)
                 if get_current_url() != MANAGE_URL:
-                    if not self.login():
+                    if not self.login_mobile():
                         status = PLATFORM_STATUS_AUTH_FAIL
                         update_login_status(platform=data[DATA_PLATFORM], platform_username=data[DATA_USERNAME],
                                             platform_password=data[DATA_PASSWORD], platform_status=status)
@@ -82,6 +82,28 @@ class Qq:
                                 platform_password=data[DATA_PASSWORD], platform_status=status)
             raise Pang5Exception("登录异常")
         ok = get_current_url() != login_url
+        status = PLATFORM_STATUS_AUTH_OK if ok else PLATFORM_STATUS_AUTH_FAIL
+        update_login_status(platform=data[DATA_PLATFORM], platform_username=data[DATA_USERNAME],
+                            platform_password=data[DATA_PASSWORD], platform_status=status)
+        return True
+
+    def login_mobile(self) -> bool:
+        # 访问移动端
+        self.driver.get('http://m.ac.qq.com/')
+        # 点击右上角菜单
+        self.driver.find_element_by_css_selector('body > header > a.btn-top.menu').click()
+        # 点击我的地盘
+        self.driver.find_element_by_css_selector('body > div.nav-menu-box.show > div.nav-menu > a').click()
+        if get_current_url() == 'http://m.ac.qq.com/home/index':
+            logger.info('已经登录')
+            return True
+        # 输入用户名
+        self.driver.find_element_by_css_selector('#u').send_keys(data[DATA_USERNAME])
+        self.driver.find_element_by_css_selector('#p').send_keys(data[DATA_PASSWORD])
+        time.sleep(1)
+        self.driver.find_element_by_css_selector('#go').click()
+        time.sleep(1)
+        ok = get_current_url() == 'http://m.ac.qq.com/home/index'
         status = PLATFORM_STATUS_AUTH_OK if ok else PLATFORM_STATUS_AUTH_FAIL
         update_login_status(platform=data[DATA_PLATFORM], platform_username=data[DATA_USERNAME],
                             platform_password=data[DATA_PASSWORD], platform_status=status)
