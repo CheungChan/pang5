@@ -6,14 +6,16 @@ from logzero import logger
 from selenium.common.exceptions import JavascriptException
 
 from config import LOGFILE_NAME, DATA_CHAPTER_IMAGE, DATA_CHAPTER_NAME, DATA_PASSWORD, DATA_USERNAME, DATA_THIRD_ID, \
-    DATA_WORKS_IMAGE, PLATFORM_STATUS_AUTH_OK, PLATFORM_STATUS_AUTH_FAIL, DATA_PLATFORM
+    DATA_WORKS_IMAGE, PLATFORM_STATUS_AUTH_OK, PLATFORM_STATUS_AUTH_FAIL, DATA_PLATFORM, DATA_LOGIN_TYPE
 from data import data
 from utils import open_driver, track_alert, get, get_current_url, clear_and_send_keys, \
     scroll_to, click_by_pyautogui, Pang5Exception, update_status2OK, g_mysqlid, scroll_to_id, update_login_status
 
 logzero.logfile(LOGFILE_NAME, encoding='utf-8', maxBytes=500_0000, backupCount=3)
 LOGIN_URL = 'http://passport.u17.com/member_v2/login.php?url=http%3A%2F%2Fcomic.user.u17.com/index.php'
+LOGIN_MOBILE_URL = 'http://m.u17.com/Wap/login/login?type=personal'
 AUTH_OK_URL = 'http://comic.user.u17.com/index.php'
+AUTH_MOBILE_OK_URL = 'http://m.u17.com/wap/Personal/index'
 TITLE_PNG = 'u17_title.png'
 CHAPTER_PNG = 'u17_chapter.png'
 START_UPLOAD_PNG = 'u17_start_upload.png'
@@ -30,7 +32,19 @@ class U17:
                 self.driver = driver
                 get(AUTH_OK_URL)
                 if get_current_url() != AUTH_OK_URL:
-                    if not self.login_mobile():
+
+                    # 登录方式
+                    login_type = data[DATA_LOGIN_TYPE]
+                    if login_type == '':
+                        login = self.login_mobile
+                    elif login_type == 'qq':
+                        login = self.login_mobile_qq
+                    elif login_type == 'weibo':
+                        login = self.login_mobile_weibo
+                    else:
+                        raise Pang5Exception(f'登录方式不支持{login_type}')
+
+                    if not login():
                         status = PLATFORM_STATUS_AUTH_FAIL
                         update_login_status(platform=data[DATA_PLATFORM], platform_username=data[DATA_USERNAME],
                                             platform_password=data[DATA_PASSWORD], platform_status=status)
@@ -61,7 +75,7 @@ class U17:
         return True
 
     def login_mobile(self) -> bool:
-        self.driver.get('http://m.u17.com/Wap/login/login?type=personal')
+        self.driver.get(LOGIN_MOBILE_URL)
         self.driver.find_element_by_css_selector('#wrapper > div > div:nth-child(2) > input').send_keys(
             data[DATA_USERNAME])
         self.driver.find_element_by_css_selector('#wrapper > div > div:nth-child(3) > input:nth-child(1)').send_keys(
@@ -69,7 +83,46 @@ class U17:
         time.sleep(1)
         self.driver.find_element_by_css_selector('#wrapper > div > a.green-btn.login-btn').click()
         time.sleep(2)
-        ok = get_current_url() == 'http://m.u17.com/wap/Personal/index'
+        ok = get_current_url() == AUTH_MOBILE_OK_URL
+        status = PLATFORM_STATUS_AUTH_OK if ok else PLATFORM_STATUS_AUTH_FAIL
+        update_login_status(platform=data[DATA_PLATFORM], platform_username=data[DATA_USERNAME],
+                            platform_password=data[DATA_PASSWORD], platform_status=status)
+        return True
+
+    def login_mobile_qq(self):
+        self.driver.get(LOGIN_MOBILE_URL)
+        # 点击qq
+        self.driver.find_element_by_css_selector('#coagent > a.coagent.coagent-qq').click()
+        time.sleep(1)
+
+        self.driver.switch_to_frame(self.driver.find_element_by_id("ptlogin_iframe"))
+        self.driver.find_element_by_id('switcher_plogin').click()
+        time.sleep(3)
+        u = self.driver.find_element_by_id('u')
+        u.clear()
+        u.send_keys(data[DATA_USERNAME])
+        p = self.driver.find_element_by_id('p')
+        p.clear()
+        p.send_keys(data[DATA_PASSWORD])
+        self.driver.find_element_by_id('login_button').click()
+        time.sleep(3)
+        ok = get_current_url() == AUTH_MOBILE_OK_URL
+        status = PLATFORM_STATUS_AUTH_OK if ok else PLATFORM_STATUS_AUTH_FAIL
+        update_login_status(platform=data[DATA_PLATFORM], platform_username=data[DATA_USERNAME],
+                            platform_password=data[DATA_PASSWORD], platform_status=status)
+        return True
+
+    def login_mobile_weibo(self):
+        self.driver.get(LOGIN_MOBILE_URL)
+        # 点击微博
+        self.driver.find_element_by_css_selector('a.coagent-weibo:nth-child(2)').click()
+        time.sleep(1)
+        self.driver.find_element_by_css_selector('#userId').send_keys(data[DATA_USERNAME])
+        self.driver.find_element_by_css_selector('#passwd').send_keys(data[DATA_PASSWORD])
+        time.sleep(1)
+        self.driver.find_element_by_css_selector('.WB_btn_login').click()
+        time.sleep(3)
+        ok = get_current_url() == AUTH_MOBILE_OK_URL
         status = PLATFORM_STATUS_AUTH_OK if ok else PLATFORM_STATUS_AUTH_FAIL
         update_login_status(platform=data[DATA_PLATFORM], platform_username=data[DATA_USERNAME],
                             platform_password=data[DATA_PASSWORD], platform_status=status)
