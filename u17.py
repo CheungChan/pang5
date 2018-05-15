@@ -29,7 +29,7 @@ class U17:
                 self.driver = driver
                 get(AUTH_OK_URL)
                 if get_current_url() != AUTH_OK_URL:
-                    if not self.login():
+                    if not self.login_mobile():
                         status = PLATFORM_STATUS_AUTH_FAIL
                         update_login_status(platform=data[DATA_PLATFORM], platform_username=data[DATA_USERNAME],
                                             platform_password=data[DATA_PASSWORD], platform_status=status)
@@ -52,6 +52,21 @@ class U17:
                                 platform_password=data[DATA_PASSWORD], platform_status=status)
             raise Pang5Exception("登录失败")
         status = PLATFORM_STATUS_AUTH_OK
+        update_login_status(platform=data[DATA_PLATFORM], platform_username=data[DATA_USERNAME],
+                            platform_password=data[DATA_PASSWORD], platform_status=status)
+        return True
+
+    def login_mobile(self) -> bool:
+        self.driver.get('http://m.u17.com/Wap/login/login?type=personal')
+        self.driver.find_element_by_css_selector('#wrapper > div > div:nth-child(2) > input').send_keys(
+            data[DATA_USERNAME])
+        self.driver.find_element_by_css_selector('#wrapper > div > div:nth-child(3) > input:nth-child(1)').send_keys(
+            data[DATA_PASSWORD])
+        time.sleep(1)
+        self.driver.find_element_by_css_selector('#wrapper > div > a.green-btn.login-btn').click()
+        time.sleep(2)
+        ok = get_current_url() == 'http://m.u17.com/wap/Personal/index'
+        status = PLATFORM_STATUS_AUTH_OK if ok else PLATFORM_STATUS_AUTH_FAIL
         update_login_status(platform=data[DATA_PLATFORM], platform_username=data[DATA_USERNAME],
                             platform_password=data[DATA_PASSWORD], platform_status=status)
         return True
