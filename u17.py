@@ -207,7 +207,10 @@ class U17:
         if data[DATA_IS_CLOCK]:
             # 点击设置
             # self.driver.find_element_by_css_selector('#open_release_time > span').click()
-            js = f'$("#input_release_time").val({data[DATA_CLOCK_PUBLISH_DATETIME]})'
+            publish_datetime = data[DATA_CLOCK_PUBLISH_DATETIME]
+            if len(publish_datetime) == len('2010-10-10 04:00'):
+                publish_datetime = publish_datetime + ':00'
+            js = f'$("#input_release_time").val("{publish_datetime}")'
             # self.driver.find_element_by_css_selector('#input_release_time').send_keys(data[DATA_CLOCK_PUBLISH_DATETIME])
             logger.info(js)
             self.driver.execute_script(js)
