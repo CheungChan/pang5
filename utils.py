@@ -373,7 +373,7 @@ def click_by_pyautogui(image_path):
         can_use_cache_loc = USE_CACHE and retry_times == MAX_RETRY_TIMES and os.path.exists(cache_loc_files)
         if can_use_cache_loc:
             with open(cache_loc_files, 'r', encoding='utf-8') as f:
-                s = f.readlines()
+                s = f.read().split(',')
                 loc = int(s[0]), int(s[1])
                 logger.info(f'使用缓存位置{loc}')
         else:
@@ -387,7 +387,7 @@ def click_by_pyautogui(image_path):
             if USE_CACHE:
                 # 缓存到文件中
                 with open(cache_loc_files, 'w', encoding='utf-8') as f:
-                    f.write(f'{x}\r\n{y}')
+                    f.write(f'{x},{y}')
                     logger.info(f'存储缓存位置{x,y}')
             break
         else:
