@@ -6,7 +6,8 @@ from logzero import logger
 from selenium.common.exceptions import JavascriptException
 
 from config import LOGFILE_NAME, DATA_CHAPTER_IMAGE, DATA_CHAPTER_NAME, DATA_PASSWORD, DATA_USERNAME, DATA_THIRD_ID, \
-    DATA_WORKS_IMAGE, PLATFORM_STATUS_AUTH_OK, PLATFORM_STATUS_AUTH_FAIL, DATA_PLATFORM, DATA_LOGIN_TYPE
+    DATA_WORKS_IMAGE, PLATFORM_STATUS_AUTH_OK, PLATFORM_STATUS_AUTH_FAIL, DATA_PLATFORM, DATA_LOGIN_TYPE, DATA_IS_CLOCK, \
+    DATA_CLOCK_PUBLISH_DATETIME
 from data import data
 from utils import open_driver, track_alert, get, get_current_url, clear_and_send_keys, \
     scroll_to, click_by_pyautogui, Pang5Exception, update_status2OK, g_mysqlid, scroll_to_id, update_login_status
@@ -203,9 +204,18 @@ class U17:
             logger.info(f'上传中, 共{count_all}个， {count_ok}个上传成功， {count_lack}个正在上传中。。。')
             time.sleep(4)
 
+        if data[DATA_IS_CLOCK]:
+            # 点击设置
+            # self.driver.find_element_by_css_selector('#open_release_time > span').click()
+            self.driver.find_element_by_css_selector('#input_release_time').send_keys(data[DATA_CLOCK_PUBLISH_DATETIME])
+            logger.info(f'设置定时时间为{data[DATA_CLOCK_PUBLISH_DATETIME]}')
+
         logger.info('提交审核')
         self.driver.find_element_by_css_selector('#main > div.borbox > div > div.tc > a').click()
         logger.info('发布成功')
+        error_msg = self.driver.find_elements_by_css_selector('#messageBox1 > table > tbody > tr > td')
+        if len(error_msg) == 1:
+            raise Pang5Exception(error_msg[0].text)
         update_status2OK()
 
 
