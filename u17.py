@@ -144,17 +144,12 @@ class U17:
         except JavascriptException as e:
             logger.error(e)
         time.sleep(1)
+        scroll_to_id('chapter_name')
         logger.info('填写章节名称')
         clear_and_send_keys("#chapter_name", data[DATA_CHAPTER_NAME])
 
         logger.info('上传封面图片')
         time.sleep(2)
-        # self.driver.find_element_by_css_selector('div.bg_cover_box > #upload_image').click()
-        # click_by_actionchains("#upload_image")
-        # POSOTION_GREEN_BUTTON = (1068, 885)
-        # POSOTION_GREEN_BUTTON = (439, 442)
-        #
-        # click_by_pg(*POSOTION_GREEN_BUTTON)
         click_by_pyautogui(TITLE_PNG)
         time.sleep(2)
         img: str = data[DATA_WORKS_IMAGE]
@@ -170,13 +165,7 @@ class U17:
             time.sleep(2)
 
         logger.info('上传章节内容')
-        scroll_to(500)
-        time.sleep(1)
-        # self.driver.find_element_by_css_selector('span.csbtn').click()
-        # POSOTION_GREEN_BUTTON = (784, 1108)
-        # POSOTION_GREEN_BUTTON = (288,304 )
-        #
-        # click_by_pg(*POSOTION_GREEN_BUTTON)
+        scroll_to_id('btn_start')
         click_by_pyautogui(CHAPTER_PNG)
         img: str = ' '.join(data[DATA_CHAPTER_IMAGE])
         cmd = f'D:/uploadImg.exe 打开 {img}'
