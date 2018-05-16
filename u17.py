@@ -1,6 +1,6 @@
 import os
 import time
-
+from datetime import datetime, timedelta
 import logzero
 from logzero import logger
 from selenium.common.exceptions import JavascriptException
@@ -213,8 +213,14 @@ class U17:
             js = f'$("#input_release_time").val("{publish_datetime}")'
             logger.info(js)
             self.driver.execute_script(js)
-            logger.info(f'设置定时时间为{data[DATA_CLOCK_PUBLISH_DATETIME]}')
-            js = f'$("#input_update_time").val("")'
+            logger.info(f'设置定时时间为{publish_datetime}')
+
+            # 暂时将下次更新时间设置为2天后.
+            two_days_from_now = (datetime.now() + timedelta(days=2)).strftime('%Y-%m-%d')
+            js = f'$("#input_update_time").val("{two_days_from_now}")'
+            logger.info(js)
+            self.driver.execute_script(js)
+            logger.info(f'设置下次更新时间为{two_days_from_now}')
 
         logger.info('提交审核')
         self.driver.find_element_by_css_selector('#main > div.borbox > div > div.tc > a').click()
