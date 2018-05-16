@@ -387,7 +387,7 @@ def click_by_pyautogui(image_path):
             if USE_CACHE:
                 # 缓存到文件中
                 with open(cache_loc_files, 'w', encoding='utf-8') as f:
-                    f.writelines([str(x), str(y)])
+                    f.write(f'{x}\r\n{y}')
                     logger.info(f'存储缓存位置{x,y}')
             break
         else:
