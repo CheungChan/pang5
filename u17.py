@@ -211,10 +211,10 @@ class U17:
             if len(publish_datetime) == len('2010-10-10 04:00'):
                 publish_datetime = publish_datetime + ':00'
             js = f'$("#input_release_time").val("{publish_datetime}")'
-            # self.driver.find_element_by_css_selector('#input_release_time').send_keys(data[DATA_CLOCK_PUBLISH_DATETIME])
             logger.info(js)
             self.driver.execute_script(js)
             logger.info(f'设置定时时间为{data[DATA_CLOCK_PUBLISH_DATETIME]}')
+            js = f'$("#input_update_time").val("")'
 
         logger.info('提交审核')
         self.driver.find_element_by_css_selector('#main > div.borbox > div > div.tc > a').click()
