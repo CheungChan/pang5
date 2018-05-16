@@ -358,20 +358,37 @@ def click_by_pyautogui(image_path):
     根据pyautogui提供的图像识别技术，点击屏幕上的像素点
     :return:
     """
-    retry_times = 2
+    USE_CACHE = True
+    MAX_RETRY_TIMES = 2
+    retry_times = MAX_RETRY_TIMES
     import pyautogui
     width, height = pyautogui.size()
     if not os.path.isabs(image_path):
         # 适配不同分辨率的图片， 仿大安卓
         image_path = os.path.join(os.path.abspath('.'), 'upload_btn_images', f'{width}_{height}', image_path)
     assert os.path.exists(image_path), logger.error(f'{image_path}文件不存在')
+    cache_loc_files = f'{image_path}.loc.txt'
     while retry_times > 0:
-        loc = pyautogui.locateCenterOnScreen(image_path)
+        # 如果可以用缓存位置的话
+        can_use_cache_loc = USE_CACHE and retry_times == MAX_RETRY_TIMES and os.path.exists(cache_loc_files)
+        if can_use_cache_loc:
+            with open(cache_loc_files, 'r', encoding='utf-8') as f:
+                s = f.readlines()
+                loc = s[0], s[1]
+                logger.info(f'使用缓存位置{loc}')
+        else:
+            # 如果不能用缓存的话
+            loc = pyautogui.locateCenterOnScreen(image_path)
         if loc:
             x, y = loc
             logger.info(f'x={x}, y={y}')
             pyautogui.moveTo(x, y)
             pyautogui.click(x, y)
+            if USE_CACHE:
+                # 缓存到文件中
+                with open(cache_loc_files, 'w', encoding='utf-8') as f:
+                    f.writelines([x, y])
+                    logger.info(f'存储缓存位置{x,y}')
             break
         else:
             retry_times -= 1
