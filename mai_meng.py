@@ -104,7 +104,6 @@ class MaiMeng:
         os.system(cmd)
         loading = self.driver.find_element_by_css_selector(
             '#create_chapter > div.container > div.inner-container > div:nth-child(5) > div > div.field-input > ul > div.el-loading-mask')
-        scroll_to()
         start = time.time()
         MAX_WAIT_SECONDS = 10
         while loading.is_displayed():
