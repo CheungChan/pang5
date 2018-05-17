@@ -105,7 +105,7 @@ class MaiMeng:
         loading = self.driver.find_element_by_css_selector(
             '#create_chapter > div.container > div.inner-container > div:nth-child(5) > div > div.field-input > ul > div.el-loading-mask')
         start = time.time()
-        MAX_WAIT_SECONDS = 10
+        MAX_WAIT_SECONDS = 30
         while loading.is_displayed():
             time.sleep(2)
             if (time.time() - start) > MAX_WAIT_SECONDS:
