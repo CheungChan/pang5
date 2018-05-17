@@ -3,6 +3,7 @@ import time
 
 import logzero
 from logzero import logger
+from selenium.common.exceptions import NoSuchElementException
 
 from config import BROWSER_FIREFOX, LOGFILE_NAME, DATA_WORKS_IMAGE, DATA_CHAPTER_IMAGE, DATA_CHAPTER_NAME, \
     DATA_PASSWORD, DATA_USERNAME, DATA_THIRD_ID, DATA_IS_CLOCK, \
@@ -121,8 +122,11 @@ class Qq:
                     'table > tbody > tr:nth-child(2) > td.chapter-publish-time > label:nth-child(2) > input[type="radio"]').click()
             else:
                 # 发布日期
-                self.driver.find_element_by_css_selector("#chapter_date").send_keys(
-                    data[DATA_CLOCK_PUBLISH_DATETIME])
+                try:
+                    self.driver.find_element_by_css_selector("#chapter_date").send_keys(
+                        data[DATA_CLOCK_PUBLISH_DATETIME])
+                except NoSuchElementException:
+                    raise Pang5Exception('定时发布时间页面上处于不能选状态')
 
         # 章节名称
         clear_and_send_keys("#chapter_title", data[DATA_CHAPTER_NAME])
