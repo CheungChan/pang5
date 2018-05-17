@@ -39,13 +39,11 @@ class Qq:
                 # add_cookie(COOKIE_DOMAIN, driver, COOKIE_FILE)
                 # driver.get('http://www.baidu.com')
                 time.sleep(5)
-                get(MANAGE_URL)
-                if get_current_url() != MANAGE_URL:
-                    if not self.login_mobile():
-                        status = PLATFORM_STATUS_AUTH_FAIL
-                        update_login_status(platform=data[DATA_PLATFORM], platform_username=data[DATA_USERNAME],
-                                            platform_password=data[DATA_PASSWORD], platform_status=status)
-                        raise Pang5Exception('登录失败')
+                if not self.login_mobile():
+                    status = PLATFORM_STATUS_AUTH_FAIL
+                    update_login_status(platform=data[DATA_PLATFORM], platform_username=data[DATA_USERNAME],
+                                        platform_password=data[DATA_PASSWORD], platform_status=status)
+                    raise Pang5Exception('登录失败')
                 # store_cookie(driver, COOKIE_FILE)
                 self.driver.switch_to.default_content()
                 logger.info('登录成功')
