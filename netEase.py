@@ -164,11 +164,9 @@ class Upload:
         chapter_name = data[DATA_CHAPTER_NAME]
         chapter_img = data[DATA_CHAPTER_IMAGE]
         is_clock = data[DATA_IS_CLOCK]
-        logger.error(data)
         if is_clock:
             publish_day = data[DATA_CLOCK_PUBLISH_DATETIME].split(' ')[0]
             pubish_hour = data[DATA_CLOCK_PUBLISH_DATETIME].split(' ')[1].split(':')[0]
-            logger.error(pubish_hour)
             min = int(data[DATA_CLOCK_PUBLISH_DATETIME].split(' ')[1].split(':')[1])
             if min < 15:
                 publish_min = "00"
