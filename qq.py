@@ -84,7 +84,7 @@ class Qq:
         status = PLATFORM_STATUS_AUTH_OK if ok else PLATFORM_STATUS_AUTH_FAIL
         update_login_status(platform=data[DATA_PLATFORM], platform_username=data[DATA_USERNAME],
                             platform_password=data[DATA_PASSWORD], platform_status=status)
-        return True
+        return ok
 
     def login_mobile(self) -> bool:
         # 访问移动端
@@ -106,7 +106,7 @@ class Qq:
         status = PLATFORM_STATUS_AUTH_OK if ok else PLATFORM_STATUS_AUTH_FAIL
         update_login_status(platform=data[DATA_PLATFORM], platform_username=data[DATA_USERNAME],
                             platform_password=data[DATA_PASSWORD], platform_status=status)
-        return True
+        return ok
 
     def publish(self):
         # 让网站允许Flash

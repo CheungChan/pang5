@@ -88,7 +88,7 @@ class U17:
         status = PLATFORM_STATUS_AUTH_OK if ok else PLATFORM_STATUS_AUTH_FAIL
         update_login_status(platform=data[DATA_PLATFORM], platform_username=data[DATA_USERNAME],
                             platform_password=data[DATA_PASSWORD], platform_status=status)
-        return True
+        return ok
 
     def login_mobile_qq(self):
         self.driver.get(LOGIN_MOBILE_URL)
@@ -111,7 +111,7 @@ class U17:
         status = PLATFORM_STATUS_AUTH_OK if ok else PLATFORM_STATUS_AUTH_FAIL
         update_login_status(platform=data[DATA_PLATFORM], platform_username=data[DATA_USERNAME],
                             platform_password=data[DATA_PASSWORD], platform_status=status)
-        return True
+        return ok
 
     def login_mobile_weibo(self):
         self.driver.get(LOGIN_MOBILE_URL)
@@ -127,7 +127,7 @@ class U17:
         status = PLATFORM_STATUS_AUTH_OK if ok else PLATFORM_STATUS_AUTH_FAIL
         update_login_status(platform=data[DATA_PLATFORM], platform_username=data[DATA_USERNAME],
                             platform_password=data[DATA_PASSWORD], platform_status=status)
-        return True
+        return ok
 
     def publish(self):
         logger.info('点击关闭提示')
