@@ -18,7 +18,7 @@ from logzero import logger
 import config
 from config import LOGFILE_NAME, DATA_CHAPTER_IMAGE, DATA_CLOCK_PUBLISH_DATETIME, DATA_CHAPTER_NAME, DATA_IS_CLOCK, \
     DATA_PASSWORD, DATA_PLATFORM, DATA_THIRD_ID, DATA_USERNAME, DATA_WORKS_IMAGE, DATA_WORKS_NAME, DATA_LOGIN_TYPE, \
-    NEED_FLASH_PLATFORM
+    NEED_FLASH_PLATFORM, DATA_NEXT_TIME
 from utils import get_sorted_imgs
 
 logzero.logfile(LOGFILE_NAME, encoding='utf-8', maxBytes=500_0000, backupCount=3)
@@ -117,7 +117,8 @@ def callback(ch, method, properties, body):
                 content = requests.get(url).content
             file = BytesIO()
             file.write(content)
-            Image.open(file).convert("RGB").save(os.path.join(pwd, "images", "章节", '%03d' % i + os.path.splitext(img)[1]))
+            Image.open(file).convert("RGB").save(
+                os.path.join(pwd, "images", "章节", '%03d' % i + os.path.splitext(img)[1]))
             i += 1
     except Exception as e:
         logger.error(e)
@@ -140,6 +141,7 @@ def callback(ch, method, properties, body):
     data[DATA_CLOCK_PUBLISH_DATETIME] = chapter_record['publish_clock_time']
     data[DATA_LOGIN_TYPE] = user_record['platform_login_type']
     data[DATA_WORKS_IMAGE] = os.path.join(pwd, 'images', '封面.png')
+    data[DATA_NEXT_TIME] = chapter_record.get('next_time', '')
 
     if user_record['platform'] in NEED_FLASH_PLATFORM:
         data[DATA_CHAPTER_IMAGE] = [f'"{os.path.join(pwd,"images","章节",d)}"' for d in

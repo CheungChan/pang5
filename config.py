@@ -59,6 +59,7 @@ DATA_IS_CLOCK = 'is_clock'  # 是否定时
 DATA_CLOCK_PUBLISH_DATETIME = 'clock_publish_datetime'  # 定时发布时间
 DATA_WORKS_IMAGE = 'works_image'  # 作品图片
 DATA_CHAPTER_IMAGE = 'chapter_image'  # 章节图片
+DATA_NEXT_TIME = 'next_time'  # 只有有妖气有的下次更新时间
 
 NEED_FLASH_PLATFORM = ('qq', 'maimeng', 'u17')
 

@@ -7,7 +7,7 @@ from selenium.common.exceptions import JavascriptException
 
 from config import LOGFILE_NAME, DATA_CHAPTER_IMAGE, DATA_CHAPTER_NAME, DATA_PASSWORD, DATA_USERNAME, DATA_THIRD_ID, \
     DATA_WORKS_IMAGE, PLATFORM_STATUS_AUTH_OK, PLATFORM_STATUS_AUTH_FAIL, DATA_PLATFORM, DATA_LOGIN_TYPE, DATA_IS_CLOCK, \
-    DATA_CLOCK_PUBLISH_DATETIME
+    DATA_CLOCK_PUBLISH_DATETIME, DATA_NEXT_TIME
 from data import data
 from utils import open_driver, track_alert, get, get_current_url, clear_and_send_keys, \
     scroll_to, click_by_pyautogui, Pang5Exception, update_status2OK, g_mysqlid, scroll_to_id, update_login_status
@@ -205,7 +205,7 @@ class U17:
             logger.info(f'设置定时时间为{publish_datetime}')
 
             # 暂时将下次更新时间设置为2天后.
-            two_days_from_now = (datetime.now() + timedelta(days=2)).strftime('%Y-%m-%d')
+            two_days_from_now = data[DATA_NEXT_TIME] or (datetime.now() + timedelta(days=2)).strftime('%Y-%m-%d')
             js = f'$("#input_update_time").val("{two_days_from_now}")'
             logger.info(js)
             self.driver.execute_script(js)
