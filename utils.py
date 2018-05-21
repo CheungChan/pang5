@@ -384,6 +384,7 @@ def click_by_pyautogui(image_path):
             logger.info(f'x={x}, y={y}')
             pyautogui.moveTo(x, y)
             pyautogui.click(x, y)
+            time.sleep(2)
             if USE_CACHE:
                 # 缓存到文件中
                 with open(cache_loc_files, 'w', encoding='utf-8') as f:
