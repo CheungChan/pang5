@@ -57,7 +57,7 @@ class U17:
                 self.driver.get(new_chapter_url)
                 time.sleep(3)
                 if get_current_url() != new_chapter_url:
-                    raise Pang5Exception('有妖气作品id有误')
+                    raise Pang5Exception(f'有妖气作品id({data[DATA_THIRD_ID]})有误')
                 self.publish()
 
     def login(self) -> bool:

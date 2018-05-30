@@ -57,7 +57,10 @@ class Qq:
 
                 # 点击新建章节
                 time.sleep(2)
-                self.driver.find_element_by_link_text("新建章节").click()
+                try:
+                    self.driver.find_element_by_link_text("新建章节").click()
+                except NoSuchElementException:
+                    raise Pang5Exception(f"腾讯动漫作品id({data[DATA_THIRD_ID]})有误")
 
                 self.publish()
 
