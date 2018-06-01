@@ -31,13 +31,11 @@ class Qingdian:
                 logger.info(f'用户名{LOGIN_USERNAME}')
                 logger.info(f'密码{LOGIN_PASSWORD}')
                 # 处理登录
-                get(MANAGE_URL)
-                if get_current_url() != MANAGE_URL:
-                    if not self.mobile_login(driver, LOGIN_USERNAME, LOGIN_PASSWORD):
-                        status = PLATFORM_STATUS_AUTH_FAIL
-                        update_login_status(platform=data[DATA_PLATFORM], platform_username=data[DATA_USERNAME],
-                                            platform_password=data[DATA_PASSWORD], platform_status=status)
-                        raise Pang5Exception('登录失败')
+                if not self.mobile_login(driver, LOGIN_USERNAME, LOGIN_PASSWORD):
+                    status = PLATFORM_STATUS_AUTH_FAIL
+                    update_login_status(platform=data[DATA_PLATFORM], platform_username=data[DATA_USERNAME],
+                                        platform_password=data[DATA_PASSWORD], platform_status=status)
+                    raise Pang5Exception('登录失败')
                 get(MANAGE_URL)
                 time.sleep(2)
                 cur = get_current_url()
