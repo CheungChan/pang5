@@ -211,6 +211,8 @@ class U17:
             self.driver.execute_script(js)
             logger.info(f'设置下次更新时间为{two_days_from_now}')
 
+        logger.info('等待10s')
+        time.sleep(10)
         logger.info('提交审核')
         self.driver.find_element_by_css_selector('#main > div.borbox > div > div.tc > a').click()
         logger.info('发布成功')
