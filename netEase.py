@@ -134,7 +134,23 @@ class Upload:
     # 微博登录
 
     def weibo_login(self, driver):
-        raise Pang5Exception('暂时不支持微博登录')
+        logger.info('用微博登录')
+        get('https://manhua.163.com/')
+        driver.find_element_by_css_selector('#login-urs-wrapper > div.ologin > ul > li:nth-child(3) > a').click()
+        time.sleep(3)
+        # 点击微博
+        driver.find_element_by_css_selector('a.coagent-weibo:nth-child(2)').click()
+        time.sleep(1)
+        driver.find_element_by_css_selector('#userId').send_keys(data[DATA_USERNAME])
+        driver.find_element_by_css_selector('#passwd').send_keys(data[DATA_PASSWORD])
+        time.sleep(1)
+        driver.find_element_by_css_selector('.WB_btn_login').click()
+        time.sleep(3)
+        ok = 'weibo' not in get_current_url()
+        status = PLATFORM_STATUS_AUTH_OK if ok else PLATFORM_STATUS_AUTH_FAIL
+        update_login_status(platform=data[DATA_PLATFORM], platform_username=data[DATA_USERNAME],
+                            platform_password=data[DATA_PASSWORD], platform_status=status)
+        return ok
 
     # 微信登录
     def weixin_login(self, driver):
