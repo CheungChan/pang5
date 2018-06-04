@@ -146,6 +146,7 @@ class Upload:
         driver.switch_to.window(windows[-1])
 
         # 点击微博
+        time.sleep(2)
         driver.find_element_by_css_selector('#userId').send_keys(data[DATA_USERNAME])
         time.sleep(2)
         driver.find_element_by_css_selector('#passwd').send_keys(data[DATA_PASSWORD])
