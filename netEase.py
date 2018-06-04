@@ -146,8 +146,6 @@ class Upload:
         driver.switch_to.window(windows[-1])
 
         # 点击微博
-        driver.find_element_by_css_selector('a.coagent-weibo:nth-child(2)').click()
-        time.sleep(1)
         driver.find_element_by_css_selector('#userId').send_keys(data[DATA_USERNAME])
         driver.find_element_by_css_selector('#passwd').send_keys(data[DATA_PASSWORD])
         time.sleep(1)
