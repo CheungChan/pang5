@@ -9,6 +9,7 @@ from config import LOGFILE_NAME, DATA_CHAPTER_IMAGE, DATA_WORKS_NAME, DATA_CHAPT
     PLATFORM_STATUS_AUTH_OK, DATA_PLATFORM
 from data import data
 from utils import open_driver, get, track_alert, get_current_url, g_mysqlid, Pang5Exception, update_login_status
+
 logzero.logfile(LOGFILE_NAME, encoding='utf-8', maxBytes=500_0000, backupCount=3)
 MANAGE_URL = 'https://zz.manhua.163.com/'
 COOKIE_DOMAIN = ".manhua.163.com"
@@ -39,6 +40,12 @@ class Upload:
                         self.mail_login(driver, login_username, login_password)
                     elif data[DATA_LOGIN_TYPE] == 'qq':
                         self.qq_login(driver, login_username, login_password)
+                    elif data[DATA_LOGIN_TYPE] == 'weibo':
+                        self.weibo_login(driver)
+                    elif data[DATA_LOGIN_TYPE] == 'weixin':
+                        self.weixin_login(driver)
+                    else:
+                        raise Pang5Exception('暂时不支持您的登录方式')
                     # self.mobile_login(driver)
 
                     # 登录
@@ -131,7 +138,7 @@ class Upload:
 
     # 微信登录
     def weixin_login(self, driver):
-        raise Pang5Exception('不支持微信')
+        raise Pang5Exception('暂时不支持微信登录')
 
     # 手机登录
     def mobile_login(self, driver, login_username, login_password) -> bool:
