@@ -136,7 +136,9 @@ class Upload:
     def weibo_login(self, driver):
         logger.info('用微博登录')
         get('https://manhua.163.com/')
-        driver.find_element_by_css_selector('#login-urs-wrapper > div.ologin > ul > li:nth-child(3) > a').click()
+        driver.find_element_by_css_selector('.topbar-meta-user >ul >li:nth-child(1)>.js-login-required').click()
+        time.sleep(3)
+        driver.find_element_by_css_selector('#common_login > div.m-loginswitch > ul > li:nth-child(3) > a > i').click()
         time.sleep(3)
         # 点击微博
         driver.find_element_by_css_selector('a.coagent-weibo:nth-child(2)').click()
