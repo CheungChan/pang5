@@ -147,8 +147,9 @@ class Upload:
 
         # 点击微博
         driver.find_element_by_css_selector('#userId').send_keys(data[DATA_USERNAME])
+        time.sleep(2)
         driver.find_element_by_css_selector('#passwd').send_keys(data[DATA_PASSWORD])
-        time.sleep(1)
+        time.sleep(2)
         driver.find_element_by_css_selector('.WB_btn_login').click()
         time.sleep(3)
 
