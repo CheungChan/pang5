@@ -147,9 +147,14 @@ class Upload:
 
         # 点击微博
         time.sleep(2)
-        driver.find_element_by_css_selector('#userId').send_keys(data[DATA_USERNAME])
+        # 一个字母一个字母的输入
+        for i in list(data[DATA_USERNAME]):
+            driver.find_element_by_css_selector('#userId').send_keys(i)
+            time.sleep(0.5)
         time.sleep(2)
-        driver.find_element_by_css_selector('#passwd').send_keys(data[DATA_PASSWORD])
+        for i in list(data[DATA_PASSWORD]):
+            driver.find_element_by_css_selector('#passwd').send_keys(i)
+            time.sleep(0.5)
         time.sleep(2)
         driver.find_element_by_css_selector('.WB_btn_login').click()
         time.sleep(3)
