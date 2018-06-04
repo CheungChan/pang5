@@ -135,18 +135,10 @@ class Upload:
 
     def weibo_login(self, driver):
         logger.info('用微博登录')
-        get('https://manhua.163.com/')
-        driver.find_element_by_css_selector('.topbar-meta-user >ul >li:nth-child(1)>.js-login-required').click()
+        get(
+            'https://h5.manhua.163.com/login/form?targetUrl=https%3A%2F%2Fh5.manhua.163.com%2Fsubscribe%3Fsigned_in_callback%3D1')
+        driver.find_element_by_css_selector('#sina').click()
         time.sleep(3)
-        driver.find_element_by_css_selector('#common_login > div.m-loginswitch > ul > li:nth-child(3) > a > i').click()
-        time.sleep(3)
-
-        # 切换窗口
-        windows = driver.window_handles
-        driver.switch_to.window(windows[-1])
-
-        # 点击微博
-        time.sleep(2)
         # 一个字母一个字母的输入
         for i in list(data[DATA_USERNAME]):
             driver.find_element_by_css_selector('#userId').send_keys(i)
@@ -156,13 +148,10 @@ class Upload:
             driver.find_element_by_css_selector('#passwd').send_keys(i)
             time.sleep(0.5)
         time.sleep(2)
-        driver.find_element_by_css_selector('.WB_btn_login').click()
+        driver.find_element_by_css_selector('a.btnP').click()
         time.sleep(3)
 
-        # 切换回来
-        windows = driver.window_handles
-        driver.switch_to.window(windows[-1])
-        return True
+        return 'weibo' in get_current_url()
 
     # 微信登录
     def weixin_login(self, driver):
