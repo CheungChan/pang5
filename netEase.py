@@ -140,6 +140,11 @@ class Upload:
         time.sleep(3)
         driver.find_element_by_css_selector('#common_login > div.m-loginswitch > ul > li:nth-child(3) > a > i').click()
         time.sleep(3)
+
+        # 切换窗口
+        windows = driver.window_handles
+        driver.switch_to.window(windows[-1])
+
         # 点击微博
         driver.find_element_by_css_selector('a.coagent-weibo:nth-child(2)').click()
         time.sleep(1)
@@ -148,11 +153,11 @@ class Upload:
         time.sleep(1)
         driver.find_element_by_css_selector('.WB_btn_login').click()
         time.sleep(3)
-        ok = 'weibo' not in get_current_url()
-        status = PLATFORM_STATUS_AUTH_OK if ok else PLATFORM_STATUS_AUTH_FAIL
-        update_login_status(platform=data[DATA_PLATFORM], platform_username=data[DATA_USERNAME],
-                            platform_password=data[DATA_PASSWORD], platform_status=status)
-        return ok
+
+        # 切换回来
+        windows = driver.window_handles
+        driver.switch_to.window(windows[-1])
+        return True
 
     # 微信登录
     def weixin_login(self, driver):
