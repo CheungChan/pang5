@@ -148,10 +148,16 @@ class Upload:
         # for i in list(data[DATA_PASSWORD]):
         #     driver.find_element_by_css_selector('#passwd').send_keys(i)
         #     time.sleep(0.5)
-        js = f'document.getElementById("userId").setAttribute("value","{data[DATA_USERNAME]}");' \
-             f'document.getElementById("passwd").setAttribute("value","{data[DATA_PASSWORD]}");'
-        driver.execute_script(js)
+        # js = f'document.getElementById("userId").setAttribute("value","{data[DATA_USERNAME]}");' \
+        #      f'document.getElementById("passwd").setAttribute("value","{data[DATA_PASSWORD]}");'
+        # driver.execute_script(js)
+        driver.find_element_by_css_selector('#userId').send_keys("")
+        send_keys_by_pyautogui(data[DATA_USERNAME])
         time.sleep(2)
+        driver.find_element_by_css_selector('#passwd').send_keys("")
+        send_keys_by_pyautogui(data[DATA_PASSWORD])
+        time.sleep(2)
+
         driver.find_element_by_css_selector('a.btnP').click()
         time.sleep(3)
 
