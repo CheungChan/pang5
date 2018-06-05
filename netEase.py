@@ -150,8 +150,9 @@ class Upload:
         # js = f'document.getElementById("userId").setAttribute("value","{data[DATA_USERNAME]}");' \
         #      f'document.getElementById("passwd").setAttribute("value","{data[DATA_PASSWORD]}");'
         # driver.execute_script(js)
-        driver.find_element_by_css_selector('#userId').send_keys("")
         import pyautogui
+        pyautogui.press('f5')
+        time.sleep(2)
         pyautogui.typewrite(data[DATA_USERNAME])
         time.sleep(2)
         pyautogui.keyDown('tab')
