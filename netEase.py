@@ -142,13 +142,17 @@ class Upload:
         driver.find_element_by_css_selector('#sina').click()
         time.sleep(3)
         # 一个字母一个字母的输入
-        for i in list(data[DATA_USERNAME]):
-            driver.find_element_by_css_selector('#userId').send_keys(i)
-            time.sleep(0.5)
-        time.sleep(2)
-        for i in list(data[DATA_PASSWORD]):
-            driver.find_element_by_css_selector('#passwd').send_keys(i)
-            time.sleep(0.5)
+        # for i in list(data[DATA_USERNAME]):
+        #     driver.find_element_by_css_selector('#userId').send_keys(i)
+        #     time.sleep(0.5)
+        # time.sleep(2)
+        # for i in list(data[DATA_PASSWORD]):
+        #     driver.find_element_by_css_selector('#passwd').send_keys(i)
+        #     time.sleep(0.5)
+        driver.find_element_by_css_selector('#userId').send_keys(data[DATA_USERNAME])
+        time.sleep(0.5)
+        driver.find_element_by_css_selector('#passwd').send_keys(data[DATA_PASSWORD])
+        time.sleep(0.5)
         # js = f'document.getElementById("userId").setAttribute("value","{data[DATA_USERNAME]}");' \
         #      f'document.getElementById("passwd").setAttribute("value","{data[DATA_PASSWORD]}");'
         # driver.execute_script(js)
@@ -165,6 +169,8 @@ class Upload:
         # time.sleep(2)
 
         # 处理验证码问题
+        # 火狐浏览器的微博登录是pc端的,所以样式都要用pc端的.
+        # 为什么必须用火狐, 因为只有火狐能对元素截图
         captcha_div = driver.find_element_by_css_selector(
             'p.oauth_code:nth-child(3)')
         if captcha_div.is_displayed():
