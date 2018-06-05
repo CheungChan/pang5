@@ -181,7 +181,7 @@ class Upload:
             else:
                 logger.error('验证码识别失败')
 
-        driver.find_element_by_css_selector('a.btnP').click()
+        driver.find_element_by_css_selector('a.WB_btn_login').click()
         # pyautogui.press('enter')
         time.sleep(3)
 
