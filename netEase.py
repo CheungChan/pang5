@@ -153,6 +153,8 @@ class Upload:
         import pyautogui
         pyautogui.press('f5')
         time.sleep(2)
+        js = 'document.getElementById("userId").focus()'
+        driver.execute_script(js)
         pyautogui.typewrite(data[DATA_USERNAME])
         time.sleep(2)
         pyautogui.keyDown('tab')
