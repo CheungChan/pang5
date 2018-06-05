@@ -166,10 +166,10 @@ class Upload:
 
         # 处理验证码问题
         captcha_div = driver.find_element_by_css_selector(
-            '#outer > div.o_body > section > div.W_btm.W_login > form > div > div.code_con')
+            'p.oauth_code:nth-child(3)')
         if captcha_div.is_displayed():
             logger.info('有验证码, 截图')
-            captcha_img = captcha_div.find_element_by_css_selector('img')
+            captcha_img = captcha_div.find_element_by_css_selector('span img')
             store_path = f"{CAPTCHAR_PATH}/netEase_{datetime.now().strftime('%Y-%m-%d %H%M%S')}.png"
             captcha_img.screenshot(store_path)
 
