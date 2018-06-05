@@ -14,6 +14,7 @@ CHROME_DRIVER_PATH = 'D:/chromedriver.exe' if platform.system() == 'Windows' els
 PHANTOMJS_PATH = ''
 FIREFOX_DRIVER_PATH = 'D:/geckodriver.exe' if platform.system() == 'Windows' else '/usr/bin/geckodriver'
 SCREENSHOT_PATH = str(Path(__file__).parent / 'screenshot')
+CAPTCHAR_PATH = str(Path(__file__).parent / 'captcha_img')
 # 等待类型
 WAIT_PRESENCE = 'presence'
 WAIT_VISIABLITY = "visiablity"

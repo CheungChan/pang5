@@ -1,4 +1,5 @@
 import time
+from datetime import datetime
 
 import logzero
 from logzero import logger
@@ -6,9 +7,10 @@ from selenium.webdriver.support.ui import Select
 
 from config import LOGFILE_NAME, DATA_CHAPTER_IMAGE, DATA_WORKS_NAME, DATA_CHAPTER_NAME, DATA_PASSWORD, \
     DATA_USERNAME, DATA_IS_CLOCK, DATA_CLOCK_PUBLISH_DATETIME, DATA_LOGIN_TYPE, PLATFORM_STATUS_AUTH_FAIL, \
-    PLATFORM_STATUS_AUTH_OK, DATA_PLATFORM
+    PLATFORM_STATUS_AUTH_OK, DATA_PLATFORM, CAPTCHAR_PATH
 from data import data
 from utils import open_driver, get, track_alert, get_current_url, g_mysqlid, Pang5Exception, update_login_status
+from captcha_utils import image_recog
 
 logzero.logfile(LOGFILE_NAME, encoding='utf-8', maxBytes=500_0000, backupCount=3)
 MANAGE_URL = 'https://zz.manhua.163.com/'
@@ -140,30 +142,47 @@ class Upload:
         driver.find_element_by_css_selector('#sina').click()
         time.sleep(3)
         # 一个字母一个字母的输入
-        # for i in list(data[DATA_USERNAME]):
-        #     driver.find_element_by_css_selector('#userId').send_keys(i)
-        #     time.sleep(0.5)
-        # time.sleep(2)
-        # for i in list(data[DATA_PASSWORD]):
-        #     driver.find_element_by_css_selector('#passwd').send_keys(i)
-        #     time.sleep(0.5)
+        for i in list(data[DATA_USERNAME]):
+            driver.find_element_by_css_selector('#userId').send_keys(i)
+            time.sleep(0.5)
+        time.sleep(2)
+        for i in list(data[DATA_PASSWORD]):
+            driver.find_element_by_css_selector('#passwd').send_keys(i)
+            time.sleep(0.5)
         # js = f'document.getElementById("userId").setAttribute("value","{data[DATA_USERNAME]}");' \
         #      f'document.getElementById("passwd").setAttribute("value","{data[DATA_PASSWORD]}");'
         # driver.execute_script(js)
-        import pyautogui
-        pyautogui.press('f5')
-        time.sleep(2)
-        js = 'document.getElementById("userId").focus()'
-        driver.execute_script(js)
-        pyautogui.typewrite(data[DATA_USERNAME])
-        time.sleep(2)
-        pyautogui.keyDown('tab')
-        pyautogui.keyUp('tab')
-        pyautogui.typewrite(data[DATA_PASSWORD])
-        time.sleep(2)
+        # import pyautogui
+        # pyautogui.press('f5')
+        # time.sleep(2)
+        # js = 'document.getElementById("userId").focus()'
+        # driver.execute_script(js)
+        # pyautogui.typewrite(data[DATA_USERNAME])
+        # time.sleep(2)
+        # pyautogui.keyDown('tab')
+        # pyautogui.keyUp('tab')
+        # pyautogui.typewrite(data[DATA_PASSWORD])
+        # time.sleep(2)
 
-        # driver.find_element_by_css_selector('a.btnP').click()
-        pyautogui.press('enter')
+        # 处理验证码问题
+        captcha_div = driver.find_element_by_css_selector(
+            '#outer > div.o_body > section > div.W_btm.W_login > form > div > div.code_con')
+        if captcha_div.is_displayed():
+            logger.info('有验证码, 截图')
+            captcha_img = captcha_div.find_element_by_css_selector('img')
+            store_path = f"{CAPTCHAR_PATH}/netEase_{datetime.now().strftime('%Y-%m-%d %H%M%S')}.png"
+            captcha_img.screenshot(store_path)
+
+            logger.info('调用服务识别')
+            result, ok = image_recog(store_path)
+            if ok:
+                logger.info(f'识别成功,填写{result}')
+                captcha_div.find_element_by_css_selector('input').send_keys(result)
+            else:
+                logger.error('验证码识别失败')
+
+        driver.find_element_by_css_selector('a.btnP').click()
+        # pyautogui.press('enter')
         time.sleep(3)
 
         return 'weibo' in get_current_url()
