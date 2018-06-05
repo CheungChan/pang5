@@ -36,7 +36,7 @@ logzero.logfile(LOGFILE_NAME, encoding='utf-8', maxBytes=500_0000, backupCount=3
 
 class open_driver(object):
     def __init__(self, width=1920, height=7000, cookie_domain=None, load_image=False, cookie_file=None,
-                 browser='chrome'):
+                 browser='chrome', phone_ua=False):
         self.width = width
         self.height = height
         self.cookie_domain = cookie_domain
@@ -44,6 +44,7 @@ class open_driver(object):
         if self.cookie_domain:
             self.cookie_file = cookie_file
         self.browser = browser
+        self.phone_ua = phone_ua
 
     def __enter__(self):
         global g_driver
@@ -52,6 +53,9 @@ class open_driver(object):
                 option = webdriver.ChromeOptions()
                 for iarg in CHROME_ARG:
                     option.add_argument(iarg)
+                if self.phone_ua:
+                    UA = 'Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A372 Safari/604.1'
+                    option.add_argument(f'user-agent={UA}')
                 prefs = {
                     "profile.default_content_setting_values.plugins": 1,
                     "profile.content_settings.plugin_whitelist.adobe-flash-player": 1,
