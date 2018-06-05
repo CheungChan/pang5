@@ -159,7 +159,8 @@ class Upload:
         pyautogui.typewrite(data[DATA_PASSWORD])
         time.sleep(2)
 
-        driver.find_element_by_css_selector('a.btnP').click()
+        # driver.find_element_by_css_selector('a.btnP').click()
+        pyautogui.press('enter')
         time.sleep(3)
 
         return 'weibo' in get_current_url()
