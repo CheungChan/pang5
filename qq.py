@@ -126,6 +126,9 @@ class Qq:
             else:
                 # 发布日期
                 try:
+                    # 定时发布选是
+                    self.driver.find_element_by_css_selector(
+                        'table > tbody > tr:nth-child(2) > td.chapter-publish-time > label:nth-child(1) > input[type="radio"]').click()
                     self.driver.find_element_by_css_selector("#chapter_date").send_keys(
                         data[DATA_CLOCK_PUBLISH_DATETIME])
                 except NoSuchElementException:
