@@ -26,7 +26,7 @@ class Upload:
 
     def process(self, mysql_id):
         g_mysqlid["mysql_id"] = mysql_id
-        with open_driver(phone_ua=True) as driver:
+        with open_driver(phone_ua=True, browser='firefox') as driver:
             with track_alert(driver):
                 # 处理登录
                 login_username = data[DATA_USERNAME]
