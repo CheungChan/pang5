@@ -7,6 +7,13 @@ import json
 from urllib.parse import urlencode
 from urllib.request import Request
 from urllib.request import urlopen
+from urllib.error import HTTPError
+
+import logzero
+from logzero import logger
+from config import LOGFILE_NAME
+
+logzero.logfile(LOGFILE_NAME, encoding='utf-8', maxBytes=500_0000, backupCount=3)
 
 
 def image_recog(img_path, v_type='ne5'):
@@ -31,14 +38,16 @@ def image_recog(img_path, v_type='ne5'):
     bodys['v_pic'] = ls_f
     bodys['v_type'] = v_type
     post_data = urlencode(bodys).encode('utf-8')
-
-    request = Request(url, post_data)
-    request.add_header('Authorization', 'APPCODE ' + appcode)
-    request.add_header('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
-    response = urlopen(request)
-    content = json.loads(response.read().decode('utf-8'))
-
-    print(content)
+    content = {}
+    try:
+        request = Request(url, post_data)
+        request.add_header('Authorization', 'APPCODE ' + appcode)
+        request.add_header('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
+        response = urlopen(request)
+        content = json.loads(response.read().decode('utf-8'))
+    except HTTPError as e:
+        logger.error(e)
+    logger.info(content)
     result = content.get('v_code')
     ok = content.get('errCode') == 0
     return result, ok
