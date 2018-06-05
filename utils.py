@@ -525,3 +525,8 @@ def set_file_name():
         random.sample(string.ascii_letters + string.digits, 8))
 
     return file_name
+
+
+def send_keys_by_pyautogui(msg):
+    import pyautogui
+    pyautogui.typewrite(msg)

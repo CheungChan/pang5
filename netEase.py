@@ -8,7 +8,8 @@ from config import LOGFILE_NAME, DATA_CHAPTER_IMAGE, DATA_WORKS_NAME, DATA_CHAPT
     DATA_USERNAME, DATA_IS_CLOCK, DATA_CLOCK_PUBLISH_DATETIME, DATA_LOGIN_TYPE, PLATFORM_STATUS_AUTH_FAIL, \
     PLATFORM_STATUS_AUTH_OK, DATA_PLATFORM
 from data import data
-from utils import open_driver, get, track_alert, get_current_url, g_mysqlid, Pang5Exception, update_login_status
+from utils import open_driver, get, track_alert, get_current_url, g_mysqlid, Pang5Exception, update_login_status, \
+    send_keys_by_pyautogui
 
 logzero.logfile(LOGFILE_NAME, encoding='utf-8', maxBytes=500_0000, backupCount=3)
 MANAGE_URL = 'https://zz.manhua.163.com/'
@@ -140,13 +141,15 @@ class Upload:
         driver.find_element_by_css_selector('#sina').click()
         time.sleep(3)
         # 一个字母一个字母的输入
-        for i in list(data[DATA_USERNAME]):
-            driver.find_element_by_css_selector('#userId').send_keys(i)
-            time.sleep(0.5)
-        time.sleep(2)
-        for i in list(data[DATA_PASSWORD]):
-            driver.find_element_by_css_selector('#passwd').send_keys(i)
-            time.sleep(0.5)
+        # for i in list(data[DATA_USERNAME]):
+        #     driver.find_element_by_css_selector('#userId').send_keys(i)
+        #     time.sleep(0.5)
+        # time.sleep(2)
+        # for i in list(data[DATA_PASSWORD]):
+        #     driver.find_element_by_css_selector('#passwd').send_keys(i)
+        #     time.sleep(0.5)
+        js = f'$("#userId").val("{data[DATA_USERNAME]}");$("#passwd").val("{data[DATA_PASSWORD]}")'
+        driver.execute_script(js)
         time.sleep(2)
         driver.find_element_by_css_selector('a.btnP').click()
         time.sleep(3)
