@@ -104,7 +104,7 @@ class Qq:
         self.driver.find_element_by_css_selector('#p').send_keys(data[DATA_PASSWORD])
         time.sleep(1)
         self.driver.find_element_by_css_selector('#go').click()
-        time.sleep(1)
+        time.sleep(5)
         ok = get_current_url() == 'http://m.ac.qq.com/home/index'
         status = PLATFORM_STATUS_AUTH_OK if ok else PLATFORM_STATUS_AUTH_FAIL
         update_login_status(platform=data[DATA_PLATFORM], platform_username=data[DATA_USERNAME],
