@@ -148,7 +148,7 @@ class Upload:
         # for i in list(data[DATA_PASSWORD]):
         #     driver.find_element_by_css_selector('#passwd').send_keys(i)
         #     time.sleep(0.5)
-        js = f'document.getElementBtId("userId").setAttribute("value","{data[DATA_USERNAME]}");' \
+        js = f'document.getElementById("userId").setAttribute("value","{data[DATA_USERNAME]}");' \
              f'document.getElementById("passwd").setAttribute("value","{data[DATA_PASSWORD]}");'
         driver.execute_script(js)
         time.sleep(2)
