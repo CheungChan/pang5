@@ -144,11 +144,11 @@ class Qq:
         logger.info(tips_chapter)
         try:
             self.driver.find_element_by_css_selector("#Filedata").send_keys(tips_chapter)
+            # 点击上传封面
+            time.sleep(3)
+            self.driver.find_element_by_css_selector('#btn_upload').click()
         except:
             logger.info('页面上没有章节封面')
-        # 点击上传封面
-        time.sleep(3)
-        self.driver.find_element_by_css_selector('#btn_upload').click()
         time.sleep(3)
         # 上传章节内容
         scroll_to()
