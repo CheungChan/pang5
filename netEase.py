@@ -67,7 +67,7 @@ class Upload:
                 # try:
                 net_series = driver.find_elements_by_link_text(data[DATA_WORKS_NAME])
                 if len(net_series) == 0:
-                    raise Pang5Exception("该用户下没有该作品")
+                    raise Pang5Exception(f"该用户下没有作品{data[DATA_WORKS_NAME]}")
                 net_series[0].click()
                 time.sleep(1)
                 handles = driver.window_handles
@@ -185,7 +185,7 @@ class Upload:
                 logger.info(f'识别成功,填写{result}')
                 captcha_div.find_element_by_css_selector('input').send_keys(result)
             else:
-                logger.error('验证码识别失败')
+                raise Pang5Exception('验证码识别失败, 请重试')
 
         driver.find_element_by_css_selector('a.WB_btn_login').click()
         # pyautogui.press('enter')
