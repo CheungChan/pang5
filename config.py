@@ -23,6 +23,7 @@ BROWSER_FIREFOX = 'firefox'
 RUN_SIKULIX_CMD = r'D:\sikuli\runsikulix.cmd'
 LOGFILE_NAME = f'D:/logs/pang5_{datetime.now().strftime("%Y%m%d %H%M%S")}.log' if platform.system() == 'Windows' \
     else f'/tmp/pang5_{datetime.now().strftime("%Y%m%d %H%M%S")}.log'
+UA = 'Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A372 Safari/604.1'
 CHROME_ARG = [
     '--disable-component-update',
     '--allow-outdated-plugins',
@@ -30,6 +31,7 @@ CHROME_ARG = [
     r'ppapi-flash-path=C:\Windows\SysWOW64\Macromed\Flash\pepflashplayer32_29_0_0_113.dll',
     'lang=zh_CN.UTF-8',
     '--start-maximized',
+    f'user-agent={UA}',
 ]
 
 if DEBUG:
