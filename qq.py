@@ -142,8 +142,10 @@ class Qq:
         # 章节封面
         tips_chapter = data[DATA_WORKS_IMAGE]
         logger.info(tips_chapter)
-        self.driver.find_element_by_css_selector("#Filedata").send_keys(tips_chapter)
-
+        try:
+            self.driver.find_element_by_css_selector("#Filedata").send_keys(tips_chapter)
+        except:
+            logger.info('页面上没有章节封面')
         # 点击上传封面
         time.sleep(3)
         self.driver.find_element_by_css_selector('#btn_upload').click()
