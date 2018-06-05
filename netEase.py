@@ -8,8 +8,7 @@ from config import LOGFILE_NAME, DATA_CHAPTER_IMAGE, DATA_WORKS_NAME, DATA_CHAPT
     DATA_USERNAME, DATA_IS_CLOCK, DATA_CLOCK_PUBLISH_DATETIME, DATA_LOGIN_TYPE, PLATFORM_STATUS_AUTH_FAIL, \
     PLATFORM_STATUS_AUTH_OK, DATA_PLATFORM
 from data import data
-from utils import open_driver, get, track_alert, get_current_url, g_mysqlid, Pang5Exception, update_login_status, \
-    send_keys_by_pyautogui
+from utils import open_driver, get, track_alert, get_current_url, g_mysqlid, Pang5Exception, update_login_status
 
 logzero.logfile(LOGFILE_NAME, encoding='utf-8', maxBytes=500_0000, backupCount=3)
 MANAGE_URL = 'https://zz.manhua.163.com/'
@@ -152,10 +151,12 @@ class Upload:
         #      f'document.getElementById("passwd").setAttribute("value","{data[DATA_PASSWORD]}");'
         # driver.execute_script(js)
         driver.find_element_by_css_selector('#userId').send_keys("")
-        send_keys_by_pyautogui(data[DATA_USERNAME])
+        import pyautogui
+        pyautogui.typewrite(data[DATA_USERNAME])
         time.sleep(2)
-        driver.find_element_by_css_selector('#passwd').send_keys("")
-        send_keys_by_pyautogui(data[DATA_PASSWORD])
+        pyautogui.keyDown('tab')
+        pyautogui.keyUp('tab')
+        pyautogui.typewrite(data[DATA_PASSWORD])
         time.sleep(2)
 
         driver.find_element_by_css_selector('a.btnP').click()
