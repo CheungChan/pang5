@@ -12,7 +12,7 @@ if os.path.exists(profile_file):
 USE_FACE = True
 CHROME_DRIVER_PATH = 'D:/chromedriver.exe' if platform.system() == 'Windows' else '/usr/bin/chromedriver'
 PHANTOMJS_PATH = ''
-FIREFOX_DRIVER_PATH = 'D:/geckodriver.exe' if platform.system() == 'Windows' else '/usr/bin/geckodriver'
+FIREFOX_DRIVER_PATH = 'D:/geckodriver32.exe' if platform.system() == 'Windows' else '/usr/bin/geckodriver'
 SCREENSHOT_PATH = str(Path(__file__).parent / 'screenshot')
 CAPTCHAR_PATH = str(Path(__file__).parent / 'captcha_img')
 # 等待类型
