@@ -148,21 +148,26 @@ class U17:
         logger.info('填写章节名称')
         clear_and_send_keys("#chapter_name", data[DATA_CHAPTER_NAME])
 
-        logger.info('上传封面图片')
-        time.sleep(2)
-        click_by_pyautogui(TITLE_PNG)
-        time.sleep(2)
-        img: str = data[DATA_WORKS_IMAGE]
-        cmd = f'D:/uploadImg.exe 打开 {img}'
-        logger.info(cmd)
-        os.system(cmd)
-        while True:
-            loading_ele = self.driver.find_element_by_css_selector('.loading_tm > img:nth-child(1)')
-            if not loading_ele.is_displayed():
-                logger.info('封面上传完毕')
-                break
-            logger.info('封面正在上传中。。。')
+        # 有的没有章节封面
+        fengmian_eles = self.driver.find_elements_by_css_selector('div.bg_cover_box')
+        if len(fengmian_eles) > 0:
+            logger.info('上传封面图片')
             time.sleep(2)
+            click_by_pyautogui(TITLE_PNG)
+            time.sleep(2)
+            img: str = data[DATA_WORKS_IMAGE]
+            cmd = f'D:/uploadImg.exe 打开 {img}'
+            logger.info(cmd)
+            os.system(cmd)
+            while True:
+                loading_ele = self.driver.find_element_by_css_selector('.loading_tm > img:nth-child(1)')
+                if not loading_ele.is_displayed():
+                    logger.info('封面上传完毕')
+                    break
+                logger.info('封面正在上传中。。。')
+                time.sleep(2)
+        else:
+            logger.info('页面没有章节封面')
 
         logger.info('上传章节内容')
         scroll_to_id('btn_start')
@@ -205,11 +210,14 @@ class U17:
             logger.info(f'设置定时时间为{publish_datetime}')
 
             # 暂时将下次更新时间设置为2天后.
-            two_days_from_now = data[DATA_NEXT_TIME] or (datetime.now() + timedelta(days=2)).strftime('%Y-%m-%d')
-            js = f'$("#input_update_time").val("{two_days_from_now}")'
-            logger.info(js)
-            self.driver.execute_script(js)
-            logger.info(f'设置下次更新时间为{two_days_from_now}')
+            two_days_from_now = data[DATA_NEXT_TIME]  # or (datetime.now() + timedelta(days=2)).strftime('%Y-%m-%d')
+            try:
+                js = f'$("#input_update_time").val("{two_days_from_now}")'
+                logger.info(js)
+                self.driver.execute_script(js)
+                logger.info(f'设置下次更新时间为{two_days_from_now}')
+            except:
+                logger.error('填写下次更新时间失败')
 
         logger.info('等待10s')
         time.sleep(10)
