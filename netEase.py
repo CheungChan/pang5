@@ -53,8 +53,9 @@ class Upload:
                     # 登录
                     # 继续中间页面
                     # 不switch会报错 cant access dead object.
+                    logger.info('点击完了登录')
                     driver.switch_to().default_content()
-                    get('https://zz.manhua.163.com/')
+                    driver.get('https://zz.manhua.163.com/')
                     time.sleep(3)
                 if get_current_url() not in ['http://zz.manhua.163.com/', 'https://zz.manhua.163.com/']:
                     status = PLATFORM_STATUS_AUTH_FAIL
