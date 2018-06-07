@@ -103,6 +103,7 @@ class Upload:
         password.send_keys(login_password)
         time.sleep(1)
         driver.find_element_by_id('dologin').click()
+        logger.info('点击登录')
         time.sleep(2)
         return True
 
