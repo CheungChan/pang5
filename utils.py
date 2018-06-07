@@ -280,7 +280,8 @@ def store_cookie(driver, cookie_file):
 def get(url, sleep=2):
     try:
         logger.info(f'get:{url}')
-        # g_driver.implicitly_wait(10)
+        g_driver.implicitly_wait(10)
+        g_driver.switch_to.default_content()
         g_driver.get(url)
     except TimeoutException as e:
         g_driver.logger.warning(f'get: {url} {e}')

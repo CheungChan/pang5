@@ -52,10 +52,8 @@ class Upload:
 
                     # 登录
                     # 继续中间页面
-                    # 不switch会报错 cant access dead object.
                     logger.info('点击完了登录')
-                    driver.switch_to().default_content()
-                    driver.get('https://zz.manhua.163.com/')
+                    get('https://zz.manhua.163.com/')
                     time.sleep(3)
                 if get_current_url() not in ['http://zz.manhua.163.com/', 'https://zz.manhua.163.com/']:
                     status = PLATFORM_STATUS_AUTH_FAIL
@@ -91,7 +89,7 @@ class Upload:
             update_login_status(platform=data[DATA_PLATFORM], platform_username=data[DATA_USERNAME],
                                 platform_password=data[DATA_PASSWORD], platform_status=status)
             raise Pang5Exception('登录方式是邮箱,但是输入的用户名不是邮箱')
-        driver.get('https://manhua.163.com/')
+        get('https://manhua.163.com/')
         # click('.topbar-meta-user >ul >li:nth-child(1)>.js-login-required')
         driver.find_element_by_css_selector('.topbar-meta-user >ul >li:nth-child(1)>.js-login-required').click()
         # driver.find_element_by_css_selector('.sns-mobile').click()
