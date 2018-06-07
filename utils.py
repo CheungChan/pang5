@@ -281,11 +281,6 @@ def get(url, sleep=2):
     try:
         logger.info(f'get:{url}')
         g_driver.implicitly_wait(10)
-        # 这是Firefox浏览器的bug, 如果不switch_to().default_content()可能会报错cant access dead object.
-        try:
-            g_driver.switch_to().default_content()
-        except Exception as e2:
-            logger.error(e2)
         g_driver.get(url)
     except TimeoutException as e:
         g_driver.logger.warning(f'get: {url} {e}')
