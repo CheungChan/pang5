@@ -90,7 +90,7 @@ class Upload:
             update_login_status(platform=data[DATA_PLATFORM], platform_username=data[DATA_USERNAME],
                                 platform_password=data[DATA_PASSWORD], platform_status=status)
             raise Pang5Exception('登录方式是邮箱,但是输入的用户名不是邮箱')
-        get('https://manhua.163.com/')
+        driver.get('https://manhua.163.com/')
         # click('.topbar-meta-user >ul >li:nth-child(1)>.js-login-required')
         driver.find_element_by_css_selector('.topbar-meta-user >ul >li:nth-child(1)>.js-login-required').click()
         # driver.find_element_by_css_selector('.sns-mobile').click()
