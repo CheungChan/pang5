@@ -289,6 +289,9 @@ def get(url, sleep=2):
         except TimeoutException as e2:
             return True
         time.sleep(sleep)
+    except Exception as e:
+        logger.error(e)
+        return False
     return True
 
 
